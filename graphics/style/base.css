@@ -1,0 +1,12 @@
+body {margin: 0;}
+
+#container {
+    position: absolute;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+}
+
+#background {
+    z-index: -1;
+}

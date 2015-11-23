@@ -1,0 +1,29 @@
+{
+  "name": "agdq16-layouts",
+  "version": "0.1.0",
+  "homepage": "http://gamesdonequick.com/",
+  "contributors": [
+    "Alex Van Camp <email@alexvan.camp>",
+    "Chris Hanel <chrishanel@gmail.com>"
+  ],
+  "description": "The on-stream graphics used during Awesome Games Done Quick 2016.",
+  "license": "Apache-2.0",
+  "nodecg": {
+    "compatibleRange": "~0.7.0",
+    "graphics": [
+      {
+        "file": "index.html",
+        "width": 1280,
+        "height": 720
+      }
+    ]
+  },
+  "dependencies": {
+    "clone": "^1.0.2",
+    "debounce": "^1.0.0",
+    "deep-equal": "^1.0.1",
+    "numeral": "^1.5.3",
+    "request": "^2.67.0",
+    "rieussec": "^0.2.4"
+  }
+}

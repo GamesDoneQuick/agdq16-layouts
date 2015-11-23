@@ -1,0 +1,8 @@
+{
+  "name": "agdq16-layouts",
+  "dependencies": {
+    "gsap": "^1.18.0",
+    "EaselJS": "0.8.1",
+    "PreloadJS": "0.6.1"
+  }
+}
