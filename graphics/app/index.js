@@ -33,7 +33,7 @@
                         'components/speedrun',
                         'layout'
                     ], function(bg, speedrun, layout) {
-                        layout('4x3_4');
+                        layout('3ds');
                         window.layout = layout;
                     }
                 );
