@@ -40,8 +40,30 @@ define([
         'ds_portrait': arguments[12]
     };
 
-    return function (name) {
+    var currentLayout, currentLayoutIndex;
+    var numLayouts = Object.keys(layouts).length;
+    window.nextLayout = function() {
+          if (typeof currentLayoutIndex === 'undefined') {
+              setLayout(Object.keys(layouts)[0]);
+              return;
+          }
+
+        currentLayoutIndex += 1;
+        if (currentLayoutIndex >= numLayouts) {
+            currentLayoutIndex = 0;
+            console.log('--- END OF LAYOUTS, STARTING FROM BEGINNING ---');
+        }
+
+        setLayout(Object.keys(layouts)[currentLayoutIndex]);
+    };
+
+    function setLayout(name) {
         console.log('layout |', name);
         layouts[name]();
-    };
+
+        currentLayout = name;
+        currentLayoutIndex = Object.keys(layouts).indexOf(name);
+    }
+
+    return setLayout;
 });
