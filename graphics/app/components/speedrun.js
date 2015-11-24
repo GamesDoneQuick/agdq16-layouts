@@ -5,18 +5,10 @@ define([
 ], function (globals, Stage) {
     'use strict';
 
+    var BOXART_WIDTH = 469;
+    var BOXART_ASPECT_RATIO = 1.397;
     var BG_SCROLL_TIME = 30;
     var BG_FADE_TIME = 2;
-
-    /*
-    notes
-
-    name
-        top margin: 15%
-        right margin: 10px
-
-    category
-     */
 
     // We'll be changing these every time we switch to a new layout.
     // The "g" here means "Global". IDK, just some way of signifying these vars are permanent.
@@ -40,6 +32,7 @@ define([
     bgContainer2.addChild(color2, background2);
 
     var name = new createjs.Text('', '800 30px proxima-nova', 'white');
+    name.textAlign = 'end';
     name.shadow = new createjs.Shadow('black', 3, 3, 0);
 
     stage.addChild(bgContainer1, bgContainer2, name);
@@ -47,16 +40,11 @@ define([
     globals.currentRunRep.on('change', function(oldVal, newVal) {
         // Set the boxart
         // TODO: give this a nice fade transition, rather than a hard cut
-        boxartHeight = gWidth * newVal.boxart.aspectRatio;
         var img = document.createElement('img');
         img.src = newVal.boxart.url;
         background1.image = background2.image = img;
-        background1.scaleX = background2.scaleX = gWidth / newVal.boxart.width;
-        background1.scaleY = background2.scaleY = gWidth / newVal.boxart.width;
-        color1.graphics.clear().beginFill('#00ADEF').drawRect(0, 0, gWidth, boxartHeight);
-        color2.graphics.clear().beginFill('#00ADEF').drawRect(0, 0, gWidth, boxartHeight);
-        cacheBackgroundAfterImageLoad();
-        resetBgScroll();
+        redrawBoxartAfterImageLoad();
+        resetBoxartScroll();
 
         name.text = newVal.name;
     });
@@ -66,11 +54,11 @@ define([
      */
     var showingBg = bgContainer1;
     var hiddenBg = bgContainer2;
-    var currentBgScrollTl;
-    var bgScrollInterval;
-    function bgScroll() {
+    var currentBoxartScrollTl;
+    var boxartScrollInterval;
+    function boxartScroll() {
         var tl = new TimelineLite();
-        currentBgScrollTl = tl;
+        currentBoxartScrollTl = tl;
 
         tl.fromTo(showingBg, BG_SCROLL_TIME,
             {y: 0},
@@ -105,20 +93,27 @@ define([
     }
 
     /**
-     *  Waits for the boxart image to be fully loaded, then caches both background elements.
+     *  Waits for the boxart image to be fully loaded, then redraws both background elements.
      */
-    function cacheBackgroundAfterImageLoad() {
+    function redrawBoxartAfterImageLoad() {
+        if (!background1.image) return;
+
         if (background1.image.complete) {
-            cacheBackground();
+            redrawAndCacheBoxart();
         } else {
-            background1.image.addEventListener('load', cacheBackground);
+            background1.image.addEventListener('load', redrawAndCacheBoxart);
         }
     }
 
     /**
-     * Caches the two background elements which contain the boxart.
+     *  Re-draws and re-caches the boxart to fit the current width.
      */
-    function cacheBackground() {
+    function redrawAndCacheBoxart() {
+        boxartHeight = gWidth * BOXART_ASPECT_RATIO;
+        background1.scaleX = background2.scaleX = gWidth / BOXART_WIDTH;
+        background1.scaleY = background2.scaleY = gWidth / BOXART_WIDTH;
+        color1.graphics.clear().beginFill('#00ADEF').drawRect(0, 0, gWidth, boxartHeight);
+        color2.graphics.clear().beginFill('#00ADEF').drawRect(0, 0, gWidth, boxartHeight);
         bgContainer1.cache(0, 0, gWidth, boxartHeight);
         bgContainer2.cache(0, 0, gWidth, boxartHeight);
     }
@@ -127,15 +122,15 @@ define([
      *  A hard cut to a new iteration of the boxart scrolling animation.
      *  To be used when changing to a new layout and a hard cut is needed.
      */
-    function resetBgScroll() {
-        clearInterval(bgScrollInterval);
-        if (currentBgScrollTl) currentBgScrollTl.clear();
+    function resetBoxartScroll() {
+        clearInterval(boxartScrollInterval);
+        if (currentBoxartScrollTl) currentBoxartScrollTl.clear();
 
         showingBg.alpha = 1;
         hiddenBg.alpha = 0;
 
-        bgScroll();
-        bgScrollInterval = setInterval(bgScroll, (BG_SCROLL_TIME - BG_FADE_TIME) * 1000);
+        boxartScroll();
+        boxartScrollInterval = setInterval(boxartScroll, (BG_SCROLL_TIME - BG_FADE_TIME) * 1000);
     }
 
     /**
@@ -153,10 +148,16 @@ define([
 
         gWidth = w;
         gHeight = h;
+
         stage.canvas.style.left = x + 'px';
         stage.canvas.style.top = y + 'px';
         stage.canvas.width = w;
         stage.canvas.height = h;
-        resetBgScroll();
+
+        name.x = w - 10;
+        name.y = h * 0.12;
+
+        redrawBoxartAfterImageLoad();
+        resetBoxartScroll();
     };
 });

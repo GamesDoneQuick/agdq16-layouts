@@ -65,10 +65,7 @@ module.exports = function (nodecg) {
                         estimate: run.fields.run_time || 'Unknown',
                         runners: run.fields.runners || [],
                         boxart: {
-                            url: boxartUrl,
-                            width: BOXART_WIDTH,
-                            height: BOXART_HEIGHT,
-                            aspectRatio: BOXART_ASPECT_RATIO
+                            url: boxartUrl
                         },
                         type: 'run'
                     };
