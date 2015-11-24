@@ -49,12 +49,4 @@ module.exports = function(nodecg) {
         nodecg.log.error('Failed to load "advertisements" lib:', e.stack);
         process.exit(1);
     }*/
-
-    try {
-        require('./boxart')(nodecg);
-    } catch (e) {
-        nodecg.log.error('Failed to load "boxart" lib:', e.stack);
-        process.exit(1);
-    }
-
 };

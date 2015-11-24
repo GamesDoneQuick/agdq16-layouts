@@ -5,10 +5,23 @@ define(function () {
     // Preload images
     var queue = new createjs.LoadQueue();
     queue.loadManifest([
+        {id: 'bg-3ds', src: 'img/backgrounds/3ds.png'},
+
+        {id: 'bg-3x2_1', src: 'img/backgrounds/3x2_1.png'},
+        {id: 'bg-3x2_2', src: 'img/backgrounds/3x2_2.png'},
+        {id: 'bg-3x2_3', src: 'img/backgrounds/4x3_3.png'},
+        {id: 'bg-3x2_4', src: 'img/backgrounds/4x3_4.png'},
+
         {id: 'bg-4x3_1', src: 'img/backgrounds/4x3_1.png'},
         {id: 'bg-4x3_2', src: 'img/backgrounds/4x3_2.png'},
         {id: 'bg-4x3_3', src: 'img/backgrounds/4x3_3.png'},
-        {id: 'bg-4x3_4', src: 'img/backgrounds/4x3_4.png'}
+        {id: 'bg-4x3_4', src: 'img/backgrounds/4x3_4.png'},
+
+        {id: 'bg-16x9_1', src: 'img/backgrounds/16x9_1.png'},
+        {id: 'bg-16x9_2', src: 'img/backgrounds/16x9_2.png'},
+
+        {id: 'bg-ds', src: 'img/backgrounds/ds.png'},
+        {id: 'bg-ds_portrait', src: 'img/backgrounds/ds_portrait.png'}
     ]);
 
     return queue;

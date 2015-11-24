@@ -1,12 +1,14 @@
 /* global define */
-define(['preloader'], function(preloader) {
+define([
+    'preloader'
+], function(preloader) {
     'use strict';
 
     var containerEl = document.getElementById('container');
     var lastBg;
 
     return function(bgName) {
-        console.log('setBackground', bgName);
+        console.log('setBackground |', bgName);
 
         // Remove the last background, if any.
         if (lastBg) {

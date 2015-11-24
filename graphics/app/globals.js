@@ -38,6 +38,9 @@ define(function() {
         },
         currentRun: {
             getter: function() {return currentRunRep.value;}
+        },
+        currentRunRep: {
+            value: currentRunRep
         }
     });
 });

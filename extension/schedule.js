@@ -1,8 +1,11 @@
 'use strict';
 
-// Schedule is kept in a google document
 var SCHEDULE_URL = 'https://gamesdonequick.com/tracker/search/?type=run&event=17';
 var POLL_INTERVAL = 3 * 60 * 1000;
+var BOXART_ASPECT_RATIO = 1.397;
+var BOXART_WIDTH = 469;
+var BOXART_HEIGHT = Math.round(BOXART_WIDTH * BOXART_ASPECT_RATIO);
+var BOXART_DEFAULT_URL = 'http://static-cdn.jtvnw.net/ttv-static/404_boxart-'+BOXART_WIDTH+'x'+BOXART_HEIGHT+'.jpg';
 
 var request = require('request');
 var clone = require('clone');
@@ -48,6 +51,10 @@ module.exports = function (nodecg) {
 
                 /* jshint -W106 */
                 var formattedSchedule = json.map(function(run) {
+                    var boxartUrl = typeof run.fields.boxart_template === 'string'
+                        ? run.fields.boxart_template.replace('{width}', BOXART_WIDTH).replace('{height}', BOXART_HEIGHT)
+                        : BOXART_DEFAULT_URL;
+
                     return {
                         name: run.fields.name || 'Unknown',
                         console: run.fields.console || 'Unknown',
@@ -57,6 +64,12 @@ module.exports = function (nodecg) {
                         order: run.fields.order,
                         estimate: run.fields.run_time || 'Unknown',
                         runners: run.fields.runners || [],
+                        boxart: {
+                            url: boxartUrl,
+                            width: BOXART_WIDTH,
+                            height: BOXART_HEIGHT,
+                            aspectRatio: BOXART_ASPECT_RATIO
+                        },
                         type: 'run'
                     };
                 });
