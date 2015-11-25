@@ -4,8 +4,6 @@ define([
 
     'layouts/3x2_1',
     'layouts/3x2_2',
-    'layouts/3x2_3',
-    'layouts/3x2_4',
 
     'layouts/4x3_1',
     'layouts/4x3_2',
@@ -25,19 +23,17 @@ define([
 
         '3x2_1': arguments[1],
         '3x2_2': arguments[2],
-        '3x2_3': arguments[3],
-        '3x2_4': arguments[4],
 
-        '4x3_1': arguments[5],
-        '4x3_2': arguments[6],
-        '4x3_3': arguments[7],
-        '4x3_4': arguments[8],
+        '4x3_1': arguments[3],
+        '4x3_2': arguments[4],
+        '4x3_3': arguments[5],
+        '4x3_4': arguments[6],
 
-        '16x9_1': arguments[9],
-        '16x9_2': arguments[10],
+        '16x9_1': arguments[7],
+        '16x9_2': arguments[8],
 
-        'ds': arguments[11],
-        'ds_portrait': arguments[12]
+        'ds': arguments[9],
+        'ds_portrait': arguments[10]
     };
 
     var currentLayout, currentLayoutIndex;

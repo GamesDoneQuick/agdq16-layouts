@@ -23,6 +23,27 @@ define(function() {
 
     /* ----- */
 
+    // This is really fragile, but whatever.
+    var NUM_REPLICANTS = 4;
+    var loadedReplicants = 0;
+
+
+    currentBidsRep.on('declared', replicantDeclared);
+    scheduleRep.on('declared', replicantDeclared);
+    currentRunRep.on('declared', replicantDeclared);
+    currentPrizesRep.on('declared', replicantDeclared);
+
+    function replicantDeclared() {
+        loadedReplicants++;
+        if (loadedReplicants === NUM_REPLICANTS) {
+            document.dispatchEvent(new CustomEvent('replicantsDeclared'));
+            window.replicantsDeclared = true;
+        }
+    }
+
+
+    /* ----- */
+
     return Object.create(Object.prototype, {
         currentBids: {
             getter: function() {return currentBidsRep.value;}

@@ -9,6 +9,11 @@ define([
 
     return function() {
         setBackground(LAYOUT_NAME);
-        setSpeedRunDimensions(950, 0, 330, 146);
+        setSpeedRunDimensions(950, 0, 330, 146, {
+            scale: 0.834,
+            nameY: 26,
+            nameMaxHeight: 50,
+            categoryY: 97
+        });
     };
 });

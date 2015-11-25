@@ -9,6 +9,10 @@ define([
 
     return function() {
         setBackground(LAYOUT_NAME);
-        setSpeedRunDimensions(442, 154, 396, 170);
+        setSpeedRunDimensions(442, 154, 396, 170, {
+            consolePosition: 'left',
+            nameY: 20,
+            categoryY: 81
+        });
     };
 });

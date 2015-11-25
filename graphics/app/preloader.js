@@ -5,6 +5,7 @@ define(function () {
     // Preload images
     var queue = new createjs.LoadQueue();
     queue.loadManifest([
+        // Backgrounds
         {id: 'bg-3ds', src: 'img/backgrounds/3ds.png'},
 
         {id: 'bg-3x2_1', src: 'img/backgrounds/3x2_1.png'},
@@ -21,7 +22,10 @@ define(function () {
         {id: 'bg-16x9_2', src: 'img/backgrounds/16x9_2.png'},
 
         {id: 'bg-ds', src: 'img/backgrounds/ds.png'},
-        {id: 'bg-ds_portrait', src: 'img/backgrounds/ds_portrait.png'}
+        {id: 'bg-ds_portrait', src: 'img/backgrounds/ds_portrait.png'},
+
+        // Console icons
+        {id: 'console-psp', src: 'img/consoles/psp.png'}
     ]);
 
     return queue;

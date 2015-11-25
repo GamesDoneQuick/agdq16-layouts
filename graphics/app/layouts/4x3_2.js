@@ -9,6 +9,9 @@ define([
 
     return function() {
         setBackground(LAYOUT_NAME);
-        setSpeedRunDimensions(0, 536, 430, 130);
+        setSpeedRunDimensions(0, 536, 430, 130, {
+            nameY: 15,
+            categoryY: 81
+        });
     };
 });
