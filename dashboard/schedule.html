@@ -41,6 +41,10 @@
             height: 24px;
             padding-right: 0;
         }
+
+        #update {
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body>
@@ -48,35 +52,8 @@
 
     <div class="layout horizontal">
         <!-- Left Column -->
-        <div class="flex" style="margin-right: 6px;">
-            <paper-button id="update" class="nodecg-warning">Force Schedule Update</paper-button>
-
-            <h5>Sequential Select</h5>
-            <div class="layout horizontal">
-                <paper-button id="previous" class="nodecg-info flex layout horizontal center-center"
-                              style="margin-right: 4px;">
-
-                    <iron-icon icon="arrow-back"></iron-icon>
-                    <span>Previous</span>
-                </paper-button>
-
-                <paper-button id="next" class="nodecg-info flex layout horizontal center-center"
-                              style="margin-left: 4px;">
-
-                    <span>Next</span>
-                    <iron-icon icon="arrow-forward"></iron-icon>
-                </paper-button>
-            </div>
-
-            <div class="layout horizontal justified">
-                <span class="flex-none">Next Run:</span>
-                <b id="nextRun"></b>
-            </div>
-
-            <!-- Divider -->
-            <hr>
-
-            <div class="layout horizontal end">
+        <div class="flex layout vertical justified" style="margin-right: 8px;">
+            <div class="layout horizontal end" style="margin-top: -14px; margin-bottom: 10px;">
                 <nodecg-typeahead-input id="typeahead" max-suggestions="3" placeholder="Search">
                 </nodecg-typeahead-input>
 
@@ -88,10 +65,36 @@
                 </paper-button>
             </div>
 
+            <div>
+                <h5>Sequential Select</h5>
+                <div class="layout horizontal">
+                    <paper-button id="previous" class="nodecg-info flex layout horizontal center-center"
+                                  style="margin-right: 4px;">
+
+                        <iron-icon icon="arrow-back"></iron-icon>
+                        <span>Previous</span>
+                    </paper-button>
+
+                    <paper-button id="next" class="nodecg-info flex layout horizontal center-center"
+                                  style="margin-left: 4px;">
+
+                        <span>Next</span>
+                        <iron-icon icon="arrow-forward"></iron-icon>
+                    </paper-button>
+                </div>
+
+                <div class="layout horizontal justified">
+                    <span class="flex-none">Next Run:</span>
+                    <b id="nextRun"></b>
+                </div>
+            </div>
+
+
+            <paper-button id="update" class="nodecg-warning">Force Schedule Update</paper-button>
         </div>
 
         <!-- Right Column -->
-        <div class="flex" style="margin-left: 6px;">
+        <div class="flex" style="margin-left: 8px;">
             <h5>Current Run Info</h5>
 
             <div class="layout vertical">
