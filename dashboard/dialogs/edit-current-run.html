@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="import" href="components/paper-input/paper-input.html">
+    <link rel="import" href="components/iron-flex-layout/classes/iron-flex-layout.html">
+    <link rel="import" href="elements/edit-runner.html">
+</head>
+<body>
+    <div class="layout horizontal">
+        <!-- Left Column -->
+        <div class="flex layout vertical justified" style="margin-right: 8px;">
+            <paper-input type="text" label="Name"></paper-input>
+            <paper-input type="text" label="Console"></paper-input>
+            <paper-input type="text" label="Estimate"></paper-input>
+            <paper-input type="text" label="Category"></paper-input>
+        </div>
+
+        <!-- Right Column -->
+        <div id="runners" class="flex layout vertical justified" style="margin-left: 8px;"></div>
+    </div>
+
+    <script>
+        var nameEl = document.querySelector('paper-input[label="Name"]');
+        var consoleEl = document.querySelector('paper-input[label="Console"]');
+        var estimateEl = document.querySelector('paper-input[label="Estimate"]');
+        var categoryEl = document.querySelector('paper-input[label="Category"]');
+        var runners = document.getElementById('runners');
+
+        var currentRun = nodecg.Replicant('currentRun');
+        currentRun.on('change', function(oldVal, newVal) {
+            nameEl.value = newVal.name;
+            consoleEl.value = newVal.console;
+            estimateEl.value = newVal.estimate;
+            categoryEl.value = newVal.category;
+
+            // Remove all current edit-runner elements.
+            while (runners.firstChild) {
+                runners.removeChild(runners.firstChild);
+            }
+
+            // Add the new edit-runner element.
+            newVal.runners.forEach(function(runner) {
+                var editRunnerEl = document.createElement('edit-runner');
+                editRunnerEl.runner = runner;
+                runners.appendChild(editRunnerEl);
+            })
+        });
+    </script>
+</body>
+</html>

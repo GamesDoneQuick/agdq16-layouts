@@ -17,6 +17,12 @@
         "width": 4,
         "headerColor": "#2d4e8a",
         "file": "schedule.html"
+      },{
+        "name": "edit-current-run",
+        "title": "Edit Current Run",
+        "width": 4,
+        "dialog": true,
+        "file": "dialogs/edit-current-run.html"
       }
     ],
     "graphics": [
