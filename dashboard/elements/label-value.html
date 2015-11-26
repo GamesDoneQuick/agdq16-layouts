@@ -1,0 +1,50 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../components/paper-styles/typography.html">
+
+<dom-module id="label-value">
+    <style>
+        :host {
+            @apply(--layout-horizontal);
+            @apply(--layout-justified);
+            height: 42px;
+        }
+
+        :host:not(:last-child) {
+            margin-bottom: 6px;
+        }
+
+        #label {
+            @apply(--paper-font-caption);
+            @apply(--layout-flex-none);
+            width: 70px;
+        }
+
+        #value {
+            text-align: right;
+            @apply(--paper-font-code1);
+
+            /* Hacky webkit-only way of enforcing that a node have at most two lines of text. */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+
+    <template>
+        <span id="label">[[label]]</span>
+        <span id="value">[[value]]</span>
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: 'label-value',
+
+        properties: {
+            label: String,
+            value: String
+        }
+    })
+</script>

@@ -1,7 +1,8 @@
 'use strict';
 
-var SCHEDULE_URL = 'https://gamesdonequick.com/tracker/search/?type=run&event=17';
-var POLL_INTERVAL = 3 * 60 * 1000;
+// TODO: CHANGE THIS BACK TO EVENT 17
+var SCHEDULE_URL = 'https://gamesdonequick.com/tracker/search/?type=run&event=16';
+var POLL_INTERVAL = 60 * 1000;
 var BOXART_ASPECT_RATIO = 1.397;
 var BOXART_WIDTH = 469;
 var BOXART_HEIGHT = Math.round(BOXART_WIDTH * BOXART_ASPECT_RATIO);
@@ -42,6 +43,38 @@ module.exports = function (nodecg) {
             });
     });
 
+    nodecg.listenFor('nextRun', function(cb) {
+        var nextIndex = currentRun.value.nextRun.order - 1;
+        var newCurrentRun = clone(scheduleRep.value[nextIndex]);
+        newCurrentRun.nextRun = scheduleRep.value[nextIndex + 1];
+        currentRun.value = newCurrentRun;
+
+        if (typeof cb === 'function') {
+            cb();
+        }
+    });
+
+    nodecg.listenFor('previousRun', function(cb) {
+        var prevIndex = currentRun.value.order - 2;
+        var newCurrentRun = clone(scheduleRep.value[prevIndex]);
+        newCurrentRun.nextRun = scheduleRep.value[prevIndex + 1];
+        currentRun.value = newCurrentRun;
+
+        if (typeof cb === 'function') {
+            cb();
+        }
+    });
+
+    nodecg.listenFor('setCurrentRunByOrder', function(order, cb) {
+        var newCurrentRun = clone(scheduleRep.value[order - 1]);
+        newCurrentRun.nextRun = scheduleRep.value[newCurrentRun.order];
+        currentRun.value = newCurrentRun;
+
+        if (typeof cb === 'function') {
+            cb();
+        }
+    });
+
     function update() {
         var deferred = Q.defer();
 
@@ -73,10 +106,35 @@ module.exports = function (nodecg) {
                 /* jshint +W106 */
 
                 // If no currentRun is set, set one
-                if (typeof(currentRun.value.game) === 'undefined') {
+                if (typeof(currentRun.value.name) === 'undefined') {
                     var cr = clone(formattedSchedule[0]);
                     if (formattedSchedule.length > 1) cr.nextRun = formattedSchedule[1];
                     currentRun.value = cr;
+                }
+
+                // Else, update the currentRun
+                else {
+                    // First, try to find the current run by name.
+                    var updatedCurrentRun = formattedSchedule.some(function(run) {
+                        if (run.name === currentRun.value.name) {
+                            var updatedCurrentRun = run;
+                            updatedCurrentRun.nextRun = formattedSchedule[updatedCurrentRun.order];
+                            currentRun.value = updatedCurrentRun;
+                            return true;
+                        }
+                    });
+
+                    // If that fails, try to update it by order.
+                    if (!updatedCurrentRun) {
+                        formattedSchedule.some(function(run) {
+                            if (run.order === currentRun.value.order) {
+                                var updatedCurrentRun = run;
+                                updatedCurrentRun.nextRun = formattedSchedule[updatedCurrentRun.order];
+                                currentRun.value = updatedCurrentRun;
+                                return true;
+                            }
+                        });
+                    }
                 }
 
                 scheduleRep.value = formattedSchedule;

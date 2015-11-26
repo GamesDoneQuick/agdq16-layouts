@@ -3,7 +3,7 @@
 
 var BIDS_URL = 'https://gamesdonequick.com/tracker/search/?type=allbids&event=17';
 var CURRENT_BIDS_URL = 'https://gamesdonequick.com/tracker/search/?type=allbids&feed=current&event=17';
-var POLL_INTERVAL = 3 * 60 * 1000;
+var POLL_INTERVAL = 60 * 1000;
 
 var format = require('util').format;
 var Q = require('q');

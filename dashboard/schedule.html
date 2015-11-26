@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="import" href="components/iron-flex-layout/classes/iron-flex-layout.html">
+    <link rel="import" href="components/iron-icons/iron-icons.html">
+    <link rel="import" href="components/paper-button/paper-button.html">
+    <link rel="import" href="components/nodecg-toast/nodecg-toast.html">
+    <link rel="import" href="components/nodecg-typeahead-input/nodecg-typeahead-input.html">
+    <link rel="import" href="elements/label-value.html">
+
+    <style>
+        paper-button {
+            display: block;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 8px;
+        }
+
+        h5 {
+            margin-bottom: 0;
+        }
+
+        hr {
+            box-sizing: content-box;
+            width: 90%;
+            height: 0;
+            border: 0;
+            border-top: 1px solid #9E9E9E;
+            margin-top: 21px;
+            margin-bottom: 21px;
+        }
+
+        #nextRun {
+            text-align: right;
+            height: 20px;
+        }
+
+        #take {
+            font-size: 14px;
+            height: 24px;
+            padding-right: 0;
+        }
+    </style>
+</head>
+<body>
+<nodecg-toast id="toast"></nodecg-toast>
+
+    <div class="layout horizontal">
+        <!-- Left Column -->
+        <div class="flex" style="margin-right: 6px;">
+            <paper-button id="update" class="nodecg-warning">Force Schedule Update</paper-button>
+
+            <h5>Sequential Select</h5>
+            <div class="layout horizontal">
+                <paper-button id="previous" class="nodecg-info flex layout horizontal center-center"
+                              style="margin-right: 4px;">
+
+                    <iron-icon icon="arrow-back"></iron-icon>
+                    <span>Previous</span>
+                </paper-button>
+
+                <paper-button id="next" class="nodecg-info flex layout horizontal center-center"
+                              style="margin-left: 4px;">
+
+                    <span>Next</span>
+                    <iron-icon icon="arrow-forward"></iron-icon>
+                </paper-button>
+            </div>
+
+            <div class="layout horizontal justified">
+                <span class="flex-none">Next Run:</span>
+                <b id="nextRun"></b>
+            </div>
+
+            <!-- Divider -->
+            <hr>
+
+            <div class="layout horizontal end">
+                <nodecg-typeahead-input id="typeahead" max-suggestions="3" placeholder="Search">
+                </nodecg-typeahead-input>
+
+                <paper-button id="take" class="nodecg-success flex layout horizontal center-center"
+                              style="margin-left: 6px;">
+
+                    <span>Take</span>
+                    <iron-icon icon="chevron-right"></iron-icon>
+                </paper-button>
+            </div>
+
+        </div>
+
+        <!-- Right Column -->
+        <div class="flex" style="margin-left: 6px;">
+            <h5>Current Run Info</h5>
+
+            <div class="layout vertical">
+                <label-value label="Name"></label-value>
+                <label-value label="Console"></label-value>
+                <label-value label="Runners"></label-value>
+                <label-value label="Estimate"></label-value>
+                <label-value label="Category"></label-value>
+                <label-value label="Order"></label-value>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var toast = document.getElementById('toast');
+        var update = document.getElementById('update');
+
+        update.addEventListener('click', function() {
+            update.setAttribute('disabled', 'true');
+            nodecg.sendMessage('updateSchedule', function (err, updated) {
+                update.removeAttribute('disabled');
+
+                if (err) {
+                    console.error(err.message);
+                    toast.text = 'Error updating schedule. Check console.';
+                    toast.show();
+                    return;
+                }
+
+                if (updated) {
+                    console.info('[sgdq15-layouts] Schedule successfully updated');
+                    toast.text = 'Successfully updated schedule.';
+                    toast.show();
+                } else {
+                    console.info('[sgdq15-layouts] Schedule unchanged, not updated');
+                    toast.text = 'Schedule unchanged, not updated.';
+                    toast.show();
+                }
+            });
+        });
+
+        /* ----- */
+
+        var typeahead = document.getElementById('typeahead');
+        typeahead.addEventListener('keyup', function(e) {
+            // Enter key
+            if (e.which === 13 && typeahead.inputValue) {
+                takeTypeahead();
+            }
+        });
+
+        var schedule = nodecg.Replicant('schedule');
+        schedule.on('change', function(oldVal, newVal) {
+            typeahead.localCandidates = newVal.map(function(speedrun) {
+                return speedrun.name;
+            })
+        });
+
+        // This is quite inefficient, but it works for now.
+        var take = document.getElementById('take');
+        take.addEventListener('click', takeTypeahead);
+
+        function takeTypeahead() {
+            take.setAttribute('disabled', 'true');
+
+            var nameToFind = typeahead.inputValue;
+
+            // Find the run based on the name.
+            var matched = schedule.value.some(function(run) {
+                if (run.name === nameToFind) {
+                    nodecg.sendMessage('setCurrentRunByOrder', run.order, function() {
+                        take.removeAttribute('disabled');
+                        typeahead.inputValue = '';
+                        typeahead._suggestions = [];
+                    });
+                    return true;
+                }
+            });
+
+            if (!matched) {
+                take.removeAttribute('disabled');
+                toast.text = 'Could not find speedrun with name "' + nameToFind + '".';
+                toast.show();
+            }
+        }
+
+        /* ----- */
+
+        var nextBtn = document.getElementById('next');
+        var previousBtn = document.getElementById('previous');
+        var nextRunSpan = document.getElementById('nextRun');
+
+        nextBtn.addEventListener('click', function() {
+            nextBtn.setAttribute('disabled', 'true');
+            nodecg.sendMessage('nextRun');
+        });
+
+        previousBtn.addEventListener('click', function() {
+            previousBtn.setAttribute('disabled', 'true');
+            nodecg.sendMessage('previousRun');
+        });
+
+        var currentRun = nodecg.Replicant('currentRun');
+        var runInfoName = document.querySelector('label-value[label="Name"]');
+        var runInfoConsole = document.querySelector('label-value[label="Console"]');
+        var runInfoRunners = document.querySelector('label-value[label="Runners"]');
+        var runInfoEstimate = document.querySelector('label-value[label="Estimate"]');
+        var runInfoCategory = document.querySelector('label-value[label="Category"]');
+        var runInfoOrder = document.querySelector('label-value[label="Order"]');
+        currentRun.on('change', function(oldVal, newVal) {
+            if (!newVal) return;
+
+            runInfoName.value = newVal.name;
+            runInfoConsole.value = newVal.console;
+            runInfoRunners.value = newVal.runners;
+            runInfoEstimate.value = newVal.estimate;
+            runInfoCategory.value = newVal.category;
+            runInfoOrder.value = newVal.order;
+
+            if (newVal.nextRun) {
+                nextRunSpan.innerText = newVal.nextRun.name
+            } else {
+                nextRunSpan.innerText = 'None';
+            }
+
+            // Disable "prev" button if at start of schedule
+            if (newVal.order <= 1) {
+                previousBtn.setAttribute('disabled', 'true');
+            } else {
+                previousBtn.removeAttribute('disabled');
+            }
+
+            // Disable "next" button if at end of schedule
+            if (schedule.value && newVal.order >= schedule.value.length) {
+                nextBtn.setAttribute('disabled', 'true');
+            } else {
+                nextBtn.removeAttribute('disabled');
+            }
+        });
+    </script>
+</body>
+</html>

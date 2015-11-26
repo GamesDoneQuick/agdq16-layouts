@@ -10,6 +10,15 @@
   "license": "Apache-2.0",
   "nodecg": {
     "compatibleRange": "~0.7.0",
+    "dashboardPanels": [
+      {
+        "name": "schedule",
+        "title": "Schedule",
+        "width": 4,
+        "headerColor": "#2d4e8a",
+        "file": "schedule.html"
+      }
+    ],
     "graphics": [
       {
         "file": "index.html",
