@@ -161,7 +161,7 @@
 
             // Find the run based on the name.
             var matched = schedule.value.some(function(run) {
-                if (run.name === nameToFind) {
+                if (run.name.toLowerCase() === nameToFind.toLowerCase()) {
                     nodecg.sendMessage('setCurrentRunByOrder', run.order, function() {
                         take.removeAttribute('disabled');
                         typeahead.inputValue = '';
