@@ -10,9 +10,9 @@ define([
     return function() {
         setBackground(LAYOUT_NAME);
         setSpeedRunDimensions(442, 154, 396, 179, {
-            consolePosition: 'left',
             nameY: 17,
-            categoryY: 84
+            categoryY: 84,
+            showEstimate: true
         });
     };
 });

@@ -47,8 +47,6 @@ define([
     var categoryContainer = new createjs.Container();
     categoryContainer.x = -2; // Hide the left stroke
 
-    var categoryShadow = shadow;
-
     var category = new createjs.Text('', '600 18px proxima-nova', 'black');
     category.x = 34;
     category.y = 4;
@@ -64,12 +62,30 @@ define([
 
     /* ----- */
 
+    var estimateContainer = new createjs.Container();
+
+    var estimate = new createjs.Text('', '600 18px proxima-nova', 'black');
+    estimate.textAlign = 'right';
+    estimate.y = 4;
+
+    var estimateBackground = new createjs.Shape();
+    estimateBackground.graphics
+        .beginStroke('#0075a1')
+        .beginFill('white')
+        .drawRect(0, 0, 0, 31);
+    var estimateRect = estimateBackground.graphics.command;
+
+    estimateContainer.addChild(estimateBackground, estimate);
+    window.estimateContainer = estimateContainer;
+
+    /* ----- */
+
     var consoleBitmap = new createjs.Bitmap(preloader.getResult('console-psp'));
 
     /* ----- */
 
     var foreground = new createjs.Container();
-    foreground.addChild(name, categoryContainer, consoleBitmap);
+    foreground.addChild(name, categoryContainer, estimateContainer, consoleBitmap);
 
     /* ----- */
 
@@ -199,18 +215,23 @@ define([
         redrawBoxartAfterImageLoad();
 
         name.text = newVal.name.toUpperCase();
-        //name.text = 'INDIANA JONES AND THE\nTEMPLE OF DOOM (2008)';
-        //name.text = 'INK';
-        //name.text = 'A LONGER ONE LINE NAME THATS REALLY LONG';
 
         category.text = newVal.category;
         categoryRect.w = category.x + category.getBounds().width + 43;
+
+        estimate.text = newVal.estimate;
+        estimateRect.w = category.x + estimate.getBounds().width + 43;
+        estimate.x = estimateRect.w - 34;
+        estimateContainer.regX = estimateRect.w - 2;
 
         // EaselJS has problems applying  shadows to stroked graphics.
         // To work around this, we remove the shadow, cache the graphic, then apply the shadow to the cache.
         categoryBackground.shadow = null;
         categoryBackground.cache(0, 0, categoryRect.w, categoryRect.h);
-        categoryBackground.shadow = categoryShadow;
+        categoryBackground.shadow = shadow;
+        estimateBackground.shadow = null;
+        estimateBackground.cache(0, 0, estimateRect.w, estimateRect.h);
+        estimateBackground.shadow = shadow;
 
         calcAndSetNameStyle();
         recacheForeground();
@@ -228,10 +249,18 @@ define([
      *  @param {Number} opts.nameMaxHeight - The maximum height of the name.
      *  @param {Number} opts.categoryY - Hor far from the top to place the category.
      *  @param {Number} [opts.scale=1] - The scale to draw all the individual elements at.
-     *  @param {String} [opts.consolePosition="right"] - Where to put the console icon. Bottom left or bottom right.
+     *  @param {Boolean} [opts.showEstimate] - Whether or not to show the run's estimate.
      */
     return function (x, y, w, h, opts) {
         console.log('setSpeedRunDimensions | x: %s, y: %s, w: %s, h: %s', x, y, w, h);
+
+        if (typeof opts.nameY === 'undefined') {
+            throw new Error('opts.nameY must be defined');
+        } else if (typeof opts.nameMaxHeight === 'undefined') {
+            throw new Error('opts.nameMaxHeight must be defined');
+        } else if (typeof opts.categoryY === 'undefined') {
+            throw new Error('opts.categoryY must be defined');
+        }
 
         gOpts = opts;
         opts.scale = opts.scale || 1;
@@ -253,14 +282,18 @@ define([
 
         categoryContainer.y = opts.categoryY;
 
-        if (opts.consolePosition === 'left') {
+        if (opts.showEstimate) {
+            estimateContainer.visible = true;
+            estimateContainer.x = gWidth;
+            estimateContainer.y = categoryContainer.y + categoryRect.h + 14;
+            estimate.x = estimateRect.w - 34;
+
+            consoleBitmap.y = estimateContainer.y;
             consoleBitmap.regX = 0;
-            consoleBitmap.regY = CONSOLE_WIDTH - 4;
             consoleBitmap.x = 8;
-            consoleBitmap.y = h - 8;
         } else {
+            estimateContainer.visible = false;
             consoleBitmap.regX = CONSOLE_WIDTH-4;
-            consoleBitmap.regY = 0;
             consoleBitmap.x = w - 8;
             consoleBitmap.y = categoryContainer.y;
         }
