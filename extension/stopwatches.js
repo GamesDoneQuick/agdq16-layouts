@@ -92,15 +92,31 @@ module.exports = function (nodecg) {
         }
     }
 
-    function resetStopwatch(index) {
+    function resetStopwatch(index, cb) {
         if (index === 'all') {
             rieussecs.forEach(function(sw) { sw.reset(); });
+
+            if (typeof cb === 'function') {
+                cb();
+            }
+
             return stopwatches.value;
         } else if (index >= 0 && index < NUM_STOPWATCHES) {
             rieussecs[index].reset();
+
+            if (typeof cb === 'function') {
+                cb();
+            }
+
             return stopwatches.value[index];
         } else {
             nodecg.log.error('index "%d" sent to "resetTime" is out of bounds', index);
+
+            // TODO: This should display some kind of error in the reset-stopwatch dialog.
+            if (typeof cb === 'function') {
+                cb();
+            }
+
             return false;
         }
     }

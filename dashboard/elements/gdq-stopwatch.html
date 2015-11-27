@@ -187,12 +187,10 @@
         },
 
         tapReset: function() {
-            this.$.resetDialog.open();
-        },
-
-        tapConfirmReset: function() {
-            nodecg.sendMessage('resetTime', this.index);
-            this.$.resetDialog.close();
+            var resetDialog = window.top.document.getElementById('agdq16-layouts_reset-stopwatch');
+            var reseDialogWindow = resetDialog.querySelector('iframe').contentWindow;
+            reseDialogWindow.setInfo(this.runner, this.index);
+            resetDialog.open();
         }
     });
 })();

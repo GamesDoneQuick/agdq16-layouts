@@ -35,6 +35,12 @@
         "width": 2,
         "dialog": true,
         "file": "dialogs/edit-stopwatch.html"
+      },{
+        "name": "reset-stopwatch",
+        "title": "Reset Stopwatch",
+        "width": 3,
+        "dialog": true,
+        "file": "dialogs/reset-stopwatch.html"
       }
     ],
     "graphics": [
