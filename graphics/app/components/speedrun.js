@@ -271,8 +271,13 @@ define([
 
         stage.canvas.style.left = x + 'px';
         stage.canvas.style.top = y + 'px';
-        stage.canvas.width = w;
-        stage.canvas.height = h;
+
+        /* Okay, this is a new one.
+         * Enforcing a minimum canvas width of 330 and rounding the
+         * canvas height up to the nearest hundred seems to have a dramatic positive impact on performance.
+         */
+        stage.canvas.width = Math.max(w, 330);
+        stage.canvas.height = Math.max(Math.ceil(h/100)*100, 200);
 
         name.scaleX = name.scaleY = opts.scale;
         categoryContainer.scaleX = categoryContainer.scaleY = opts.scale;
