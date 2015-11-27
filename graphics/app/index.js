@@ -57,7 +57,8 @@
                     [
                         'components/background',
                         'components/speedrun',
-                        'layout'
+                        'layout',
+                        'obs'
                     ], function(bg, speedrun, layout) {
                         layout('3ds');
                         window.layout = layout;
