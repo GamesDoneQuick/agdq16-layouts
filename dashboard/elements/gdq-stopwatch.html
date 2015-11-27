@@ -17,7 +17,7 @@
         }
 
         :host[disabled] {
-            opacity: 0.6;
+            opacity: 0.3;
         }
 
         #status {
@@ -49,19 +49,21 @@
 
         #controls iron-icon {
             cursor: pointer;
-            width: 32px;
-            height: 32px;
+            --iron-icon-height: 32px;
+            --iron-icon-width: 32px;
         }
 
         #minorControls {
             margin-left: 6px;
+            padding-left: 6px;
+            border-left: 1px solid #9E9E9E;
             @apply(--layout-vertical);
             @apply(--layout-justified);
         }
 
         #minorControls iron-icon {
-            width: 20px;
-            height: 20px;
+            --iron-icon-height: 20px;
+            --iron-icon-width: 20px;
         }
 
         #play {color: #43ac6a;}
@@ -72,12 +74,19 @@
 
         #pause:hover {color: #b67102;}
 
+        #edit,
         #reset {
-            color: #f04124;
-            transform: scaleX(-1);
+            color: var(--nodecg-configure-color);
         }
 
-        #reset:hover {color: #d32a0e;}
+        #edit:hover,
+        #reset:hover {
+            color: var(--nodecg-configure-color--dark);
+        }
+
+        #reset {
+            transform: scaleX(-1);
+        }
 
         time-only {display: none;}
     </style>
@@ -90,7 +99,7 @@
         <div id="controls">
             <iron-icon id="play" icon="av:play-arrow" title="Start/Resume" on-tap="tapPlay"></iron-icon>
             <iron-icon id="pause" icon="av:pause" title="Pause" on-tap="tapPause"></iron-icon>
-            <iron-icon id="finish" icon="flag" title="Finish" on-tap="tapFinish"></iron-icon>
+            <iron-icon id="finish" src="../img/checkered_flag.png" title="Finish" on-tap="tapFinish"></iron-icon>
 
             <div id="minorControls">
                 <iron-icon id="edit" icon="editor:mode-edit" title="Edit" on-tap="tapEdit"></iron-icon>

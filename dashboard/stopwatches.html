@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="import" href="elements/gdq-stopwatch.html">
+    <link rel="import" href="components/iron-flex-layout/classes/iron-flex-layout.html">
+    <link rel="import" href="components/paper-button/paper-button.html">
     <link rel="stylesheet" href="shared-panel-styles.css">
 </head>
 <body>
@@ -10,5 +12,11 @@
     <gdq-stopwatch index="1"></gdq-stopwatch>
     <gdq-stopwatch index="2"></gdq-stopwatch>
     <gdq-stopwatch index="3"></gdq-stopwatch>
+
+    <div id="globalButtons" class="layout horizontal">
+        <paper-button class="nodecg-success flex" style="margin-right: 3px;">Start All</paper-button>
+        <paper-button class="nodecg-warning flex" style="margin-right: 3px; margin-left: 3px;">Pause All</paper-button>
+        <paper-button class="nodecg-danger flex" style="margin-left: 3px;">Reset All</paper-button>
+    </div>
 </body>
 </html>
