@@ -11,7 +11,8 @@ define([
         setBackground(LAYOUT_NAME);
         setSpeedRunDimensions(882, 291, 398, 127, {
             nameY: 18,
-            categoryY: 80
+            categoryY: 80,
+            nameMaxHeight: 80
         });
     };
 });

@@ -12,7 +12,7 @@ define([
         setSpeedRunDimensions(950, 0, 330, 146, {
             scale: 0.834,
             nameY: 26,
-            nameMaxHeight: 50,
+            nameMaxHeight: 80,
             categoryY: 97
         });
     };

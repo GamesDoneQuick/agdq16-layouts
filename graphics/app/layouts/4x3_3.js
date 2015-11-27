@@ -12,7 +12,8 @@ define([
         setSpeedRunDimensions(442, 154, 396, 179, {
             nameY: 17,
             categoryY: 84,
-            showEstimate: true
+            showEstimate: true,
+            nameMaxHeight: 80
         });
     };
 });

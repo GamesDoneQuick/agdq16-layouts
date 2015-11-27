@@ -10,8 +10,9 @@ define([
     return function() {
         setBackground(LAYOUT_NAME);
         setSpeedRunDimensions(975, 0, 305, 151, {
-            nameY: 31,
-            categoryY: 89
+            nameY: 29,
+            categoryY: 89,
+            nameMaxHeight: 70
         });
     };
 });
