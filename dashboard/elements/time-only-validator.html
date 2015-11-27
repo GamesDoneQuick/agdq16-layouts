@@ -1,0 +1,17 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/iron-validator-behavior/iron-validator-behavior.html">
+
+<script>
+    // Create a "time" validator to be used in the "editDialog" modal
+    Polymer({
+        is: 'time-only',
+        behaviors: [
+            Polymer.IronValidatorBehavior
+        ],
+        validate: function(value) {
+            if (typeof value !== 'string') return false;
+            var valid = /^\d{2}:\d{2}:\d{2}$/.test(value);
+            return valid;
+        }
+    });
+</script>

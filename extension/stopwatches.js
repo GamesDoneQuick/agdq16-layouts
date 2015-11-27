@@ -1,6 +1,5 @@
 'use strict';
 
-var app = require('express')();
 var Rieussec = require('rieussec');
 var NUM_STOPWATCHES = 4;
 
@@ -14,7 +13,7 @@ module.exports = function (nodecg) {
     nodecg.Replicant('currentRun')
         .on('change', function(oldVal, newVal) {
             newVal.runners.forEach(function(runner, index) {
-                stopwatches.value[index].runner = runner;
+                stopwatches.value[index].runnerName = runner.name || '?';
             });
         });
 
@@ -23,7 +22,7 @@ module.exports = function (nodecg) {
         stopwatch.state = stopwatch.time === '00:00:00' ? 'stopped' : 'paused';
     });
 
-    // Make an array of 4 Rieussec rieussecs
+    // Make an array of 4 Rieussec stopwatches
     var rieussecs = [null, null, null, null].map(function(val, index) {
         // Load the existing time and start the stopwatch at that.
         var startMs = 0;
@@ -66,7 +65,7 @@ module.exports = function (nodecg) {
         }
     }
 
-    function pauseStopwatch (index) {
+    function pauseStopwatch(index) {
         if (index === 'all') {
             rieussecs.forEach(function(sw) { sw.pause(); });
             return stopwatches.value;
@@ -79,7 +78,7 @@ module.exports = function (nodecg) {
         }
     }
 
-    function finishStopwatch (index) {
+    function finishStopwatch(index) {
         if (index === 'all') {
             rieussecs.forEach(function(sw) { sw.pause(); });
             return stopwatches.value;
@@ -93,7 +92,7 @@ module.exports = function (nodecg) {
         }
     }
 
-    function resetStopwatch (index) {
+    function resetStopwatch(index) {
         if (index === 'all') {
             rieussecs.forEach(function(sw) { sw.reset(); });
             return stopwatches.value;
@@ -129,7 +128,7 @@ module.exports = function (nodecg) {
         }
     }
 
-    function setStopwatch (data) {
+    function setStopwatch (data, cb) {
         var index = data.index;
         if (index >= 0 && index < NUM_STOPWATCHES) {
             // Pause all timers while we do our work.
@@ -155,9 +154,19 @@ module.exports = function (nodecg) {
                 }
             });
 
+            if (typeof cb === 'function') {
+                cb();
+            }
+
             return stopwatches.value[index];
         } else {
             nodecg.log.error('index "%d" sent to "setTime" is out of bounds', index);
+
+            // TODO: This should display some kind of error in the edit-stopwatch dialog.
+            if (typeof cb === 'function') {
+                cb();
+            }
+
             return false;
         }
     }
@@ -166,11 +175,13 @@ module.exports = function (nodecg) {
         nodecg.log.warn('"enableRestApi" is true, the stopwatch REST API will be active.');
         nodecg.log.warn('This API is COMPLETELY INSECURE. ONLY USE IT ON A SECURE LOCAL NETWORK.');
 
-        app.get('/sgdq15-layouts/stopwatches', function (req, res) {
+        var app = require('express')();
+
+        app.get('/agdq16-layouts/stopwatches', function (req, res) {
             res.json(stopwatches.value);
         });
 
-        app.put('/sgdq15-layouts/stopwatch/:index/start', function (req, res) {
+        app.put('/agdq16-layouts/stopwatch/:index/start', function (req, res) {
             var result = startStopwatch(req.params.index);
             if (result) {
                 res.status(200).json(result);
@@ -179,7 +190,7 @@ module.exports = function (nodecg) {
             }
         });
 
-        app.put('/sgdq15-layouts/stopwatch/:index/pause', function (req, res) {
+        app.put('/agdq16-layouts/stopwatch/:index/pause', function (req, res) {
             var result = pauseStopwatch(req.params.index);
             if (result) {
                 res.status(200).json(result);
@@ -188,7 +199,7 @@ module.exports = function (nodecg) {
             }
         });
 
-        app.put('/sgdq15-layouts/stopwatch/:index/finish', function (req, res) {
+        app.put('/agdq16-layouts/stopwatch/:index/finish', function (req, res) {
             var result = finishStopwatch(req.params.index);
             if (result) {
                 res.status(200).json(result);
@@ -197,7 +208,7 @@ module.exports = function (nodecg) {
             }
         });
 
-        app.put('/sgdq15-layouts/stopwatch/:index/reset', function (req, res) {
+        app.put('/agdq16-layouts/stopwatch/:index/reset', function (req, res) {
             var result = resetStopwatch(req.params.index);
             if (result) {
                 res.status(200).json(result);
@@ -206,7 +217,7 @@ module.exports = function (nodecg) {
             }
         });
 
-        app.put('/sgdq15-layouts/stopwatch/:index/startfinish', function (req, res) {
+        app.put('/agdq16-layouts/stopwatch/:index/startfinish', function (req, res) {
             var result = startFinishStopwatch(req.params.index);
             if (result) {
                 res.status(200).json(result);

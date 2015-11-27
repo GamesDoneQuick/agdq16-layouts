@@ -1,0 +1,199 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/iron-icons/iron-icons.html">
+<link rel="import" href="../components/iron-icons/av-icons.html">
+<link rel="import" href="../components/iron-icons/editor-icons.html">
+<link rel="import" href="../components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../components/paper-button/paper-button.html">
+<link rel="import" href="../components/paper-input/paper-input.html">
+<link rel="import" href="time-only-validator.html">
+
+<dom-module id="gdq-stopwatch">
+    <style>
+        :host {
+            @apply(--layout-horizontal);
+            @apply(--layout-center);
+            height: 46px;
+            margin-bottom: 8px;
+        }
+
+        :host[disabled] {
+            opacity: 0.6;
+        }
+
+        #status {
+            @apply(--layout-vertical);
+            @apply(--layout-flex);
+            font-size: 1.1em;
+            padding-right: 0.5em;
+        }
+
+        #time {
+            font-weight: bold;
+            margin-bottom: -2px;
+        }
+
+        #runner {
+            font-size: smaller;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .btn {font-size: 11px;}
+
+        #controls {
+            @apply(--layout-horizontal);
+            @apply(--layout-center);
+            @apply(--layout-flex-none);
+        }
+
+        #controls iron-icon {
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+        }
+
+        #minorControls {
+            margin-left: 6px;
+            @apply(--layout-vertical);
+            @apply(--layout-justified);
+        }
+
+        #minorControls iron-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        #play {color: #43ac6a;}
+
+        #play:hover {color: #358753;}
+
+        #pause {color: #e99002; }
+
+        #pause:hover {color: #b67102;}
+
+        #reset {
+            color: #f04124;
+            transform: scaleX(-1);
+        }
+
+        #reset:hover {color: #d32a0e;}
+
+        time-only {display: none;}
+    </style>
+
+    <template>
+        <div id="status">
+            <span id="time">{{time}}</span>
+            <span id="runner" title="{{runner}}">{{runner}}</span>
+        </div>
+        <div id="controls">
+            <iron-icon id="play" icon="av:play-arrow" title="Start/Resume" on-tap="tapPlay"></iron-icon>
+            <iron-icon id="pause" icon="av:pause" title="Pause" on-tap="tapPause"></iron-icon>
+            <iron-icon id="finish" icon="flag" title="Finish" on-tap="tapFinish"></iron-icon>
+
+            <div id="minorControls">
+                <iron-icon id="edit" icon="editor:mode-edit" title="Edit" on-tap="tapEdit"></iron-icon>
+                <iron-icon id="reset" icon="refresh" title="Reset" on-tap="tapReset"></iron-icon>
+            </div>
+        </div>
+    </template>
+</dom-module>
+
+<script>
+(function() {
+    Polymer({
+        is: 'gdq-stopwatch',
+
+        properties: {
+            index: Number,
+            running: {
+                type: Boolean,
+                value: false,
+                readOnly: true,
+                observer: 'runningChanged'
+            },
+            time: String,
+            runner: String
+        },
+
+        runningChanged: function(newVal) {
+            this.$.play.style.display = newVal ? 'none' : 'inline-block';
+            this.$.pause.style.display = newVal ? 'inline-block' : 'none';
+        },
+
+        /*
+         * Lifecycle
+         */
+        ready: function() {
+            var self = this;
+
+            nodecg.Replicant('stopwatches').on('change', function(oldVal, newVal) {
+                if (!newVal) {
+                    return;
+                } else if (!newVal[self.index]) {
+                    throw new Error('Index "%s" out of bounds (replicant length: %d',
+                            self.index, newVal.length);
+                }
+
+                self.time = newVal[self.index].time;
+                self.runner = newVal[self.index].runnerName;
+                self._setRunning(newVal[self.index].state === 'running');
+
+                switch (newVal[self.index].state) {
+                    case 'paused':
+                        self.$.time.style.color = '#6b8b95';
+                        break;
+                    case 'finished':
+                        self.$.time.style.color = '#29813f';
+                        break;
+                    default:
+                        self.$.time.style.color = 'black';
+                }
+            });
+
+            nodecg.Replicant('currentRun').on('change', function(oldVal, newVal) {
+                if (!newVal) return;
+
+                // Hide the entire element if there is no runner at this index.
+                if (newVal.runners[self.index]) {
+                    self.removeAttribute('disabled');
+                } else {
+                    self.setAttribute('disabled', true);
+                }
+            });
+        },
+
+        /*
+         * Events
+         */
+        tapEdit: function() {
+            var editDialog = window.top.document.getElementById('agdq16-layouts_edit-stopwatch');
+            var editDialogWindow = editDialog.querySelector('iframe').contentWindow;
+            editDialogWindow.setInfo(this.time, this.runner, this.index);
+            editDialog.open();
+        },
+
+        tapPlay: function() {
+            nodecg.sendMessage('startTime', this.index);
+        },
+
+        tapPause: function() {
+            nodecg.sendMessage('pauseTime', this.index);
+        },
+
+        tapFinish: function() {
+            nodecg.sendMessage('finishTime', this.index);
+        },
+
+        tapReset: function() {
+            this.$.resetDialog.open();
+        },
+
+        tapConfirmReset: function() {
+            nodecg.sendMessage('resetTime', this.index);
+            this.$.resetDialog.close();
+        }
+    });
+})();
+</script>

@@ -1,12 +1,15 @@
 {
   "name": "agdq16-layouts",
   "dependencies": {
-    "gsap": "^1.18.0",
     "EaselJS": "0.8.1",
+    "gsap": "1.18.0",
+    "iron-icons": "PolymerElements/iron-icons#1.0.5",
+    "iron-validator-behavior": "PolymerElements/iron-validator-behavior#1.0.1",
+    "nodecg-toast": "NodeCGElements/nodecg-toast#0.1.2",
+    "obs-remote": "1.0.1",
+    "paper-button": "PolymerElements/paper-button#1.0.8",
+    "paper-input": "PolymerElements/paper-input#1.1.1",
     "PreloadJS": "0.6.1",
-    "paper-button": "PolymerElements/paper-button#~1.0.8",
-    "nodecg-toast": "NodeCGElements/nodecg-toast#~0.1.2",
-    "iron-icons": "PolymerElements/iron-icons#~1.0.5",
-    "obs-remote": "~1.0.1"
+    "nodecg-typeahead-input": "NodeCGElements/nodecg-typeahead-input#~0.1.1"
   }
 }

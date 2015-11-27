@@ -3,7 +3,7 @@
 
 var BIDS_URL = 'https://gamesdonequick.com/tracker/search/?type=allbids&event=17';
 var CURRENT_BIDS_URL = 'https://gamesdonequick.com/tracker/search/?type=allbids&feed=current&event=17';
-var POLL_INTERVAL = 60 * 1000;
+var POLL_INTERVAL = 1 * 60 * 1000;
 
 var format = require('util').format;
 var Q = require('q');
@@ -76,10 +76,12 @@ module.exports = function (nodecg) {
             var childBids = [];
             bids.forEach(function(bid) {
                 // If this bid is an option for a donation war, add it to childBids array.
-                // Else, add it to the parentBidsById object.
                 if (bid.fields.parent) {
                     childBids.push(bid);
-                } else {
+                }
+
+                // Else, add it to the parentBidsById object.
+                else {
                     // Format the bid to clean up unneeded cruft.
                     var formattedParentBid = {
                         id: bid.pk,

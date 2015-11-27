@@ -1,0 +1,20 @@
+paper-button {
+    display: block;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 8px;
+}
+
+h5 {
+    margin-bottom: 0;
+}
+
+hr {
+    box-sizing: content-box;
+    width: 90%;
+    height: 0;
+    border: 0;
+    border-top: 1px solid #9E9E9E;
+    margin-top: 21px;
+    margin-bottom: 21px;
+}

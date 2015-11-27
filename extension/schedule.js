@@ -120,7 +120,7 @@ module.exports = function (nodecg) {
 
                     // If that fails, try to update it by order.
                     if (!updatedCurrentRun) {
-                        updatedCurrentRun = formattedSchedule.some(function(run) {
+                        formattedSchedule.some(function(run) {
                             if (run.order === currentRun.value.order) {
                                 _setCurrentRun(run);
                                 return true;
