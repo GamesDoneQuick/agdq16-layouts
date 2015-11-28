@@ -2,10 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="import" href="../../components/iron-flex-layout/classes/iron-flex-layout.html">
+    <link rel="import" href="../../components/paper-button/paper-button.html">
+    <link rel="import" href="../../components/paper-dialog/paper-dialog.html">
+    <link rel="import" href="/dashboard/style/nodecg-styles.html">
     <link rel="import" href="elements/gdq-stopwatch.html">
-    <link rel="import" href="components/iron-flex-layout/classes/iron-flex-layout.html">
-    <link rel="import" href="components/paper-button/paper-button.html">
-    <link rel="stylesheet" href="shared-panel-styles.css">
+    <link rel="import" href="elements/time-only-validator.html">
+
     <style is="custom-style">
         #globalButtons paper-button {
             font-size: 12px;
@@ -68,24 +71,32 @@
         </paper-button>
     </div>
 
-    <script>
-        var startAll = document.getElementById('startAll');
-        startAll.addEventListener('click', function() {
-            nodecg.sendMessage('startTime', 'all');
-        });
+    <paper-dialog id="editDialog" with-backdrop>
+        <h2>Edit Stopwatch</h2>
 
-        var pauseAll = document.getElementById('pauseAll');
-        pauseAll.addEventListener('click', function() {
-            nodecg.sendMessage('pauseTime', 'all');
-        });
+        <!-- Initialize the "time-only" validator so that we may use it -->
+        <time-only></time-only>
 
-        var resetAll = document.getElementById('resetAll');
-        resetAll.addEventListener('click', function() {
-            var resetDialog = window.top.document.getElementById('agdq16-layouts_reset-stopwatch');
-            var reseDialogWindow = resetDialog.querySelector('iframe').contentWindow;
-            reseDialogWindow.setInfo('everyone', 'all');
-            resetDialog.open();
-        });
-    </script>
+        <paper-input id="editInput" label="Time" validator="time-only" auto-validate
+                     error-message="Should be formatted as HH:MM:SS"></paper-input>
+
+        <div class="buttons">
+            <paper-button dialog-dismiss autofocus>Cancel</paper-button>
+            <paper-button id="confirmEdit">Save</paper-button>
+        </div>
+    </paper-dialog>
+
+    <paper-dialog id="resetDialog" with-backdrop>
+        <h2>Reset <b class="runnerName"></b>'s Stopwatch</h2>
+
+        <p>Are you sure you wish to reset <b class="runnerName"></b>'s stopwatch to 00:00:00?</p>
+
+        <div class="buttons">
+            <paper-button dialog-dismiss autofocus>No, Cancel</paper-button>
+            <paper-button id="confirmReset">Yes, Reset</paper-button>
+        </div>
+    </paper-dialog>
+
+    <script src="stopwatches.js"></script>
 </body>
 </html>

@@ -18,34 +18,20 @@
         "headerColor": "#2d4e8a",
         "file": "schedule.html"
       },{
-        "name": "stopwatches",
-        "title": "Stopwatches",
-        "width": 2,
-        "headerColor": "#2d4e8a",
-        "file": "stopwatches.html"
-      },{
         "name": "edit-current-run",
         "title": "Edit Current Run",
         "width": 4,
         "dialog": true,
         "file": "dialogs/edit-current-run.html"
-      },{
-        "name": "edit-stopwatch",
-        "title": "Edit Stopwatch",
-        "width": 2,
-        "dialog": true,
-        "file": "dialogs/edit-stopwatch.html"
-      },{
-        "name": "reset-stopwatch",
-        "title": "Reset Stopwatch",
-        "width": 3,
-        "dialog": true,
-        "file": "dialogs/reset-stopwatch.html"
       }
     ],
     "graphics": [
       {
         "file": "index.html",
+        "width": 1280,
+        "height": 720
+      },{
+        "file": "custom_controls/stopwatches/index.html",
         "width": 1280,
         "height": 720
       }

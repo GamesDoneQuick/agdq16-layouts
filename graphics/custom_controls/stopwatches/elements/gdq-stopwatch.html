@@ -1,10 +1,10 @@
-<link rel="import" href="../components/polymer/polymer.html">
-<link rel="import" href="../components/iron-icons/iron-icons.html">
-<link rel="import" href="../components/iron-icons/av-icons.html">
-<link rel="import" href="../components/iron-icons/editor-icons.html">
-<link rel="import" href="../components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../components/paper-button/paper-button.html">
-<link rel="import" href="../components/paper-input/paper-input.html">
+<link rel="import" href="../../../components/polymer/polymer.html">
+<link rel="import" href="../../../components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../components/iron-icons/av-icons.html">
+<link rel="import" href="../../../components/iron-icons/editor-icons.html">
+<link rel="import" href="../../../components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../components/paper-button/paper-button.html">
+<link rel="import" href="../../../components/paper-input/paper-input.html">
 <link rel="import" href="time-only-validator.html">
 
 <dom-module id="gdq-stopwatch">
@@ -99,7 +99,7 @@
         <div id="controls">
             <iron-icon id="play" icon="av:play-arrow" title="Start/Resume" on-tap="tapPlay"></iron-icon>
             <iron-icon id="pause" icon="av:pause" title="Pause" on-tap="tapPause"></iron-icon>
-            <iron-icon id="finish" src="../img/checkered_flag.png" title="Finish" on-tap="tapFinish"></iron-icon>
+            <iron-icon id="finish" src="checkered_flag.png" title="Finish" on-tap="tapFinish"></iron-icon>
 
             <div id="minorControls">
                 <iron-icon id="edit" icon="editor:mode-edit" title="Edit" on-tap="tapEdit"></iron-icon>
@@ -177,9 +177,8 @@
          * Events
          */
         tapEdit: function() {
-            var editDialog = window.top.document.getElementById('agdq16-layouts_edit-stopwatch');
-            var editDialogWindow = editDialog.querySelector('iframe').contentWindow;
-            editDialogWindow.setInfo(this.time, this.runner, this.index);
+            var editDialog = document.getElementById('editDialog');
+            window.setDialogInfo(this.index, this.runner, this.time);
             editDialog.open();
         },
 
@@ -196,9 +195,8 @@
         },
 
         tapReset: function() {
-            var resetDialog = window.top.document.getElementById('agdq16-layouts_reset-stopwatch');
-            var reseDialogWindow = resetDialog.querySelector('iframe').contentWindow;
-            reseDialogWindow.setInfo(this.runner, this.index);
+            var resetDialog = document.getElementById('resetDialog');
+            window.setDialogInfo(this.index, this.runner);
             resetDialog.open();
         }
     });
