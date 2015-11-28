@@ -17,11 +17,6 @@ module.exports = function (nodecg) {
             });
         });
 
-    // Make sure all timers are set to "paused"
-    stopwatches.value.forEach(function(stopwatch) {
-        stopwatch.state = stopwatch.time === '00:00:00' ? 'stopped' : 'paused';
-    });
-
     // Make an array of 4 Rieussec stopwatches
     var rieussecs = [null, null, null, null].map(function(val, index) {
         // Load the existing time and start the stopwatch at that.
@@ -29,14 +24,23 @@ module.exports = function (nodecg) {
         if (stopwatches.value[index].time) {
             var ts = stopwatches.value[index].time.split(':');
             startMs = Date.UTC(1970, 0, 1, ts[0], ts[1], ts[2]);
+            
+            if (stopwatches.value[index].lastTick) {
+                startMs += Date.now() - stopwatches.value[index].lastTick;
+            }
         }
 
         var rieussec = new Rieussec();
         rieussec.setMilliseconds(startMs);
 
+        if (stopwatches.value[index].state === 'running') {
+            rieussec.start();
+        }
+
         rieussec.on('tick', function(ms) {
             stopwatches.value[index].time = msToTime(ms);
             stopwatches.value[index].milliseconds = ms;
+            stopwatches.value[index].lastTick = Date.now();
         });
 
         rieussec.on('state', function(state) {
