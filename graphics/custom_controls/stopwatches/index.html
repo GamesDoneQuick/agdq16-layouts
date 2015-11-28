@@ -22,18 +22,6 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --paper-input-container-label: {
-                font-size: 1.3em;
-                line-height: 1.3em;
-            };
-
-            --paper-input-container-input: {
-                font-size: 1em;
-                line-height: 1em;
-            };
-        }
-
         #globalButtons {
             border-top: 1px solid #9E9E9E;
             padding-top: 1em;
@@ -45,7 +33,7 @@
 
         #globalButtons paper-button {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             align-items: center;
             color: white;
         }
@@ -53,6 +41,7 @@
         #globalButtons iron-icon {
             --iron-icon-height: 2em;
             --iron-icon-width: 2em;
+            margin-right: 0.2em;
         }
 
         #startAll {
@@ -81,18 +70,6 @@
 
         #resetAll:hover {
             background-color: var(--nodecg-configure-color--dark);
-        }
-
-        paper-dialog {
-            --paper-dialog: {
-                font-size: 1em;
-                line-height: 1em;
-            }
-        }
-
-        paper-dialog h2 {
-            font-size: 1.6em;
-            line-height: 1.6em;
         }
     </style>
 </head>
