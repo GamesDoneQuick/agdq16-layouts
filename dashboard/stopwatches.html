@@ -6,6 +6,44 @@
     <link rel="import" href="components/iron-flex-layout/classes/iron-flex-layout.html">
     <link rel="import" href="components/paper-button/paper-button.html">
     <link rel="stylesheet" href="shared-panel-styles.css">
+    <style is="custom-style">
+        #globalButtons paper-button {
+            font-size: 12px;
+            margin-bottom: 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            color: white;
+        }
+
+        #startAll {
+            margin-right: 3px;
+            background-color: #43ac6a;
+        }
+
+        #startAll:hover {
+            background-color: #358753;
+        }
+
+        #pauseAll {
+            margin-right: 3px;
+            margin-left: 3px;
+            background-color: #e99002;
+        }
+
+        #pauseAll:hover {
+            background-color: #b67102;
+        }
+
+        #resetAll {
+            margin-left: 3px;
+            background-color: var(--nodecg-configure-color);
+        }
+
+        #resetAll:hover {
+            background-color: var(--nodecg-configure-color--dark);
+        }
+    </style>
 </head>
 <body>
     <gdq-stopwatch index="0"></gdq-stopwatch>
@@ -14,9 +52,40 @@
     <gdq-stopwatch index="3"></gdq-stopwatch>
 
     <div id="globalButtons" class="layout horizontal">
-        <paper-button class="nodecg-success flex" style="margin-right: 3px;">Start All</paper-button>
-        <paper-button class="nodecg-warning flex" style="margin-right: 3px; margin-left: 3px;">Pause All</paper-button>
-        <paper-button class="nodecg-danger flex" style="margin-left: 3px;">Reset All</paper-button>
+        <paper-button id="startAll" class="flex">
+            <iron-icon icon="av:play-arrow" title="Start/Resume All"></iron-icon>
+            Start All
+        </paper-button>
+
+        <paper-button id="pauseAll" class="flex">
+            <iron-icon icon="av:pause" title="Start/Resume All"></iron-icon>
+            Pause All
+        </paper-button>
+
+        <paper-button id="resetAll" class="flex">
+            <iron-icon icon="refresh" title="Reset"></iron-icon>
+            Reset All
+        </paper-button>
     </div>
+
+    <script>
+        var startAll = document.getElementById('startAll');
+        startAll.addEventListener('click', function() {
+            nodecg.sendMessage('startTime', 'all');
+        });
+
+        var pauseAll = document.getElementById('pauseAll');
+        pauseAll.addEventListener('click', function() {
+            nodecg.sendMessage('pauseTime', 'all');
+        });
+
+        var resetAll = document.getElementById('resetAll');
+        resetAll.addEventListener('click', function() {
+            var resetDialog = window.top.document.getElementById('agdq16-layouts_reset-stopwatch');
+            var reseDialogWindow = resetDialog.querySelector('iframe').contentWindow;
+            reseDialogWindow.setInfo('everyone', 'all');
+            resetDialog.open();
+        });
+    </script>
 </body>
 </html>
