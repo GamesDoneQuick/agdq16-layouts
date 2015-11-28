@@ -12,8 +12,8 @@
         :host {
             @apply(--layout-horizontal);
             @apply(--layout-center);
-            height: 46px;
-            margin-bottom: 8px;
+            @apply(--layout-flex);
+            margin-bottom: 0.5em;
         }
 
         :host[disabled] {
@@ -23,13 +23,13 @@
         #status {
             @apply(--layout-vertical);
             @apply(--layout-flex);
-            font-size: 1.1em;
-            padding-right: 0.5em;
+            font-size: 2em;
+            padding-right: 1em;
         }
 
         #time {
             font-weight: bold;
-            margin-bottom: -2px;
+            margin-bottom: -0.2em;
         }
 
         #runner {
@@ -39,8 +39,6 @@
             white-space: nowrap;
         }
 
-        .btn {font-size: 11px;}
-
         #controls {
             @apply(--layout-horizontal);
             @apply(--layout-center);
@@ -49,21 +47,21 @@
 
         #controls iron-icon {
             cursor: pointer;
-            --iron-icon-height: 32px;
-            --iron-icon-width: 32px;
+            --iron-icon-height: 4em;
+            --iron-icon-width: 4em;
         }
 
         #minorControls {
-            margin-left: 6px;
-            padding-left: 6px;
+            margin-left: 0.5em;
+            padding-left: 0.5em;
             border-left: 1px solid #9E9E9E;
             @apply(--layout-vertical);
             @apply(--layout-justified);
         }
 
         #minorControls iron-icon {
-            --iron-icon-height: 20px;
-            --iron-icon-width: 20px;
+            --iron-icon-height: 1.9em;
+            --iron-icon-width: 1.9em;
         }
 
         #play {color: #43ac6a;}
@@ -84,7 +82,12 @@
             color: var(--nodecg-configure-color--dark);
         }
 
+        #edit {
+            margin-bottom: 0.25em;
+        }
+
         #reset {
+            margin-top: 0.25em;
             transform: scaleX(-1);
         }
 

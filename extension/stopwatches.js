@@ -187,11 +187,11 @@ module.exports = function (nodecg) {
         }
     }
 
+    var app = require('express')();
+
     if (nodecg.bundleConfig && nodecg.bundleConfig.enableRestApi) {
         nodecg.log.warn('"enableRestApi" is true, the stopwatch REST API will be active.');
         nodecg.log.warn('This API is COMPLETELY INSECURE. ONLY USE IT ON A SECURE LOCAL NETWORK.');
-
-        var app = require('express')();
 
         app.get('/agdq16-layouts/stopwatches', function (req, res) {
             res.json(stopwatches.value);
@@ -241,11 +241,15 @@ module.exports = function (nodecg) {
                 res.status(422).send('Invalid stopwatch index "' + req.params.index + '"');
             }
         });
-
-        nodecg.mount(app);
     } else {
         nodecg.log.info('"enableRestApi" is false, the stopwatch REST API will be unavailable');
     }
+
+    app.get('/agdq16-layouts/stopwatches/control', nodecg.util.authCheck,function (req, res) {
+        res.redirect('/graphics/agdq16-layouts/custom_controls/stopwatches/index.html');
+    });
+
+    nodecg.mount(app);
 };
 
 function msToTime(duration) {
