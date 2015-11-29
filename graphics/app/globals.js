@@ -5,6 +5,7 @@ define(function() {
     var currentBidsRep = nodecg.Replicant('currentBids');
     var scheduleRep = nodecg.Replicant('schedule');
     var currentRunRep = nodecg.Replicant('currentRun');
+    var totalRep = nodecg.Replicant('total');
 
     /* ----- */
 
@@ -24,13 +25,14 @@ define(function() {
     /* ----- */
 
     // This is really fragile, but whatever.
-    var NUM_REPLICANTS = 4;
+    var NUM_REPLICANTS = 5;
     var loadedReplicants = 0;
 
     currentBidsRep.on('declared', replicantDeclared);
     scheduleRep.on('declared', replicantDeclared);
     currentRunRep.on('declared', replicantDeclared);
     currentPrizesRep.on('declared', replicantDeclared);
+    totalRep.on('declared', replicantDeclared);
 
     function replicantDeclared() {
         loadedReplicants++;
@@ -44,25 +46,28 @@ define(function() {
 
     return Object.create(Object.prototype, {
         currentBids: {
-            getter: function() {return currentBidsRep.value;}
+            get: function() {return currentBidsRep.value;}
         },
         currentGrandPrizes: {
-            getter: function() {return currentGrandPrizes;}
+            get: function() {return currentGrandPrizes;}
         },
         currentNormalPrizes: {
-            getter: function() {return currentNormalPrizes;}
+            get: function() {return currentNormalPrizes;}
         },
         schedule: {
-            getter: function() {return scheduleRep.value;}
+            get: function() {return scheduleRep.value;}
         },
         currentRun: {
-            getter: function() {return currentRunRep.value;}
+            get: function() {return currentRunRep.value;}
         },
         nextRun: {
-            getter: function() {return currentRunRep.value.nextRun;}
+            get: function() {return currentRunRep.value.nextRun;}
         },
         currentRunRep: {
             value: currentRunRep
+        },
+        totalRep: {
+            value: totalRep
         }
     });
 });

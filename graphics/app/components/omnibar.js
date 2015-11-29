@@ -1,4 +1,4 @@
-/* global define, TimelineLite, Power2, Power1, Elastic */
+/* global define, TweenLite, TimelineLite, Power3, Power2, Power1, Elastic, Back */
 define([
     'preloader',
     'globals',
@@ -8,6 +8,7 @@ define([
 
     var OMNIBAR_HEIGHT = 55;
     var OMNIBAR_WIDTH_MINUS_LOGO = 1161;
+    var CTA_VERT_SLIDE_TIME = 0.6;
     var WHITE = '#ffffff';
     var GRAY = '#efefef';
     var RED = '#d38585';
@@ -24,14 +25,23 @@ define([
     stage.addChild(omnibar);
 
     var tl = new TimelineLite({autoRemoveChildren: true});
-    var state = {};
-    var displayDuration = 10;
+    var state = {
+        totalShowing: true,
+        labelShowing: false
+    };
+    var displayDuration = 2;
     var lastShownGrandPrize;
 
     /* ----- */
 
     var gdqLogo = new createjs.Bitmap(preloader.getResult('omnibar-logo-gdq'));
     var GDQ_LOGO_WIDTH = gdqLogo.getBounds().width;
+
+    var pcfLogo = new createjs.Bitmap(preloader.getResult('omnibar-logo-pcf'));
+    var PCF_LOGO_WIDTH = pcfLogo.getBounds().width;
+    pcfLogo.restingX = 1173;
+    pcfLogo.x = pcfLogo.restingX;
+    pcfLogo.y = -17;
 
     /* ----- */
 
@@ -44,13 +54,37 @@ define([
 
     /* ----- */
 
+    var CTA_CENTER_X = PCF_LOGO_WIDTH / 2 + 12;
+    var CTA_TEXT_MASK_WIDTH = OMNIBAR_WIDTH_MINUS_LOGO / 2;
+
     var cta = new createjs.Container();
-    cta.x = GDQ_LOGO_WIDTH;
+    cta.x = GDQ_LOGO_WIDTH + OMNIBAR_WIDTH_MINUS_LOGO / 2 - CTA_CENTER_X;
+    cta.y = 10;
 
-    var ctaText = new createjs.Text('FOKKEN DONATE, YE? GWAN.', '800 48px proxima-nova', 'white');
-    ctaText.textAlign = 'center';
+    var ctaLeftTextMask = new createjs.Shape();
+    ctaLeftTextMask.graphics.drawRect(CTA_CENTER_X - CTA_TEXT_MASK_WIDTH, -cta.y, CTA_TEXT_MASK_WIDTH, OMNIBAR_HEIGHT);
 
-    cta.addChild(ctaText);
+    var ctaLeftText = new createjs.Text('', '800 32px proxima-nova', 'white');
+    ctaLeftText.textAlign = 'right';
+    ctaLeftText.restingX = 0;
+    ctaLeftText.hiddenX = 383 + CTA_CENTER_X;
+    ctaLeftText.x = ctaLeftText.hiddenX;
+    ctaLeftText.mask = ctaLeftTextMask;
+    ctaLeftText.snapToPixel = false;
+
+    var ctaRightTextMask = new createjs.Shape();
+    ctaRightTextMask.graphics.drawRect(CTA_CENTER_X, -cta.y, CTA_TEXT_MASK_WIDTH, OMNIBAR_HEIGHT);
+
+    var ctaRightText = new createjs.Text('', '800 32px proxima-nova', 'white');
+    ctaRightText.restingX = PCF_LOGO_WIDTH + 24;
+    ctaRightText.hiddenX = -297 - CTA_CENTER_X;
+    ctaRightText.x = ctaRightText.hiddenX;
+    ctaRightText.mask = ctaRightTextMask;
+    ctaRightText.snapToPixel = false;
+
+    pcfLogo.ctaX = cta.x + 12;
+
+    cta.addChild(ctaLeftTextMask, ctaRightTextMask, ctaLeftText, ctaRightText);
 
     /* ----- */
 
@@ -106,6 +140,23 @@ define([
                 },
                 w: 180,
                 ease: Elastic.easeOut.config(0.5, 0.5)
+            }, 0.08);
+        }
+
+        return tmpTL;
+    }
+
+    function hideLabel() {
+        var tmpTL = new TimelineLite();
+
+        if (state.labelShowing) {
+            var reverseLabelBgLayers = labelBgLayers.slice(0).reverse();
+            tmpTL.staggerTo(reverseLabelBgLayers, 0.7, {
+                onStart: function () {
+                    state.labelShowing = false;
+                },
+                w: 0,
+                ease: Back.easeIn.config(1.3)
             }, 0.08);
         }
 
@@ -195,22 +246,61 @@ define([
     totalText.x = 13;
     totalText.y = 10;
 
-    var pcfLogo = new createjs.Bitmap(preloader.getResult('omnibar-logo-pcf'));
-    pcfLogo.y = - 17;
+    totalContainer.addChild(totalLeftBorder, totalText);
 
-    totalContainer.addChild(totalLeftBorder, totalText, pcfLogo);
-
-    nodecg.Replicant('total').on('change', function(oldVal, newVal) {
+    globals.totalRep.on('change', function(oldVal, newVal) {
         totalText.text = newVal;
-        pcfLogo.x = totalText.x + totalText.getBounds().width + 6;
         var totalContainerWidth = totalContainer.getBounds().width;
-        totalContainer.x = OMNIBAR_WIDTH_MINUS_LOGO - totalContainerWidth - 17;
+        totalContainer.showingX = OMNIBAR_WIDTH_MINUS_LOGO - totalContainerWidth - PCF_LOGO_WIDTH - 36;
+        totalContainer.hiddenX = totalContainer.showingX + OMNIBAR_WIDTH_MINUS_LOGO - totalContainer.showingX;
+
+        totalContainer.x = state.totalShowing ? totalContainer.showingX : totalContainer.hiddenX;
 
         mainLine1.maxWidth = totalContainer.x - mainLine1.x - 12;
         mainLine2.maxWidth = mainLine1.maxWidth - 4;
-        ctaText.maxWidth = totalContainer.x - 24;
-        ctaText.x = ctaText.maxWidth / 2 + 12;
     });
+
+    function showTotal() {
+        var tmpTL = new TimelineLite();
+
+        console.log('showTotal', state.totalShowing);
+
+        if (!state.totalShowing) {
+            tmpTL.call(function() {
+                TweenLite.to(totalContainer, 0.7, {
+                    onStart: function () {
+                        state.totalShowing = true;
+                    },
+                    x: totalContainer.showingX,
+                    ease: Power2.easeIn
+                });
+            }, null, null, '+=0.01');
+
+            tmpTL.to({}, 0.7, {});
+        }
+
+        return tmpTL;
+    }
+
+    function hideTotal() {
+        var tmpTL = new TimelineLite();
+
+        if (state.totalShowing) {
+            tmpTL.call(function() {
+                TweenLite.to(totalContainer, 0.7, {
+                    onStart: function () {
+                        state.totalShowing = false;
+                    },
+                    x: totalContainer.hiddenX,
+                    ease: Power2.easeIn
+                });
+            }, null, null, '+=0.01');
+
+            tmpTL.to({}, 0.7, {});
+        }
+
+        return tmpTL;
+    }
 
     /* ----- */
 
@@ -219,37 +309,94 @@ define([
     mainContainer.x = GDQ_LOGO_WIDTH;
     mainContainer.addChild(mainLine1, mainLine2, labelBg, labelText, totalContainer);
 
-    omnibar.addChild(barBg, mainContainer, cta, gdqLogo);
+    omnibar.addChild(barBg, mainContainer, cta, gdqLogo, pcfLogo);
 
     /* ----- */
 
     function showCTA(immediate) {
         if (immediate) tl.clear();
 
-        tl.add('showCTA_start');
-        tl.add(this._hideLabel(), 'showCTA_start');
+        tl.call(function() {
+            hideLabel();
+            hideTotal();
+        }, null, null, '+=0.01');
+
+        // Move PCF logo to center
+        tl.to(pcfLogo, 1.2, {
+            onStart: function() {
+                ctaLeftText.text = '#AGDQ2016 benefits the';
+                ctaRightText.text = 'Prevent Cancer Foundation';
+            },
+            x: pcfLogo.ctaX,
+            ease: Power3.easeInOut
+        });
+
+        // Enter Line 1
+        tl
+            .add('showCTA_Line1Enter')
+            .to(ctaLeftText, CTA_VERT_SLIDE_TIME, {
+                x: ctaLeftText.restingX,
+                ease: Power2.easeOut
+            }, 'showCTA_Line1Enter')
+            .to(ctaRightText, CTA_VERT_SLIDE_TIME, {
+                x: ctaRightText.restingX,
+                ease: Power2.easeOut
+            }, 'showCTA_Line1Enter');
+
+        // Exit Line 1
+        tl
+            .add('showCTA_Line1Exit', '+=' + displayDuration)
+            .to(ctaLeftText, CTA_VERT_SLIDE_TIME, {
+                y: -40,
+                ease: Power2.easeIn
+            }, 'showCTA_Line1Exit')
+            .to(ctaRightText, CTA_VERT_SLIDE_TIME, {
+                y: 38,
+                ease: Power2.easeIn,
+                onComplete: function() {
+                    ctaLeftText.y = 38;
+                    ctaRightText.y = -40;
+                    ctaLeftText.text = 'Donate to PCF at';
+                    ctaRightText.text = 'gamesdonequick.com';
+                }
+            }, 'showCTA_Line1Exit');
+
+        // Enter Line 2
+        tl
+            .add('showCTA_Line2Enter')
+            .to(ctaLeftText, CTA_VERT_SLIDE_TIME, {
+                y: 0,
+                ease: Power2.easeOut
+            }, 'showCTA_Line2Enter')
+            .to(ctaRightText, CTA_VERT_SLIDE_TIME, {
+                y: 0,
+                ease: Power2.easeOut
+            }, 'showCTA_Line2Enter');
+
+        // Exit Line 2
+        tl
+            .add('showCTA_Line2Exit', '+=' + displayDuration)
+            .to(ctaLeftText, CTA_VERT_SLIDE_TIME, {
+                x: ctaLeftText.hiddenX,
+                ease: Power2.easeIn
+            }, 'showCTA_Line2Exit')
+            .to(ctaRightText, CTA_VERT_SLIDE_TIME, {
+                x: ctaRightText.hiddenX,
+                ease: Power2.easeIn
+            }, 'showCTA_Line2Exit');
+
+        tl.add('showCTA_end');
+
+        // Move PCF Logo back to far right
+        tl.to(pcfLogo, 1.2, {
+            x: pcfLogo.restingX,
+            ease: Power3.easeInOut
+        }, 'showCTA_end');
 
         tl.call(function() {
-            var b = document.createElement('b');
-            b.textContent = 'Call-to-action line #2';
-
-            // Put it in the qPlate hopper.
-            self.$.fullLine.fillHopper(b);
-        }, null, null, '+=' + displayDuration);
-
-        // Give it some time to show
-        tl.to({}, displayDuration, {});
-
-        // Hide, then show bids
-        tl.to({}, this.$.fullLine.duration / 2, {
-            onStart: function() {
-                self.$.fullLine.fillHopperText('');
-            },
-            onComplete: function() {
-                self.$.fullLine.style.display = 'none';
-                self.showBids();
-            }
-        })
+            showTotal();
+            showCurrentBids();
+        }, null, null, 'showCTA_end+=0.3');
     }
 
     function showUpNext(immediate) {
@@ -287,7 +434,7 @@ define([
 
     function showCurrentBids(immediate) {
         if (immediate) tl.clear();
-
+        
         if (globals.currentBids.length > 0) {
             var showedLabel = false;
 
@@ -320,7 +467,7 @@ define([
             });
         }
 
-        tl.call(showPrizes, null, null, '+=0.01');
+        tl.call(showCurrentPrizes, null, null, '+=0.01');
     }
 
     function showBid(bid, immediate) {
@@ -420,7 +567,7 @@ define([
             prizesToDisplay.forEach(showPrize);
         }
 
-        tl.call(showNext, null, null, '+=0.01');
+        tl.call(showUpNext, null, null, '+=0.01');
     }
 
     function showPrize(prize, immediate) {
@@ -452,10 +599,6 @@ define([
     }
 
     /***** TESTING *****/
-    setTimeout(function() {
-        showUpNext('UP NEXT', 32);
-    }, 500);
-
     nodecg.listenFor('barDemand', function(data) {
         switch (data.type) {
             case 'bid':
