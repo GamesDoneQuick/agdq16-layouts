@@ -57,9 +57,10 @@
                     [
                         'components/background',
                         'components/speedrun',
+                        'components/omnibar',
                         'layout',
                         'obs'
-                    ], function(bg, speedrun, layout) {
+                    ], function(bg, speedrun, omnibar, layout) {
                         layout('3ds');
                         window.layout = layout;
                     }

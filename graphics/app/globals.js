@@ -27,7 +27,6 @@ define(function() {
     var NUM_REPLICANTS = 4;
     var loadedReplicants = 0;
 
-
     currentBidsRep.on('declared', replicantDeclared);
     scheduleRep.on('declared', replicantDeclared);
     currentRunRep.on('declared', replicantDeclared);
@@ -40,7 +39,6 @@ define(function() {
             window.replicantsDeclared = true;
         }
     }
-
 
     /* ----- */
 
@@ -59,6 +57,9 @@ define(function() {
         },
         currentRun: {
             getter: function() {return currentRunRep.value;}
+        },
+        nextRun: {
+            getter: function() {return currentRunRep.value.nextRun;}
         },
         currentRunRep: {
             value: currentRunRep

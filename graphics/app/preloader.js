@@ -25,7 +25,11 @@ define(function () {
         {id: 'bg-ds_portrait', src: 'img/backgrounds/ds_portrait.png'},
 
         // Console icons
-        {id: 'console-psp', src: 'img/consoles/psp.png'}
+        {id: 'console-psp', src: 'img/consoles/psp.png'},
+
+        // Omnibar
+        {id: 'omnibar-logo-gdq', src: 'img/omnibar/logo-gdq.png'},
+        {id: 'omnibar-logo-pcf', src: 'img/omnibar/logo-pcf.png'}
     ]);
 
     return queue;
