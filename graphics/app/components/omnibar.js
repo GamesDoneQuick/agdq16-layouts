@@ -1,8 +1,8 @@
-/* global define, TimelineLite, Power3, Power2, Power1, Elastic */
+/* global define, TimelineLite, Power2, Power1, Elastic */
 define([
     'preloader',
     'globals',
-    'classes/Stage'
+    'classes/stage'
 ], function (preloader, globals, Stage) {
     'use strict';
 

@@ -2,7 +2,7 @@
 define([
     'preloader',
     'globals',
-    'classes/Stage'
+    'classes/stage'
 ], function (preloader, globals, Stage) {
     'use strict';
 
