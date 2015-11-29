@@ -7,8 +7,11 @@ define([
     'use strict';
 
     var OMNIBAR_HEIGHT = 55;
-
     var OMNIBAR_WIDTH_MINUS_LOGO = 1161;
+    var WHITE = '#ffffff';
+    var GRAY = '#efefef';
+    var RED = '#d38585';
+    var GREEN = '#a7d385';
 
     var createjs = require('easel');
     var stage = new Stage(1280, 72, 'omnibar');
@@ -23,19 +26,31 @@ define([
     var tl = new TimelineLite({autoRemoveChildren: true});
     var state = {};
     var displayDuration = 10;
-    var lastShownGrandPrizeIdx = -1;
+    var lastShownGrandPrize;
+
+    /* ----- */
+
+    var gdqLogo = new createjs.Bitmap(preloader.getResult('omnibar-logo-gdq'));
+    var GDQ_LOGO_WIDTH = gdqLogo.getBounds().width;
 
     /* ----- */
 
     var barBg = new createjs.Shape();
     barBg.graphics
         .beginFill('#0075a1')
-        .drawRect(119, 0, OMNIBAR_WIDTH_MINUS_LOGO, OMNIBAR_HEIGHT);
-    barBg.cache(119, 0, OMNIBAR_WIDTH_MINUS_LOGO, OMNIBAR_HEIGHT);
+        .drawRect(GDQ_LOGO_WIDTH, 0, OMNIBAR_WIDTH_MINUS_LOGO, OMNIBAR_HEIGHT);
+    barBg.cache(GDQ_LOGO_WIDTH, 0, OMNIBAR_WIDTH_MINUS_LOGO, OMNIBAR_HEIGHT);
+
 
     /* ----- */
 
-    var gdqLogo = new createjs.Bitmap(preloader.getResult('omnibar-logo-gdq'));
+    var cta = new createjs.Container();
+    cta.x = GDQ_LOGO_WIDTH;
+
+    var ctaText = new createjs.Text('FOKKEN DONATE, YE? GWAN.', '800 48px proxima-nova', 'white');
+    ctaText.textAlign = 'center';
+
+    cta.addChild(ctaText);
 
     /* ----- */
 
@@ -97,9 +112,6 @@ define([
         return tmpTL;
     }
 
-    //setLabel('BID WAR', 33);
-    //setLabel('RAFFLE\nPRIZES', 30);
-
     /* ----- */
 
     var mainLine1 = new createjs.Text('', '800 18px proxima-nova', 'white');
@@ -114,16 +126,41 @@ define([
     mainLine2.x = 190;
     mainLine2.y = 18;
 
-    function showMainLines(line1Text, line2Text) {
+    function showMainLine1(text, color) {
         var tmpTL = new TimelineLite();
+        color = color || WHITE;
 
-        if (mainLine1.text || mainLine2.text) {
+        if (mainLine1.text) {
             tmpTL.add('exit');
 
             tmpTL.to(mainLine1, 0.5, {
                 y: -18,
                 ease: Power2.easeIn
             }, 'exit');
+        }
+
+        tmpTL.add('enter');
+
+        tmpTL.to(mainLine1, 1.2, {
+            onStart: function() {
+                mainLine1.text = text;
+                mainLine1.x = mainLine1.restingX - mainLine1.getBounds().width - 20;
+                mainLine1.y = mainLine1.restingY;
+                mainLine1.color = color;
+            },
+            x: mainLine1.restingX,
+            ease: Power2.easeOut
+        }, 'enter');
+
+        return tmpTL;
+    }
+
+    function showMainLine2(text, color) {
+        var tmpTL = new TimelineLite();
+        color = color || WHITE;
+
+        if (mainLine2.text) {
+            tmpTL.add('exit');
 
             tmpTL.to(mainLine2, 0.5, {
                 y: 50,
@@ -131,25 +168,15 @@ define([
             }, 'exit');
         }
 
-        tmpTL.to({}, 0.01, {onStart: function() {
-            mainLine1.text = line1Text;
-            mainLine2.text = line2Text;
-
-            mainLine1.x = mainLine1.restingX - mainLine1.getBounds().width - 20;
-            mainLine1.y = mainLine1.restingY;
-
-            mainLine2.x = mainLine2.restingX - mainLine2.getBounds().width - 20;
-            mainLine2.y = mainLine2.restingY;
-        }});
-
         tmpTL.add('enter');
 
-        tmpTL.to(mainLine1, 1.2, {
-            x: mainLine1.restingX,
-            ease: Power2.easeOut
-        }, 'enter');
-
         tmpTL.to(mainLine2, 1.2, {
+            onStart: function() {
+                mainLine2.text = text;
+                mainLine2.x = mainLine2.restingX - mainLine2.getBounds().width - 20;
+                mainLine2.y = mainLine2.restingY;
+                mainLine2.color = color;
+            },
             x: mainLine2.restingX,
             ease: Power2.easeOut
         }, 'enter');
@@ -164,7 +191,7 @@ define([
     var totalLeftBorder = new createjs.Shape();
     totalLeftBorder.graphics.beginFill('white').drawRect(0, 0, 3, OMNIBAR_HEIGHT);
 
-    var totalText = new createjs.Text('$1,560,259', '800 30px proxima-nova', 'white');
+    var totalText = new createjs.Text('', '800 30px proxima-nova', 'white');
     totalText.x = 13;
     totalText.y = 10;
 
@@ -181,18 +208,49 @@ define([
 
         mainLine1.maxWidth = totalContainer.x - mainLine1.x - 12;
         mainLine2.maxWidth = mainLine1.maxWidth - 4;
+        ctaText.maxWidth = totalContainer.x - 24;
+        ctaText.x = ctaText.maxWidth / 2 + 12;
     });
 
     /* ----- */
 
     // This is what holds the "Up Next", "Bid War", and "Raffle Prizes" modes.
     var mainContainer = new createjs.Container();
-    mainContainer.x = 119;
+    mainContainer.x = GDQ_LOGO_WIDTH;
     mainContainer.addChild(mainLine1, mainLine2, labelBg, labelText, totalContainer);
 
-    omnibar.addChild(barBg, mainContainer, gdqLogo);
+    omnibar.addChild(barBg, mainContainer, cta, gdqLogo);
 
     /* ----- */
+
+    function showCTA(immediate) {
+        if (immediate) tl.clear();
+
+        tl.add('showCTA_start');
+        tl.add(this._hideLabel(), 'showCTA_start');
+
+        tl.call(function() {
+            var b = document.createElement('b');
+            b.textContent = 'Call-to-action line #2';
+
+            // Put it in the qPlate hopper.
+            self.$.fullLine.fillHopper(b);
+        }, null, null, '+=' + displayDuration);
+
+        // Give it some time to show
+        tl.to({}, displayDuration, {});
+
+        // Hide, then show bids
+        tl.to({}, this.$.fullLine.duration / 2, {
+            onStart: function() {
+                self.$.fullLine.fillHopperText('');
+            },
+            onComplete: function() {
+                self.$.fullLine.style.display = 'none';
+                self.showBids();
+            }
+        })
+    }
 
     function showUpNext(immediate) {
         if (globals.nextRun) {
@@ -208,19 +266,17 @@ define([
                      * timeline and bail out to showing bids again.
                      */
                     if (globals.nextRun) {
-                        mainLine1.text = globals.nextRun.runners.reduce(function(prev, curr) {
+                        var runnerNames = globals.nextRun.runners.reduce(function(prev, curr) {
                             return prev + ', ' + curr.name;
                         });
+                        showMainLine1(runnerNames);
+                        showMainLine2(globals.nextRun.game + ' - ' + globals.nextRun.category);
                     } else {
                         tl.clear();
-                        tl.call(showBids);
+                        tl.call(showCurrentBids);
                     }
                 }
             });
-
-            tl.call(function() {
-                mainLine2.text = globals.nextRun.game + ' - ' + globals.nextRun.category;
-            }, null, null, '+=0.08');
 
             // Give it some time to show
             tl.to({}, displayDuration, {});
@@ -229,17 +285,178 @@ define([
         tl.call(showCTA, null, null, '+=0.01');
     }
 
+    function showCurrentBids(immediate) {
+        if (immediate) tl.clear();
+
+        if (globals.currentBids.length > 0) {
+            var showedLabel = false;
+
+            // Figure out what bids to display in this batch
+            var bidsToDisplay = [];
+
+            window.currentBids.forEach(function(bid) {
+                // Don't show closed bids in the automatic rotation.
+                if (bid.state.toLowerCase() === 'closed') return;
+
+                // We have at least one bid to show, so show the label
+                if (!showedLabel) {
+                    showedLabel = true;
+                    tl.call(showLabel, ['BID WAR', 33]);
+                }
+
+                // If we have already have our three bids determined, we still need to check
+                // if any of the remaining bids are for the same speedrun as the third bid.
+                // This ensures that we are never displaying a partial list of bids for a given speedrun.
+                if (bidsToDisplay.length < 3) {
+                    bidsToDisplay.push(bid);
+                } else if (bid.speedrun === bidsToDisplay[bidsToDisplay.length - 1].speedrun) {
+                    bidsToDisplay.push(bid);
+                }
+            });
+
+            // Loop over each bid and queue it up on the timeline
+            bidsToDisplay.forEach(function(bid) {
+                showBid(bid);
+            });
+        }
+
+        tl.call(showPrizes, null, null, '+=0.01');
+    }
+
+    function showBid(bid, immediate) {
+        if (immediate) {
+            tl.clear();
+            tl.call(showLabel, ['BID WAR', 33]);
+        }
+
+        var mainLine1Text = bid.description;
+        var mainLine1Color = WHITE;
+
+        // If this bid is closed, we want the text to default to gray.
+        if (bid.state.toLowerCase() === 'closed') {
+            mainLine1Text += ' (CLOSED)';
+            mainLine1Color = GRAY;
+        }
+
+        // GSAP is dumb with `call` sometimes. Putting this in a near-zero duration tween seems to be more reliable.
+        tl.to({}, 0.01, {
+            onComplete: function() {
+                showMainLine1(mainLine1Text, mainLine1Color);
+            }
+        });
+
+        // If this is a donation war, up to three options for it.
+        // Else, it must be a normal incentive, so show its total amount raised and its goal.
+        if (bid.options) {
+            // If there are no options yet, display a message.
+            if (bid.options.length === 0) {
+                tl.call(function() {
+                    showMainLine2('Be the first to bid!');
+                }, null, null);
+            }
+
+            else {
+                bid.options.forEach(function(option, index) {
+                    if (index > 2) return;
+
+                    tl.call(function() {
+                        // If this bid is closed, the first option (the winner)
+                        // should be green and the rest should be red.
+                        var mainLine2Color = WHITE;
+                        if (bid.state.toLowerCase() === 'closed') {
+                            if (index === 0) {
+                                mainLine2Color = GREEN;
+                            } else {
+                                mainLine2Color = RED;
+                            }
+                        }
+
+                        var mainLine2Text = (index + 1) + '. ' + (option.description || option.name)
+                            + ' - ' + option.total;
+                        showMainLine2(mainLine2Text, mainLine2Color);
+                    }, null, null, '+=' + (0.08 + (index * 4)));
+                });
+            }
+        }
+
+        else {
+            tl.call(function() {
+                var mainLine2Color = bid.state.toLowerCase() === 'closed' ? GRAY : WHITE;
+                showMainLine2(bid.total + ' / ' + bid.goal, mainLine2Color);
+            }, null, null, '+=0.08');
+        }
+
+        // Give the bid some time to show
+        tl.to({}, displayDuration, {});
+
+        // If we're just showing this one bid on-demand, show "Prizes" next.
+        if (immediate) {
+            tl.call(showCurrentPrizes, null, null, '+=0.01');
+        }
+    }
+
+    function showCurrentPrizes(immediate) {
+        if (immediate) tl.clear();
+
+        if (globals.currentGrandPrizes.length > 0 || globals.currentNormalPrizes.length > 0) {
+            var prizesToDisplay = globals.currentNormalPrizes.slice(0);
+            tl.call(showLabel, ['RAFFLE\nPRIZES', 30]);
+
+            if (globals.currentGrandPrizes.length) {
+                // Figure out what grand prize to show in this batch.
+                var lastShownGrandPrizeIdx = globals.currentGrandPrizes.indexOf(lastShownGrandPrize);
+                var nextGrandPrizeIdx = lastShownGrandPrizeIdx >= globals.currentGrandPrizes.length - 1
+                    ? 0
+                    : lastShownGrandPrizeIdx + 1;
+                var nextGrandPrize = globals.currentGrandPrizes[nextGrandPrizeIdx];
+
+                if (nextGrandPrize) {
+                    prizesToDisplay.unshift(nextGrandPrize);
+                    lastShownGrandPrize = nextGrandPrize;
+                }
+            }
+
+            // Loop over each prize and queue it up on the timeline
+            prizesToDisplay.forEach(showPrize);
+        }
+
+        tl.call(showNext, null, null, '+=0.01');
+    }
+
+    function showPrize(prize, immediate) {
+        if (immediate) {
+            tl.clear();
+            tl.call(showLabel, ['RAFFLE\nPRIZES', 30]);
+        }
+
+        // GSAP is dumb with `call` sometimes. Putting this in a near-zero duration tween seems to be more reliable.
+        tl.to({}, 0.01, {
+            onComplete: function() {
+                showMainLine1('PROVIDED BY ' + prize.provided);
+
+                if (prize.grand) {
+                    showMainLine2('Grand Prize: ' + prize.name + ' (Minimum Bid: ' + prize.minimumbid + ')');
+                } else {
+                    showMainLine2(prize.name + ' (Minimum Bid: ' + prize.minimumbid + ')');
+                }
+            }
+        });
+
+        // Give the prize some time to show
+        tl.to({}, displayDuration, {});
+
+        // If we're just showing this one prize on-demand, show "Up Next" next.
+        if (immediate) {
+            tl.call(showUpNext, null, null, '+=0.01');
+        }
+    }
+
     /***** TESTING *****/
     setTimeout(function() {
-        showLabel('UP NEXT', 32);
+        showUpNext('UP NEXT', 32);
     }, 500);
 
-    setTimeout(function() {
-        showMainLines('SAVE OR KILL THE ANIMALS IN SUPER METROID?', '1. SAVE THE ANIMALS - $18,940');
-    }, 800);
-
-
-    /*nodecg.listenFor('barDemand', function(data) {
+    nodecg.listenFor('barDemand', function(data) {
         switch (data.type) {
             case 'bid':
                 showBid(data, true);
@@ -253,15 +470,15 @@ define([
     }.bind(this));
 
     nodecg.listenFor('barCurrentBids', function() {
-        showBids(true);
+        showCurrentBids(true);
     }.bind(this));
 
     nodecg.listenFor('barCurrentPrizes', function() {
-        showPrizes(true);
+        showCurrentPrizes(true);
     }.bind(this));
 
     nodecg.listenFor('barUpNext', function() {
-        showNext(true);
+        showUpNext(true);
     }.bind(this));
 
     nodecg.listenFor('barCTA', function() {
@@ -272,6 +489,6 @@ define([
         showGDQMonitor(message);
     }.bind(this));
 
-    // Bids are the first thing we show, so we use this to start our loop
-    showCTA();*/
+    // CTA is the first thing we show, so we use this to start our loop
+    showCTA();
 });
