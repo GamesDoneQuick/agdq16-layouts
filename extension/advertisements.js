@@ -9,7 +9,7 @@ var md5File = require('md5-file');
 var ADVERTISEMENTS_PATH = path.resolve(__dirname, '../graphics/advertisements');
 var BASE_URL = '/graphics/agdq16-layouts/advertisements/';
 var IMAGE_EXTS = ['.png', '.jpg', '.gif'];
-var VIDEO_EXTS = ['.webm', '.mp4'];
+var VIDEO_EXTS = ['.webm'];
 
 module.exports = function(nodecg) {
     nodecg.log.info('Monitoring "%s" for changes to advertisement assets...', ADVERTISEMENTS_PATH);
@@ -21,8 +21,7 @@ module.exports = function(nodecg) {
         ADVERTISEMENTS_PATH + '/*.png',
         ADVERTISEMENTS_PATH + '/*.jpg',
         ADVERTISEMENTS_PATH + '/*.gif',
-        ADVERTISEMENTS_PATH + '/*.webm',
-        ADVERTISEMENTS_PATH + '/*.mp4'
+        ADVERTISEMENTS_PATH + '/*.webm'
     ],{
         ignored: /[\/\\]\./,
         persistent: true,
