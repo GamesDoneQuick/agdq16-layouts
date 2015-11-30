@@ -96,9 +96,7 @@ define([
     var currentImage, nextImage;
     var tl = new TimelineLite({autoRemoveChildren: true});
 
-    nodecg.listenFor('stopAd', stopAndRemoveAllAds);
-
-    function stopAndRemoveAllAds() {
+    nodecg.listenFor('stopAd', function() {
         tl.clear();
         tl.to(imageContainer, FADE_DURATION, {
             opacity: 0,
@@ -106,7 +104,7 @@ define([
             onComplete: removeAdImages
         });
         removeAdVideo();
-    }
+    });
 
     // We assume that if we're hearing this message then the ad in question is fully preloaded.
     nodecg.listenFor('playAd', function(ad) {
@@ -136,7 +134,8 @@ define([
         }
 
         // Clear any existing tweens. Advertisements ain't nothin' to fuck wit.
-        stopAndRemoveAllAds();
+        tl.clear();
+        removeAdVideo();
         tl.add('start');
 
         // If we already have a next image, ???
@@ -196,7 +195,8 @@ define([
     }
 
     function showAdVideo(video) {
-        stopAndRemoveAllAds();
+        removeAdVideo();
+        removeAdImages();
 
         video.style.visibility = 'hidden';
         video.id = 'videoPlayer';
