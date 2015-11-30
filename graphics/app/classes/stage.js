@@ -19,12 +19,14 @@ define(function() {
         // Create the stage on the target canvas, and create a ticker that will render at 60 fps.
         var stage = new createjs.Stage(stageEl);
         createjs.Ticker.addEventListener('tick', function(event) {
-            if (event.paused) return;
+            if (Stage.globalPause || event.paused) return;
             stage.update();
         });
 
         return stage;
     }
+
+    Stage.globalPause = false;
 
     return Stage;
 });
