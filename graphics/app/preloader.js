@@ -4,6 +4,7 @@ define(function () {
 
     // Preload images
     var queue = new createjs.LoadQueue();
+    queue.setMaxConnections(10);
     queue.loadManifest([
         // Backgrounds
         {id: 'bg-3ds', src: 'img/backgrounds/3ds.png'},
