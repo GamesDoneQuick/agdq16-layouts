@@ -2,6 +2,23 @@
 (function() {
     'use strict';
 
+    var layoutState = nodecg.Replicant('layoutState');
+
+    // Hack to prevent other instances of the layout from breaking the layoutState.
+    // They have a brief window in which to change it before singleInstance kicks them off.
+    layoutState.on('declared', function(rep) {
+        if (rep.value === 'closed') {
+            layoutState.value = 'preloading';
+
+            // Prevent NodeCG restarts from breaking the layoutState.
+            layoutState.on('change', function(oldVal, newVal) {
+                if (newVal === 'closed') {
+                    layoutState.value = 'open';
+                }
+            });
+        }
+    });
+
     requirejs.config({
         baseUrl: 'app',
         shim: {
