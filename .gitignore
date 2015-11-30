@@ -3,3 +3,6 @@
 node_modules
 bower_components
 
+/graphics/advertisements/*
+!.empty_directory
+

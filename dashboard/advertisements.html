@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="import" href="components/iron-flex-layout/iron-flex-layout.html">
+    <link rel="import" href="components/iron-icons/iron-icons.html">
+    <link rel="import" href="components/paper-button/paper-button.html">
+    <link rel="import" href="elements/ad-list.html">
+    <link rel="stylesheet" href="shared-panel-styles.css">
+
+    <style is="custom-style">
+        #container {
+            @apply(--layout-horizontal);
+        }
+
+        #playbackControls {
+            margin-top: 16px;
+            margin-bottom: -8px;
+            @apply(--layout-horizontal)
+        }
+
+        #playbackControls paper-button {
+            @apply(--layout-horizontal);
+            @apply(--layout-center-center);
+        }
+
+        #playbackControls #play-image {
+            display: none;
+        }
+
+        #play-image,
+        #play-video {
+            @apply(--layout-flex);
+            margin-right: 4px;
+        }
+
+        #stop {
+            @apply(--layout-flex);
+            margin-left: 4px;
+            margin-right: 4px;
+        }
+
+        #ftb {
+            margin-left: 4px;
+        }
+
+        .column {
+            @apply(--layout-vertical);
+            @apply(--layout-flex);
+        }
+
+        .cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            @apply(--layout-vertical);
+            @apply(--layout-center-center);
+            display: none;
+        }
+
+        .cover span {
+            text-align: center;
+        }
+
+        paper-item {
+            --paper-item: {
+                cursor: pointer;
+            };
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <!-- Left Column -->
+        <div class="column" style="margin-right: 8px;">
+            <div>
+                <h5>Images</h5>
+                <ad-list id="imageList"></ad-list>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="column" style="margin-left: 8px;">
+            <div>
+                <h5>Videos</h5>
+                <ad-list id="videoList"></ad-list>
+            </div>
+        </div>
+    </div>
+
+    <div id="playbackControls">
+        <paper-button id="play-image" class="nodecg-success">
+            <span>Play Selected Ad</span>
+        </paper-button>
+        <paper-button id="play-video" class="nodecg-success">
+            <span>Play Selected Ad</span>
+        </paper-button>
+        <paper-button id="stop" class="nodecg-danger">Stop</paper-button>
+        <paper-button id="ftb" raised>FTB</paper-button>
+    </div>
+
+    <div id="notReady" class="cover">
+        <span id="notReady-closed">
+            The layout graphic appears to be closed.
+            <br/>
+            Open the layout graphic to enable these controls.
+        </span>
+
+        <span id="notReady-preloading">
+            The layout graphic is preloading.
+            <br/>
+            Please wait...
+        </span>
+    </div>
+
+    <script src="advertisements.js"></script>
+</body>
+</html>

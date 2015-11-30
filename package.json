@@ -21,12 +21,20 @@
         "width": 4,
         "headerColor": "#2d4e8a",
         "file": "schedule.html"
-      },{
+      },
+      {
         "name": "edit-current-run",
         "title": "Edit Current Run",
         "width": 4,
         "dialog": true,
         "file": "dialogs/edit-current-run.html"
+      },
+      {
+        "name": "advertisements",
+        "title": "Advertisements",
+        "width": 4,
+        "headerColor": "#2d4e8a",
+        "file": "advertisements.html"
       }
     ],
     "graphics": [
@@ -35,7 +43,8 @@
         "width": 1280,
         "height": 720,
         "singleInstance": true
-      },{
+      },
+      {
         "file": "custom_controls/stopwatches/index.html",
         "width": 1280,
         "height": 720
@@ -46,6 +55,7 @@
     "clone": "^1.0.2",
     "debounce": "^1.0.0",
     "deep-equal": "^1.0.1",
+    "md5-file": "^2.0.4",
     "numeral": "^1.5.3",
     "request": "^2.67.0",
     "rieussec": "^0.2.4"

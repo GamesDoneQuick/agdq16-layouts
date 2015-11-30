@@ -1,0 +1,76 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/paper-menu/paper-menu.html">
+<link rel="import" href="ad-item.html">
+
+<dom-module id="ad-list">
+    <style>
+        :host {
+            display: block;
+        }
+
+        paper-menu {
+            height: 200px;
+            overflow: auto;
+        }
+    </style>
+
+    <template>
+        <paper-menu id="menu" on-iron-select="_selectionChanged">
+            <template is="dom-repeat" items="{{ads}}">
+                <ad-item value="{{item}}"></ad-item>
+            </template>
+        </paper-menu>
+    </template>
+</dom-module>
+
+<script>
+(function() {
+    var adListElements = document.getElementsByTagName('ad-list');
+    var playImageButton = document.getElementById('play-image');
+    var playVideoButton = document.getElementById('play-video');
+
+    window.deselectAllAdLists = function() {
+        for (var i = 0; i < adListElements.length; i++) {
+            adListElements.item(i).deselect();
+        }
+        window.adListSelectedAd = null;
+        playImageButton.setAttribute('disabled', 'true');
+        playVideoButton.setAttribute('disabled', 'true');
+    };
+
+    Polymer({
+        is: 'ad-list',
+
+        properties: {
+            ads: Array
+        },
+
+        deselect: function() {
+            this.$.menu.select(-1);
+        },
+
+        _selectionChanged: function() {
+            for (var i = 0; i < adListElements.length; i++) {
+                if (adListElements.item(i) === this) continue;
+                adListElements.item(i).deselect();
+            }
+
+            window.adListSelectedAd = this.$.menu.selectedItem.value;
+
+            if (window.adListSelectedAd.type === 'image') {
+                playImageButton.style.display = 'flex';
+                playImageButton.removeAttribute('disabled');
+
+                playVideoButton.style.display = 'none';
+                window.checkVideoPlayButton();
+            } else {
+                playImageButton.style.display = 'none';
+                playImageButton.setAttribute('disabled', 'true');
+
+                playVideoButton.style.display = 'flex';
+                window.checkVideoPlayButton();
+            }
+        }
+    })
+})();
+</script>

@@ -46,11 +46,14 @@
             var preloaderDone = false;
             var replicantsDone = false;
 
-            preloader.on('complete', function() {
+            preloader.on('complete', handlePreloadComplete);
+
+            function handlePreloadComplete() {
+                preloader.removeAllEventListeners('complete');
                 preloaderDone = true;
                 console.log('preloading complete');
                 checkReplicantsAndPreloader();
-            });
+            }
 
             if (window.replicantsDeclared) {
                 replicantsDone = true;
@@ -75,7 +78,8 @@
                         'components/speedrun',
                         'components/omnibar',
                         'layout',
-                        'obs'
+                        'obs',
+                        'advertisements'
                     ], function(bg, speedrun, omnibar, layout) {
                         layout('3ds');
                         window.layout = layout;

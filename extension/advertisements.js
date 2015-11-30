@@ -4,23 +4,25 @@ var chokidar = require('chokidar');
 var path = require('path');
 var fs = require('fs');
 var debounce = require('debounce');
-var ADVERTISEMENTS_PATH = path.resolve(__dirname, '../view/advertisements');
-var server = require('../../../lib/server');
-var io = server.getIO();
-var BASE_URL = '/view/sgdq15-layouts/advertisements/';
-var IMAGE_EXTS = ['.png', '.jpg'];
-var VIDEO_EXTS = ['.webm'];
+var md5File = require('md5-file');
+
+var ADVERTISEMENTS_PATH = path.resolve(__dirname, '../graphics/advertisements');
+var BASE_URL = '/graphics/agdq16-layouts/advertisements/';
+var IMAGE_EXTS = ['.png', '.jpg', '.gif'];
+var VIDEO_EXTS = ['.webm', '.mp4'];
 
 module.exports = function(nodecg) {
     nodecg.log.info('Monitoring "%s" for changes to advertisement assets...', ADVERTISEMENTS_PATH);
 
-    var adVideos = nodecg.Replicant('adVideos');
-    var adImages = nodecg.Replicant('adImages');
+    var ads = nodecg.Replicant('ads', {defaultValue: [], persistent: false});
+    nodecg.Replicant('ftb', {defaultValue: false});
 
     var watcher = chokidar.watch([
         ADVERTISEMENTS_PATH + '/*.png',
         ADVERTISEMENTS_PATH + '/*.jpg',
-        ADVERTISEMENTS_PATH + '/*.webm'
+        ADVERTISEMENTS_PATH + '/*.gif',
+        ADVERTISEMENTS_PATH + '/*.webm',
+        ADVERTISEMENTS_PATH + '/*.mp4'
     ],{
         ignored: /[\/\\]\./,
         persistent: true,
@@ -30,79 +32,78 @@ module.exports = function(nodecg) {
 
     watcher.on('add', debounce(reloadAdvertisements, 500));
     watcher.on('change', debounce(reloadAdvertisements, 500));
-    watcher.on('unlink', debounce(reloadAdvertisements, 500));
+
+    watcher.on('unlink', debounce(function(filepath) {
+        var adFilename = path.basename(filepath);
+        nodecg.log.info('Advertisement "%s" deleted, removing from list...', adFilename);
+
+        ads.value.some(function(ad, index) {
+            if (ad.filename === adFilename) {
+                var adData = ads.value[index];
+                ads.value.splice(index, 1);
+                nodecg.sendMessage('adRemoved', adData);
+                return true;
+            }
+        });
+    }, 500));
+
     watcher.on('error', function(e) {
         nodecg.error(e.stack);
     });
 
-    // Heartbeat system
-    var liveSocketId, heartbeatTimeout;
-    var HEARTBEAT_INTERVAL = 1000;
-    io.on('connection', function (socket) {
-        /* If we have a live socket id...
-         *     and this is the live socket, reset the heartbeatTimeout and invoke callback with "true".
-         *     Else, invoke callback with "false".
-         * Else, this socket becomes the live socket. */
-        socket.on('adHeartbeat', function (data, cb) {
-            if (liveSocketId) {
-                if (socket.id === liveSocketId) {
-                    clearTimeout(heartbeatTimeout);
-                    heartbeatTimeout = setTimeout(function() {
-                        liveSocketId = null;
-                    }, HEARTBEAT_INTERVAL * 2);
-                    cb(true);
-                } else {
-                    cb(false);
-                }
-            } else {
-                liveSocketId = socket.id;
-            }
-        });
-
-        socket.on('disconnect', function () {
-            // If the socket that disconnected is our live socket, immediately clear the live socket id.
-            if (socket.id === liveSocketId) {
-                clearTimeout(heartbeatTimeout);
-                liveSocketId = null;
-            }
-        });
-    });
-
-        // Initialize
+    // Initialize
     reloadAdvertisements();
 
-    // On changed/added/deleted
-    function reloadAdvertisements(filename) {
-        if (filename) {
-            nodecg.log.info('Advertisement "%s" changed, reloading all advertisements...', path.basename(filename));
-        }
-
-        // Arrays with URLs pointing to the images and videos, respectively
-        var imageUrls = [];
-        var videoUrls = [];
+    // On changed/added
+    function reloadAdvertisements(filepath) {
+        nodecg.log.info('Advertisement "%s" changed, reloading all advertisements...', path.basename(filepath));
 
         // Scan the images dir
         var adsDir = fs.readdirSync(ADVERTISEMENTS_PATH);
-        adsDir.forEach(function(ad) {
-            var ext = path.extname(ad);
-            if (isImage(ext)) {
-                imageUrls.push({
-                    url: BASE_URL + ad,
-                    filename: ad,
-                    type: 'image'
-                });
-            } else if (isVideo(ext)) {
-                videoUrls.push({
-                    url: BASE_URL + ad,
-                    filename: ad,
-                    type: 'video'
-                });
-            }
-        });
+        adsDir.forEach(function(adFilename) {
+            var ext = path.extname(adFilename);
+            var adPath = path.join(ADVERTISEMENTS_PATH, adFilename);
 
-        // Overwrite the replicants
-        adImages.value = imageUrls;
-        adVideos.value = videoUrls;
+            var type;
+            if (isImage(ext)) {
+                type = 'image';
+            } else if (isVideo(ext)) {
+                type = 'video';
+            } else {
+                return;
+            }
+
+            md5File(adPath, function (err, sum) {
+                if (err) {
+                    nodecg.log.error(err);
+                    return;
+                }
+
+                var adData = {
+                    url: BASE_URL + adFilename,
+                    filename: adFilename,
+                    type: type,
+                    checksum: sum
+                };
+
+                // Look for an existing entry in the replicant with this filename, and update if found and md5 changed.
+                var foundExistingAd = ads.value.some(function(ad, index) {
+                    if (ad.filename === adFilename) {
+                        if (ad.checksum !== sum) {
+                            ads.value[index] = adData;
+                            nodecg.sendMessage('adChanged', adData);
+                        }
+                        return true;
+                    }
+                });
+
+                // If there was no existing ad with this filename, add a new one.
+                if (!foundExistingAd) {
+                    ads.value.push(adData);
+                    nodecg.sendMessage('newAd', adData);
+                }
+            });
+        });
     }
 };
 

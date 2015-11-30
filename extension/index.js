@@ -15,12 +15,12 @@ module.exports = function(nodecg) {
         process.exit(1);
     }*/
 
-    try {
+    /*try {
         require('./bids')(nodecg);
     } catch (e) {
         nodecg.log.error('Failed to load "bids" lib:', e.stack);
         process.exit(1);
-    }
+    }*/
 
     /*try {
         require('./total')(nodecg);
@@ -43,10 +43,17 @@ module.exports = function(nodecg) {
         process.exit(1);
     }*/
 
-    /*try {
+    try {
         require('./advertisements')(nodecg);
     } catch (e) {
         nodecg.log.error('Failed to load "advertisements" lib:', e.stack);
         process.exit(1);
-    }*/
+    }
+
+    try {
+        require('./state')(nodecg);
+    } catch (e) {
+        nodecg.log.error('Failed to load "state" lib:', e.stack);
+        process.exit(1);
+    }
 };

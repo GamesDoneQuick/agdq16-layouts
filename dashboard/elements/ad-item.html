@@ -1,0 +1,82 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/paper-item/paper-item.html">
+<link rel="import" href="../components/paper-progress/paper-progress.html">
+
+<dom-module id="ad-item">
+    <style>
+        :host {
+            display: block;
+            position: relative;
+        }
+
+        paper-item {
+            position: relative;
+        }
+
+        #filename {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #progressContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            @apply(--layout-vertical);
+            @apply(--layout-center-center);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+    </style>
+
+    <template>
+        <paper-item>
+            <span id="filename">{{value.filename}}</span>
+        </paper-item>
+
+        <div id="progressContainer">
+            <paper-progress id="progress" value="{{percentLoaded}}"></paper-progress>
+        </div>
+    </template>
+</dom-module>
+
+<script>
+(function() {
+    Polymer({
+        is: 'ad-item',
+
+        properties: {
+            value: {
+                type: Object,
+                observer: '_valueChanged'
+            },
+            percentLoaded: {
+                type: Number
+            },
+            loaded: {
+                type: Boolean,
+                value: false,
+                observer: '_loadedChanged'
+            }
+        },
+
+        _valueChanged: function(newVal) {
+            this.setAttribute('filename', newVal.filename);
+        },
+
+        _loadedChanged: function(newVal) {
+            if (newVal) {
+                this.$.progressContainer.style.display = 'none';
+            } else {
+                this.$.progressContainer.style.display = 'flex';
+
+                if (this.classList.contains('iron-selected')) {
+                    window.deselectAllAdLists();
+                }
+            }
+        }
+    })
+})();
+</script>
