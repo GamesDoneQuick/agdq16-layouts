@@ -55,9 +55,10 @@ module.exports = function(nodecg) {
 
     // On changed/added
     function reloadAdvertisements(filepath) {
-        if (!filepath) return;
-        nodecg.log.info('Advertisement "%s" changed, reloading all advertisements...', path.basename(filepath));
-
+        if (filepath) {
+            nodecg.log.info('Advertisement "%s" changed, reloading all advertisements...', path.basename(filepath));
+        }
+        
         // Scan the images dir
         var adsDir = fs.readdirSync(ADVERTISEMENTS_PATH);
         adsDir.forEach(function(adFilename) {
