@@ -263,8 +263,6 @@ define([
     function showTotal() {
         var tmpTL = new TimelineLite();
 
-        console.log('showTotal', state.totalShowing);
-
         if (!state.totalShowing) {
             tmpTL.call(function() {
                 TweenLite.to(totalContainer, 0.7, {
@@ -434,7 +432,7 @@ define([
 
     function showCurrentBids(immediate) {
         if (immediate) tl.clear();
-        
+
         if (globals.currentBids.length > 0) {
             var showedLabel = false;
 
