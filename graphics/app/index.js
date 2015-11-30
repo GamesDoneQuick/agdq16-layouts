@@ -1,4 +1,4 @@
-/* global requirejs, Typekit */
+/* global requirejs, Typekit, TweenLite */
 (function() {
     'use strict';
 
@@ -47,7 +47,6 @@
                 });
             }
 
-
             createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
             function checkReplicantsAndPreloader() {
@@ -63,6 +62,10 @@
                     ], function(bg, speedrun, omnibar, layout) {
                         layout('3ds');
                         window.layout = layout;
+                        layoutState.value = 'open';
+
+                        // Fade up the body once everything is loaded
+                        TweenLite.to(document.body, 0.5, {delay: 0.2, opacity: 1, ease: Power1.easeInOut});
                     }
                 );
             }

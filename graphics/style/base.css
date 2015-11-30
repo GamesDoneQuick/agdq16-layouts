@@ -1,4 +1,7 @@
-body {margin: 0;}
+body {
+    margin: 0;
+    opacity: 0;
+}
 
 #container {
     position: absolute;
