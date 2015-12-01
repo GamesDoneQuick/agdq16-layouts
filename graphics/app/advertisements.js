@@ -11,6 +11,8 @@ define([
 
     /* ----- */
 
+    var adState = nodecg.Replicant('adState');
+
     function loadAd(ad) {
         console.log('[advertisements] Loading %s', ad.filename);
 
@@ -97,6 +99,7 @@ define([
     var tl = new TimelineLite({autoRemoveChildren: true});
 
     nodecg.listenFor('stopAd', function() {
+        adState.value = 'stopped';
         tl.clear();
         tl.to(imageContainer, FADE_DURATION, {
             opacity: 0,
@@ -170,6 +173,7 @@ define([
             tl.to(imageContainer, FADE_DURATION, {
                 onStart: function() {
                     currentImage.style.opacity = 1;
+                    adState.value = 'playing';
                 },
                 opacity: 1,
                 ease: FADE_EASE
@@ -180,11 +184,15 @@ define([
         tl.to(imageContainer, FADE_DURATION, {
             opacity: 0,
             ease: FADE_EASE,
-            onComplete: removeAdImages
+            onComplete: function() {
+                adState.value = 'stopped';
+                removeAdImages();
+            }
         }, 'start+=' + (IMAGE_AD_DURATION + FADE_DURATION));
     }
 
     function removeAdImages() {
+
         if (currentImage) {
             imageContainer.removeChild(currentImage);
             currentImage = null;
@@ -197,23 +205,17 @@ define([
     }
 
     function showAdVideo(video) {
+        video.removeEventListener('playing', playingListener);
+        video.removeEventListener('ended', endedListener);
+
         removeAdVideo();
         removeAdImages();
 
+        video.currentTime = 0;
         video.style.visibility = 'hidden';
         video.id = 'videoPlayer';
         video.classList.add('fullscreen');
         video.play();
-
-        var playingListener = function() {
-            video.style.visibility = 'visible';
-            video.removeEventListener('playing', playingListener);
-        };
-
-        var endedListener = function() {
-            video.remove();
-            video.removeEventListener('ended', endedListener);
-        };
 
         // The videos sometimes look at bit weird when they first start playing.
         // To polish things up a bit, we hide the video until the 'playing' event is fired.
@@ -227,9 +229,21 @@ define([
 
     function removeAdVideo() {
         while (document.getElementById('videoPlayer')) {
-            document.getElementById('videoPlayer').remove();
+            container.removeChild(document.getElementById('videoPlayer'));
         }
     }
+
+    var playingListener = function() {
+        this.style.visibility = 'visible';
+        this.removeEventListener('playing', playingListener);
+        adState.value = 'playing';
+    };
+
+    var endedListener = function() {
+        removeAdVideo();
+        this.removeEventListener('ended', endedListener);
+        adState.value = 'stopped';
+    };
 });
 
 

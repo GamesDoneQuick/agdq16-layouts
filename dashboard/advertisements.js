@@ -123,4 +123,23 @@
         var el = document.querySelector('ad-item[filename="' + filename + '"]');
         if (el) el.loaded = true;
     });
+
+    /* ----- */
+
+    var adState = nodecg.Replicant('adState');
+    var status = document.getElementById('status');
+    adState.on('change', function(oldVal, newVal) {
+        switch (newVal) {
+            case 'stopped':
+                status.innerText = 'Not currently playing an ad.';
+                status.style.fontWeight = 'normal';
+                break;
+            case 'playing':
+                status.innerText = 'An ad is in progress.';
+                status.style.fontWeight = 'bold';
+                break;
+            default:
+                throw new Error('Unexpected adState: "' + newVal + '"');
+        }
+    });
 })();

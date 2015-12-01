@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="shared-panel-styles.css">
 
     <style is="custom-style">
+        body {
+            margin-bottom: 0;
+        }
+
         #container {
             @apply(--layout-horizontal);
         }
@@ -42,6 +46,12 @@
 
         #ftb {
             margin-left: 4px;
+        }
+
+        #statusArea {
+            @apply(--layout-horizontal);
+            @apply(--layout-center-center);
+            height: 50px;
         }
 
         .column {
@@ -100,6 +110,10 @@
         </paper-button>
         <paper-button id="stop" class="nodecg-danger">Stop</paper-button>
         <paper-button id="ftb" raised>FTB</paper-button>
+    </div>
+
+    <div id="statusArea">
+        <span id="status">Not currently playing an ad.</span>
     </div>
 
     <div id="notReady" class="cover">
