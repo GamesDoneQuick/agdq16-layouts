@@ -281,7 +281,7 @@ define([
                         state.totalShowing = true;
                     },
                     x: totalContainer.showingX,
-                    ease: Power2.easeIn
+                    ease: Power2.easeOut
                 });
             }, null, null, '+=0.01');
 
