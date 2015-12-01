@@ -8,12 +8,12 @@ module.exports = function(nodecg) {
         process.exit(1);
     }
 
-    /*try {
+    try {
         require('./prizes')(nodecg);
     } catch (e) {
         nodecg.log.error('Failed to load "prizes" lib:', e.stack);
         process.exit(1);
-    }*/
+    }
 
     /*try {
         require('./bids')(nodecg);
