@@ -29,7 +29,7 @@ define([
         totalShowing: true,
         labelShowing: false
     };
-    var displayDuration = 2;
+    var displayDuration = 3;
     var lastShownGrandPrize;
 
     /* ----- */
@@ -182,26 +182,32 @@ define([
         color = color || WHITE;
 
         if (mainLine1.text) {
-            tmpTL.add('exit');
-
             tmpTL.to(mainLine1, 0.5, {
-                y: -18,
+                y: -20,
                 ease: Power2.easeIn
-            }, 'exit');
+            });
+
+            // Delay for a sec
+            tmpTL.to({}, 0.25, {});
         }
 
-        tmpTL.add('enter');
+        tmpTL.call(function() {
+            mainLine1.text = text;
 
-        tmpTL.to(mainLine1, 1.2, {
-            onStart: function() {
-                mainLine1.text = text;
+            if (text) {
                 mainLine1.x = mainLine1.restingX - mainLine1.getBounds().width - 20;
                 mainLine1.y = mainLine1.restingY;
                 mainLine1.color = color;
-            },
-            x: mainLine1.restingX,
-            ease: Power2.easeOut
-        }, 'enter');
+            }
+        }, null, null, '+=0.01');
+
+
+        if (text) {
+            tmpTL.to(mainLine1, 1.2, {
+                x: mainLine1.restingX,
+                ease: Power2.easeOut
+            });
+        }
 
         return tmpTL;
     }
@@ -211,26 +217,31 @@ define([
         color = color || WHITE;
 
         if (mainLine2.text) {
-            tmpTL.add('exit');
-
             tmpTL.to(mainLine2, 0.5, {
                 y: 50,
                 ease: Power2.easeIn
-            }, 'exit');
+            });
+
+            // Delay for a sec
+            tmpTL.to({}, 0.25, {});
         }
 
-        tmpTL.add('enter');
+        tmpTL.call(function() {
+            mainLine2.text = text;
 
-        tmpTL.to(mainLine2, 1.2, {
-            onStart: function() {
-                mainLine2.text = text;
+            if (text) {
                 mainLine2.x = mainLine2.restingX - mainLine2.getBounds().width - 20;
                 mainLine2.y = mainLine2.restingY;
                 mainLine2.color = color;
-            },
-            x: mainLine2.restingX,
-            ease: Power2.easeOut
-        }, 'enter');
+            }
+        }, null, null, '+=0.01');
+
+        if (text) {
+            tmpTL.to(mainLine2, 1.2, {
+                x: mainLine2.restingX,
+                ease: Power2.easeOut
+            });
+        }
 
         return tmpTL;
     }
@@ -306,6 +317,10 @@ define([
     var mainContainer = new createjs.Container();
     mainContainer.x = GDQ_LOGO_WIDTH;
     mainContainer.addChild(mainLine1, mainLine2, labelBg, labelText, totalContainer);
+
+    var mainContainerMask = new createjs.Shape();
+    mainContainerMask.graphics.drawRect(GDQ_LOGO_WIDTH, 0, OMNIBAR_WIDTH_MINUS_LOGO, OMNIBAR_HEIGHT);
+    mainContainer.mask = mainContainerMask;
 
     omnibar.addChild(barBg, mainContainer, cta, gdqLogo, pcfLogo);
 
@@ -545,7 +560,11 @@ define([
 
         if (globals.currentGrandPrizes.length > 0 || globals.currentNormalPrizes.length > 0) {
             var prizesToDisplay = globals.currentNormalPrizes.slice(0);
-            tl.call(showLabel, ['RAFFLE\nPRIZES', 30]);
+            tl.to({}, 0.3, {
+                onStart: function() {
+                    showLabel('RAFFLE\nPRIZES', 30)
+                }
+            });
 
             if (globals.currentGrandPrizes.length) {
                 // Figure out what grand prize to show in this batch.
@@ -562,22 +581,31 @@ define([
             }
 
             // Loop over each prize and queue it up on the timeline
-            prizesToDisplay.forEach(showPrize);
+            prizesToDisplay.forEach(function(prize) {
+                showPrize(prize);
+            });
         }
 
-        tl.call(showUpNext, null, null, '+=0.01');
+        tl.to({}, 0.3, {
+            onStart: function() {
+                showMainLine1('');
+                showMainLine2('');
+            },
+            onComplete: showUpNext
+        });
     }
 
     function showPrize(prize, immediate) {
         if (immediate) {
             tl.clear();
-            tl.call(showLabel, ['RAFFLE\nPRIZES', 30]);
+            tl.call(showLabel, ['RAFFLE\nPRIZES', 30], null, '+=0.01');
         }
 
         // GSAP is dumb with `call` sometimes. Putting this in a near-zero duration tween seems to be more reliable.
         tl.to({}, 0.01, {
             onComplete: function() {
-                showMainLine1('PROVIDED BY ' + prize.provided);
+                console.log('showing prize', prize.name);
+                showMainLine1('Provided by ' + prize.provided);
 
                 if (prize.grand) {
                     showMainLine2('Grand Prize: ' + prize.name + ' (Minimum Bid: ' + prize.minimumbid + ')');
@@ -592,7 +620,13 @@ define([
 
         // If we're just showing this one prize on-demand, show "Up Next" next.
         if (immediate) {
-            tl.call(showUpNext, null, null, '+=0.01');
+            tl.to({}, 0.3, {
+                onStart: function() {
+                    showMainLine1('');
+                    showMainLine2('');
+                },
+                onComplete: showUpNext
+            });
         }
     }
 
