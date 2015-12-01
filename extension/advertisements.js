@@ -53,7 +53,7 @@ module.exports = function(nodecg) {
     watcher.on('add', debounce(reloadAdvertisements, 500));
     watcher.on('change', debounce(reloadAdvertisements, 500));
 
-    watcher.on('unlink', debounce(function(filepath) {
+    watcher.on('unlink', function(filepath) {
         var adFilename = path.basename(filepath);
         nodecg.log.info('Advertisement "%s" deleted, removing from list...', adFilename);
 
@@ -65,7 +65,7 @@ module.exports = function(nodecg) {
                 return true;
             }
         });
-    }, 500));
+    });
 
     watcher.on('error', function(e) {
         nodecg.error(e.stack);
