@@ -93,8 +93,10 @@
         window.checkVideoPlayButton();
         if (newVal) {
             ftbButton.classList.add('nodecg-warning');
+            playVideoButton.querySelector('span').innerText = 'Play Selected Ad';
         } else {
             ftbButton.classList.remove('nodecg-warning');
+            playVideoButton.querySelector('span').innerText = 'FTB To Play Video';
         }
     });
 
