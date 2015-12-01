@@ -461,7 +461,11 @@ define([
                 // We have at least one bid to show, so show the label
                 if (!showedLabel) {
                     showedLabel = true;
-                    tl.call(showLabel, ['BID WAR', 33]);
+                    tl.to({}, 0.3, {
+                        onStart: function() {
+                            showLabel('BID WAR', 33);
+                        }
+                    });
                 }
 
                 // If we have already have our three bids determined, we still need to check
@@ -480,7 +484,13 @@ define([
             });
         }
 
-        tl.call(showCurrentPrizes, null, null, '+=0.01');
+        tl.to({}, 0.3, {
+            onStart: function() {
+                showMainLine1('');
+                showMainLine2('');
+            },
+            onComplete: showCurrentPrizes
+        });
     }
 
     function showBid(bid, immediate) {
@@ -551,7 +561,13 @@ define([
 
         // If we're just showing this one bid on-demand, show "Prizes" next.
         if (immediate) {
-            tl.call(showCurrentPrizes, null, null, '+=0.01');
+            tl.to({}, 0.3, {
+                onStart: function() {
+                    showMainLine1('');
+                    showMainLine2('');
+                },
+                onComplete: showCurrentPrizes
+            });
         }
     }
 
@@ -562,7 +578,7 @@ define([
             var prizesToDisplay = globals.currentNormalPrizes.slice(0);
             tl.to({}, 0.3, {
                 onStart: function() {
-                    showLabel('RAFFLE\nPRIZES', 30)
+                    showLabel('RAFFLE\nPRIZES', 30);
                 }
             });
 
@@ -604,7 +620,6 @@ define([
         // GSAP is dumb with `call` sometimes. Putting this in a near-zero duration tween seems to be more reliable.
         tl.to({}, 0.01, {
             onComplete: function() {
-                console.log('showing prize', prize.name);
                 showMainLine1('Provided by ' + prize.provided);
 
                 if (prize.grand) {
