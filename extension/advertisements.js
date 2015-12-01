@@ -3,6 +3,7 @@
 var chokidar = require('chokidar');
 var path = require('path');
 var fs = require('fs');
+var format = require('util').format;
 var debounce = require('debounce');
 var md5File = require('md5-file');
 
@@ -13,6 +14,26 @@ var VIDEO_EXTS = ['.webm'];
 
 module.exports = function(nodecg) {
     nodecg.log.info('Monitoring "%s" for changes to advertisement assets...', ADVERTISEMENTS_PATH);
+
+    var currentRun = nodecg.Replicant('currentRun');
+    nodecg.listenFor('logAdPlay', function(ad) {
+        var runnerNames = currentRun.value.runners.reduce(function(prev, curr) {
+            if (typeof prev === 'string') {
+                return prev + ' ' + curr.name;
+            } else {
+                return prev.name + ' ' + curr.name;
+            }
+        });
+
+        var logStr = format('%s, %s, %s, %s\n',
+            new Date().toISOString(), ad.filename, currentRun.value.name, runnerNames);
+
+        fs.appendFile('logs/ad_log.csv', logStr, function (err) {
+            if (err) {
+                nodecg.log.error('[advertisements] Error appending to log:', err.stack);
+            }
+        });
+    });
 
     var ads = nodecg.Replicant('ads', {defaultValue: [], persistent: false});
     nodecg.Replicant('ftb', {defaultValue: false});

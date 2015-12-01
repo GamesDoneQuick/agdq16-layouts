@@ -112,12 +112,14 @@ define([
         if (ad.type === 'image') {
             if (result) {
                 showAdImage(result);
+                nodecg.sendMessage('logAdPlay', ad);
             } else {
                 throw new Error('Tried to play ad but ad was not preloaded:' + ad.filename);
             }
         } else if (ad.type === 'video') {
             if (result) {
                 showAdVideo(result);
+                nodecg.sendMessage('logAdPlay', ad);
             } else {
                 throw new Error('Tried to play ad but ad was not preloaded:' + ad.filename);
             }
