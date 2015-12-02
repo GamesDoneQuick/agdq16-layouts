@@ -70,5 +70,15 @@ define([
         currentLayoutIndex = Object.keys(layouts).indexOf(name);
     }
 
-    return setLayout;
+    return Object.create(Object.prototype, {
+        changeTo: {
+            value: setLayout
+        },
+        currentLayoutName: {
+            get: function() {return currentLayoutName;}
+        },
+        currentLayoutIndex: {
+            get: function() {return currentLayoutIndex;}
+        }
+    });
 });

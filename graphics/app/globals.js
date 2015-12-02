@@ -68,6 +68,9 @@ define(function() {
         },
         totalRep: {
             value: totalRep
+        },
+        currentLayoutName: {
+            get: function() {return layout.currentLayoutName;}
         }
     });
 });

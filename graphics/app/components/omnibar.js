@@ -2,8 +2,9 @@
 define([
     'preloader',
     'globals',
-    'classes/stage'
-], function (preloader, globals, Stage) {
+    'classes/stage',
+    'layout'
+], function (preloader, globals, Stage, layout) {
     'use strict';
 
     var OMNIBAR_HEIGHT = 55;
@@ -413,10 +414,16 @@ define([
     }
 
     function showUpNext(immediate) {
-        if (globals.nextRun) {
+        var upNextRun = layout.currentLayoutName === 'break' ? globals.currentRun : globals.nextRun;
+
+        if (upNextRun) {
             if (immediate) tl.clear();
 
-            tl.call(showLabel, ['UP NEXT', 32]);
+            tl.to({}, 0.3, {
+                onStart: function() {
+                    showLabel('UP NEXT', 32);
+                }
+            });
 
             // GSAP is dumb with `call` sometimes. Putting this in a near-zero duration tween seems to be more reliable.
             tl.to({}, 0.01, {
@@ -425,15 +432,27 @@ define([
                      * after window.nextRun has been set to null. In that case, we immediately clear the
                      * timeline and bail out to showing bids again.
                      */
-                    if (globals.nextRun) {
-                        var runnerNames = globals.nextRun.runners.reduce(function(prev, curr) {
-                            return prev + ', ' + curr.name;
+                    var upNextRun = layout.currentLayoutName === 'break' ? globals.currentRun : globals.nextRun;
+                    if (upNextRun) {
+                        var runnerNames = upNextRun.runners.reduce(function(prev, curr) {
+                            if (typeof prev === 'object') {
+                                return prev.name + ', ' + curr.name;
+                            } else {
+                                return prev + ', ' + curr.name;
+                            }
                         });
                         showMainLine1(runnerNames);
-                        showMainLine2(globals.nextRun.game + ' - ' + globals.nextRun.category);
+                        showMainLine2(upNextRun.name + ' - ' + upNextRun.category);
                     } else {
                         tl.clear();
-                        tl.call(showCurrentBids);
+
+                        tl.to({}, 0.3, {
+                            onStart: function() {
+                                showMainLine1('');
+                                showMainLine2('');
+                            },
+                            onComplete: showCurrentBids
+                        });
                     }
                 }
             });
@@ -442,7 +461,13 @@ define([
             tl.to({}, displayDuration, {});
         }
 
-        tl.call(showCTA, null, null, '+=0.01');
+        tl.to({}, 0.3, {
+            onStart: function() {
+                showMainLine1('');
+                showMainLine2('');
+            },
+            onComplete: showCTA
+        });
     }
 
     function showCurrentBids(immediate) {
@@ -657,27 +682,25 @@ define([
             default:
                 throw new Error('Invalid barDemand type: ' + data.type);
         }
-    }.bind(this));
+    });
 
     nodecg.listenFor('barCurrentBids', function() {
         showCurrentBids(true);
-    }.bind(this));
+    });
 
     nodecg.listenFor('barCurrentPrizes', function() {
         showCurrentPrizes(true);
-    }.bind(this));
+    });
 
     nodecg.listenFor('barUpNext', function() {
         showUpNext(true);
-    }.bind(this));
+    });
 
     nodecg.listenFor('barCTA', function() {
         showCTA(true);
-    }.bind(this));
+    });
 
-    nodecg.listenFor('barGDQMonitor', function(message) {
-        showGDQMonitor(message);
-    }.bind(this));
+    //nodecg.listenFor('barGDQMonitor', showGDQMonitor);
 
     // CTA is the first thing we show, so we use this to start our loop
     showCTA();

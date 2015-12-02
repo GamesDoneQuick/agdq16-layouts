@@ -32,7 +32,7 @@ define([
 
             scene.sources.some(function(source) {
                 if (source.name.indexOf('Layout ') === 0) {
-                    layout(source.name.split(' ')[1]);
+                    layout.changeTo(source.name.split(' ')[1]);
                 }
             });
         });
