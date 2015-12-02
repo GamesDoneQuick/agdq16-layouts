@@ -35,11 +35,13 @@
     });
 
     // Wait until Typekit fonts are loaded before setting up the graphic.
-    try {
+    /*try {
         Typekit.load({active: init});
     } catch (e) {
         console.error(e);
-    }
+    }*/
+
+    init();
 
     function init() {
         requirejs(['preloader', 'globals', 'easel'], function (preloader, globals, createjs) {
