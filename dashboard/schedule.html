@@ -182,43 +182,45 @@
             nodecg.sendMessage('previousRun');
         });
 
-        var currentRun = nodecg.Replicant('currentRun');
-        var runInfoName = document.querySelector('label-value[label="Name"]');
-        var runInfoConsole = document.querySelector('label-value[label="Console"]');
-        var runInfoRunners = document.querySelector('label-value[label="Runners"]');
-        var runInfoEstimate = document.querySelector('label-value[label="Estimate"]');
-        var runInfoCategory = document.querySelector('label-value[label="Category"]');
-        var runInfoOrder = document.querySelector('label-value[label="Order"]');
-        currentRun.on('change', function(oldVal, newVal) {
-            if (!newVal) return;
+        schedule.on('declared', function() {
+            var currentRun = nodecg.Replicant('currentRun');
+            var runInfoName = document.querySelector('label-value[label="Name"]');
+            var runInfoConsole = document.querySelector('label-value[label="Console"]');
+            var runInfoRunners = document.querySelector('label-value[label="Runners"]');
+            var runInfoEstimate = document.querySelector('label-value[label="Estimate"]');
+            var runInfoCategory = document.querySelector('label-value[label="Category"]');
+            var runInfoOrder = document.querySelector('label-value[label="Order"]');
+            currentRun.on('change', function(oldVal, newVal) {
+                if (!newVal) return;
 
-            runInfoName.value = newVal.name;
-            runInfoConsole.value = newVal.console;
-            runInfoRunners.value = newVal.runners;
-            runInfoEstimate.value = newVal.estimate;
-            runInfoCategory.value = newVal.category;
-            runInfoOrder.value = newVal.order;
+                runInfoName.value = newVal.name;
+                runInfoConsole.value = newVal.console;
+                runInfoRunners.value = newVal.runners;
+                runInfoEstimate.value = newVal.estimate;
+                runInfoCategory.value = newVal.category;
+                runInfoOrder.value = newVal.order;
 
-            if (newVal.nextRun) {
-                nextRunSpan.innerText = newVal.nextRun.name
-            } else {
-                nextRunSpan.innerText = 'None';
-            }
+                if (newVal.nextRun) {
+                    nextRunSpan.innerText = newVal.nextRun.name
+                } else {
+                    nextRunSpan.innerText = 'None';
+                }
 
-            // Disable "prev" button if at start of schedule
-            if (newVal.order <= 1) {
-                previousBtn.setAttribute('disabled', 'true');
-            } else {
-                previousBtn.removeAttribute('disabled');
-            }
+                // Disable "prev" button if at start of schedule
+                if (newVal.order <= 1) {
+                    previousBtn.setAttribute('disabled', 'true');
+                } else {
+                    previousBtn.removeAttribute('disabled');
+                }
 
-            // Disable "next" button if at end of schedule
-            if (schedule.value && newVal.order >= schedule.value.length) {
-                nextBtn.setAttribute('disabled', 'true');
-            } else {
-                nextBtn.removeAttribute('disabled');
-            }
-        });
+                // Disable "next" button if at end of schedule
+                if (schedule.value || newVal.order >= schedule.value.length) {
+                    nextBtn.setAttribute('disabled', 'true');
+                } else {
+                    nextBtn.removeAttribute('disabled');
+                }
+            });
+        })
     </script>
 </body>
 </html>
