@@ -71,6 +71,8 @@ define([
     });
 
     function showPrize(prize) {
+        console.log('showPrize', prize.name);
+
         var imgEl;
         if (preloadedImages[prize.name]) {
             imgEl = preloadedImages[prize.name];
@@ -85,7 +87,9 @@ define([
             nextImage.image = imgEl;
             if (!imgEl.complete) {
                 tl.pause();
-                imgEl.addEventListener('load', tl.play.bind(tl));
+                imgEl.addEventListener('load', function() {
+                    tl.play();
+                });
             }
         }, null, null, '+=0.1');
 
