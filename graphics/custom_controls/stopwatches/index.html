@@ -75,10 +75,18 @@
         #resetAll:hover {
             background-color: var(--nodecg-configure-color--dark);
         }
+
+        #checklistStatus {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div id="container" class="layout vertical">
+        <div class="layout horizontal center-center">
+            <span id="checklistStatus"></span>
+        </div>
+
         <gdq-stopwatch index="0"></gdq-stopwatch>
         <gdq-stopwatch index="1"></gdq-stopwatch>
         <gdq-stopwatch index="2"></gdq-stopwatch>
@@ -90,7 +98,7 @@
                     <iron-icon icon="av:play-arrow" title="Start/Resume All"></iron-icon>
                     Start All
                 </div>
-                <span id="startAll-notReady">Complete checklist first</span>
+                <span id="startAll-notReady">Checklist Incomplete</span>
             </paper-button>
 
             <paper-button id="pauseAll" class="flex">
