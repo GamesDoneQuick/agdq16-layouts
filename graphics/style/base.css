@@ -39,6 +39,12 @@ body {
     z-index: 11;
 }
 
+#fontPreloader {
+    position: absolute;
+    visibility: hidden;
+    font-family: 'proxima-nova';
+}
+
 .fullscreen {
     position: absolute;
     width: 1280px;
