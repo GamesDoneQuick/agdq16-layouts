@@ -178,9 +178,18 @@ define([
     mainLine2.x = 190;
     mainLine2.y = 18;
 
+    var _latestMainLine1 = {};
     function showMainLine1(text, color) {
-        var tmpTL = new TimelineLite();
         color = color || WHITE;
+
+        if (text === _latestMainLine1.text && color === _latestMainLine1.color) {
+            return;
+        } else {
+            _latestMainLine1.text = text;
+            _latestMainLine1.color = color;
+        }
+
+        var tmpTL = new TimelineLite();
 
         if (mainLine1.text) {
             tmpTL.to(mainLine1, 0.5, {
@@ -213,9 +222,18 @@ define([
         return tmpTL;
     }
 
+    var _latestMainLine2 = {};
     function showMainLine2(text, color) {
-        var tmpTL = new TimelineLite();
         color = color || WHITE;
+
+        if (text === _latestMainLine2.text && color === _latestMainLine2.color) {
+            return;
+        } else {
+            _latestMainLine2.text = text;
+            _latestMainLine2.color = color;
+        }
+
+        var tmpTL = new TimelineLite();
 
         if (mainLine2.text) {
             tmpTL.to(mainLine2, 0.5, {
