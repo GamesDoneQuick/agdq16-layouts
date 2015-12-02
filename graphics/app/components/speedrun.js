@@ -237,74 +237,91 @@ define([
         recacheForeground();
     });
 
-    /**
-     *  Sets the position and dimensions of the SpeedRun element.
-     *  Transitions to the new position and dimenstions with a hard cut, and restarts the boxart scroll anim.
-     *  @param {Number} x - The x position to set.
-     *  @param {Number} y - The y position to set.
-     *  @param {Number} w - The width to set.
-     *  @param {Number} h - The height to set.
-     *  @param {Object} opts - The options to set.
-     *  @param {Number} opts.nameY - How far from the top to place the name.
-     *  @param {Number} opts.nameMaxHeight - The maximum height of the name.
-     *  @param {Number} opts.categoryY - Hor far from the top to place the category.
-     *  @param {Number} [opts.scale=1] - The scale to draw all the individual elements at.
-     *  @param {Boolean} [opts.showEstimate] - Whether or not to show the run's estimate.
-     */
-    return function (x, y, w, h, opts) {
-        console.log('setSpeedRunDimensions | x: %s, y: %s, w: %s, h: %s', x, y, w, h);
 
-        if (typeof opts.nameY === 'undefined') {
-            throw new Error('opts.nameY must be defined');
-        } else if (typeof opts.nameMaxHeight === 'undefined') {
-            throw new Error('opts.nameMaxHeight must be defined');
-        } else if (typeof opts.categoryY === 'undefined') {
-            throw new Error('opts.categoryY must be defined');
-        }
+    return {
+        disable: function() {
+            stage.visible = false;
+            stage.paused = true;
+            stage.canvas.style.display = 'none';
+        },
 
-        gOpts = opts;
-        opts.scale = opts.scale || 1;
-        opts.consolePosition = opts.consolePosition || 'right';
+        enable: function() {
+            stage.visible = true;
+            stage.paused = false;
+            stage.canvas.style.display = 'block';
+        },
 
-        gWidth = w;
-        gHeight = h;
-
-        stage.canvas.style.left = x + 'px';
-        stage.canvas.style.top = y + 'px';
-
-        /* Okay, this is a new one.
-         * Enforcing a minimum canvas width of 330 and rounding the
-         * canvas height up to the nearest hundred seems to have a dramatic positive impact on performance.
+        /**
+         *  Sets the position and dimensions of the SpeedRun element.
+         *  Transitions to the new position and dimenstions with a hard cut, and restarts the boxart scroll anim.
+         *  @param {Number} x - The x position to set.
+         *  @param {Number} y - The y position to set.
+         *  @param {Number} w - The width to set.
+         *  @param {Number} h - The height to set.
+         *  @param {Object} opts - The options to set.
+         *  @param {Number} opts.nameY - How far from the top to place the name.
+         *  @param {Number} opts.nameMaxHeight - The maximum height of the name.
+         *  @param {Number} opts.categoryY - Hor far from the top to place the category.
+         *  @param {Number} [opts.scale=1] - The scale to draw all the individual elements at.
+         *  @param {Boolean} [opts.showEstimate] - Whether or not to show the run's estimate.
          */
-        stage.canvas.width = Math.max(w, 330);
-        stage.canvas.height = Math.max(Math.ceil(h/100)*100, 200);
+        configure:  function (x, y, w, h, opts) {
+            console.log('setSpeedRunDimensions | x: %s, y: %s, w: %s, h: %s', x, y, w, h);
 
-        name.scaleX = name.scaleY = opts.scale;
-        categoryContainer.scaleX = categoryContainer.scaleY = opts.scale;
-        consoleBitmap.scaleX = consoleBitmap.scaleY = opts.scale;
+            this.enable();
 
-        name.x = w - 10;
+            if (typeof opts.nameY === 'undefined') {
+                throw new Error('opts.nameY must be defined');
+            } else if (typeof opts.nameMaxHeight === 'undefined') {
+                throw new Error('opts.nameMaxHeight must be defined');
+            } else if (typeof opts.categoryY === 'undefined') {
+                throw new Error('opts.categoryY must be defined');
+            }
 
-        categoryContainer.y = opts.categoryY;
+            gOpts = opts;
+            opts.scale = opts.scale || 1;
+            opts.consolePosition = opts.consolePosition || 'right';
 
-        if (opts.showEstimate) {
-            estimateContainer.visible = true;
-            estimateContainer.x = gWidth;
-            estimateContainer.y = categoryContainer.y + categoryRect.h + 14;
-            estimate.x = estimateRect.w - 34;
+            gWidth = w;
+            gHeight = h;
 
-            consoleBitmap.y = estimateContainer.y;
-            consoleBitmap.regX = 0;
-            consoleBitmap.x = 8;
-        } else {
-            estimateContainer.visible = false;
-            consoleBitmap.regX = CONSOLE_WIDTH-4;
-            consoleBitmap.x = w - 8;
-            consoleBitmap.y = categoryContainer.y;
+            stage.canvas.style.left = x + 'px';
+            stage.canvas.style.top = y + 'px';
+
+            /* Okay, this is a new one.
+             * Enforcing a minimum canvas width of 330 and rounding the
+             * canvas height up to the nearest hundred seems to have a dramatic positive impact on performance.
+             */
+            stage.canvas.width = Math.max(w, 330);
+            stage.canvas.height = Math.max(Math.ceil(h/100)*100, 200);
+
+            name.scaleX = name.scaleY = opts.scale;
+            categoryContainer.scaleX = categoryContainer.scaleY = opts.scale;
+            consoleBitmap.scaleX = consoleBitmap.scaleY = opts.scale;
+
+            name.x = w - 10;
+
+            categoryContainer.y = opts.categoryY;
+
+            if (opts.showEstimate) {
+                estimateContainer.visible = true;
+                estimateContainer.x = gWidth;
+                estimateContainer.y = categoryContainer.y + categoryRect.h + 14;
+                estimate.x = estimateRect.w - 34;
+
+                consoleBitmap.y = estimateContainer.y;
+                consoleBitmap.regX = 0;
+                consoleBitmap.x = 8;
+            } else {
+                estimateContainer.visible = false;
+                consoleBitmap.regX = CONSOLE_WIDTH-4;
+                consoleBitmap.x = w - 8;
+                consoleBitmap.y = categoryContainer.y;
+            }
+
+            redrawBoxartAfterImageLoad();
+            calcAndSetNameStyle();
+            recacheForeground();
         }
-
-        redrawBoxartAfterImageLoad();
-        calcAndSetNameStyle();
-        recacheForeground();
     };
 });

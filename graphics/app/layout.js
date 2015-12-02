@@ -13,6 +13,8 @@ define([
     'layouts/16x9_1',
     'layouts/16x9_2',
 
+    'layouts/break',
+
     'layouts/ds',
     'layouts/ds_portrait'
 ], function() {
@@ -32,11 +34,13 @@ define([
         '16x9_1': arguments[7],
         '16x9_2': arguments[8],
 
-        'ds': arguments[9],
-        'ds_portrait': arguments[10]
+        'break': arguments[9],
+
+        'ds': arguments[10],
+        'ds_portrait': arguments[11]
     };
 
-    var currentLayout, currentLayoutIndex;
+    var currentLayoutName, currentLayoutIndex;
     var numLayouts = Object.keys(layouts).length;
     window.nextLayout = function() {
           if (typeof currentLayoutIndex === 'undefined') {
@@ -55,9 +59,14 @@ define([
 
     function setLayout(name) {
         console.log('layout |', name);
-        layouts[name]();
 
-        currentLayout = name;
+        if (currentLayoutName && layouts[currentLayoutName].detached){
+            layouts[currentLayoutName].detached();
+        }
+
+        layouts[name].attached();
+
+        currentLayoutName = name;
         currentLayoutIndex = Object.keys(layouts).indexOf(name);
     }
 

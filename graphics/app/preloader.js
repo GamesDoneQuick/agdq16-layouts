@@ -22,6 +22,8 @@ define(function () {
         {id: 'bg-16x9_1', src: 'img/backgrounds/16x9_1.png'},
         {id: 'bg-16x9_2', src: 'img/backgrounds/16x9_2.png'},
 
+        {id: 'bg-break', src: 'img/backgrounds/break.png'},
+
         {id: 'bg-ds', src: 'img/backgrounds/ds.png'},
         {id: 'bg-ds_portrait', src: 'img/backgrounds/ds_portrait.png'},
 
