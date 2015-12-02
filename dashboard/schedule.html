@@ -200,10 +200,13 @@
                 runInfoCategory.value = newVal.category;
                 runInfoOrder.value = newVal.order;
 
+                // Disable "next" button if at end of schedule
                 if (newVal.nextRun) {
-                    nextRunSpan.innerText = newVal.nextRun.name
+                    nextRunSpan.innerText = newVal.nextRun.name;
+                    nextBtn.removeAttribute('disabled');
                 } else {
                     nextRunSpan.innerText = 'None';
+                    nextBtn.setAttribute('disabled', 'true');
                 }
 
                 // Disable "prev" button if at start of schedule
@@ -211,13 +214,6 @@
                     previousBtn.setAttribute('disabled', 'true');
                 } else {
                     previousBtn.removeAttribute('disabled');
-                }
-
-                // Disable "next" button if at end of schedule
-                if (schedule.value || newVal.order >= schedule.value.length) {
-                    nextBtn.setAttribute('disabled', 'true');
-                } else {
-                    nextBtn.removeAttribute('disabled');
                 }
             });
         })

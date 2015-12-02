@@ -35,6 +35,12 @@
         "width": 4,
         "headerColor": "#2d4e8a",
         "file": "advertisements.html"
+      },{
+        "name": "checklist",
+        "title": "Checklist",
+        "width": 4,
+        "headerColor": "#2d4e8a",
+        "file": "checklist.html"
       }
     ],
     "graphics": [

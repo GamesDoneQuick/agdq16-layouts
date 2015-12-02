@@ -3,7 +3,7 @@
 <link rel="import" href="../../../components/iron-icons/av-icons.html">
 <link rel="import" href="../../../components/iron-icons/editor-icons.html">
 <link rel="import" href="../../../components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../components/paper-button/paper-button.html">
+<link rel="import" href="../../../components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../components/paper-input/paper-input.html">
 <link rel="import" href="time-only-validator.html">
 
@@ -45,10 +45,10 @@
             @apply(--layout-flex-none);
         }
 
-        #controls iron-icon {
+        #controls paper-icon-button {
             cursor: pointer;
-            --iron-icon-height: 4em;
-            --iron-icon-width: 4em;
+            width: 5.5em;
+            height: 5.5em;
         }
 
         #minorControls {
@@ -59,14 +59,19 @@
             @apply(--layout-justified);
         }
 
-        #minorControls iron-icon {
-            --iron-icon-height: 1.9em;
-            --iron-icon-width: 1.9em;
+        #minorControls paper-icon-button {
+            width: 2.6em;
+            height: 2.6em;
         }
 
         #play {color: #43ac6a;}
 
         #play:hover {color: #358753;}
+
+        #play[disabled] {
+            color: #373737;
+            opacity: 0.3;
+        }
 
         #pause {color: #e99002; }
 
@@ -82,12 +87,7 @@
             color: var(--nodecg-configure-color--dark);
         }
 
-        #edit {
-            margin-bottom: 0.25em;
-        }
-
         #reset {
-            margin-top: 0.25em;
             transform: scaleX(-1);
         }
 
@@ -100,13 +100,13 @@
             <span id="runner" title="{{runner}}">{{runner}}</span>
         </div>
         <div id="controls">
-            <iron-icon id="play" icon="av:play-arrow" title="Start/Resume" on-tap="tapPlay"></iron-icon>
-            <iron-icon id="pause" icon="av:pause" title="Pause" on-tap="tapPause"></iron-icon>
-            <iron-icon id="finish" src="checkered_flag.png" title="Finish" on-tap="tapFinish"></iron-icon>
+            <paper-icon-button id="play" icon="av:play-arrow" title="Start/Resume" on-tap="tapPlay"></paper-icon-button>
+            <paper-icon-button id="pause" icon="av:pause" title="Pause" on-tap="tapPause"></paper-icon-button>
+            <paper-icon-button id="finish" src="checkered_flag.png" title="Finish" on-tap="tapFinish"></paper-icon-button>
 
             <div id="minorControls">
-                <iron-icon id="edit" icon="editor:mode-edit" title="Edit" on-tap="tapEdit"></iron-icon>
-                <iron-icon id="reset" icon="refresh" title="Reset" on-tap="tapReset"></iron-icon>
+                <paper-icon-button id="edit" icon="editor:mode-edit" title="Edit" on-tap="tapEdit"></paper-icon-button>
+                <paper-icon-button id="reset" icon="refresh" title="Reset" on-tap="tapReset"></paper-icon-button>
             </div>
         </div>
     </template>

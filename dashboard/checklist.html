@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="import" href="components/iron-flex-layout/classes/iron-flex-layout.html">
+    <link rel="import" href="components/paper-checkbox/paper-checkbox.html">
+    <style>
+        paper-checkbox {
+            padding-left: 4px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            width: 49%;
+        }
+    </style>
+</head>
+<body>
+    <div id="list" class="layout horizontal wrap"></div>
+
+    <script>
+        var listEl = document.getElementById('list');
+        var checklist = nodecg.Replicant('checklist');
+        checklist.on('change', function(oldVal, newVal) {
+            // Update all checkboxes, or add new ones if needed.
+            newVal.forEach(function(task) {
+                var existingPaperCheckbox = document.querySelector('paper-checkbox[taskName="' + task.name + '"]');
+                if (existingPaperCheckbox) {
+                    existingPaperCheckbox.checked = task.complete;
+                } else {
+                    var paperCheckbox = document.createElement('paper-checkbox');
+                    paperCheckbox.setAttribute('taskName', task.name);
+                    paperCheckbox.querySelector('#checkboxLabel').textContent = task.name;
+                    paperCheckbox.checked = task.complete;
+                    listEl.appendChild(paperCheckbox);
+                }
+            });
+
+            // Find and remove any checkboxes that are no longer needed.
+            var checkboxes = Array.prototype.slice.call(document.querySelectorAll('paper-checkbox'));
+            checkboxes.forEach(function(checkbox) {
+                var taskName = checkbox.getAttribute('taskName');
+                var foundTask = checklist.value.some(function(task) {
+                    if (task.name === taskName) {
+                        return true;
+                    }
+                });
+
+                if (!foundTask) {
+                    checkbox.remove();
+                }
+            });
+        });
+
+        document.addEventListener('change', function(e) {
+            var taskName = e.target.getAttribute('taskName');
+            checklist.value.some(function(task) {
+                if (task.name === taskName) {
+                    task.complete = e.target.checked;
+                    return true;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -53,6 +53,10 @@
             background-color: #358753;
         }
 
+        #startAll-notReady {
+            display: none;
+        }
+
         #pauseAll {
             margin-right: 0.5em;
             margin-left: 0.5em;
@@ -82,8 +86,11 @@
 
         <div id="globalButtons" class="layout horizontal">
             <paper-button id="startAll" class="flex">
-                <iron-icon icon="av:play-arrow" title="Start/Resume All"></iron-icon>
-                Start All
+                <div id="startAll-ready" class="layout horizontal center">
+                    <iron-icon icon="av:play-arrow" title="Start/Resume All"></iron-icon>
+                    Start All
+                </div>
+                <span id="startAll-notReady">Complete checklist first</span>
             </paper-button>
 
             <paper-button id="pauseAll" class="flex">

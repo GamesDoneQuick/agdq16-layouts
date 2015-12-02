@@ -13,6 +13,7 @@ var Q = require('q');
 var format = require('util').format;
 
 module.exports = function (nodecg) {
+    var checklist = require('./checklist')(nodecg);
     var scheduleRep = nodecg.Replicant('schedule', {defaultValue: [], persistent: false});
     var currentRun = nodecg.Replicant('currentRun', {defaultValue: {}});
 
@@ -45,6 +46,7 @@ module.exports = function (nodecg) {
     nodecg.listenFor('nextRun', function(cb) {
         var nextIndex = currentRun.value.nextRun.order - 1;
         _setCurrentRun(scheduleRep.value[nextIndex]);
+        checklist.reset();
 
         if (typeof cb === 'function') {
             cb();
@@ -54,6 +56,7 @@ module.exports = function (nodecg) {
     nodecg.listenFor('previousRun', function(cb) {
         var prevIndex = currentRun.value.order - 2;
         _setCurrentRun(scheduleRep.value[prevIndex]);
+        checklist.reset();
 
         if (typeof cb === 'function') {
             cb();

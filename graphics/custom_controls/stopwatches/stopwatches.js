@@ -19,6 +19,31 @@
 
     /* ----- */
 
+    var startButtons = Array.prototype.slice.call(document.querySelectorAll('#play'));
+
+    var checklistComplete = nodecg.Replicant('checklistComplete');
+    checklistComplete.on('change', function(oldVal, newVal) {
+        if (newVal) {
+            startButtons.forEach(function(button) {
+                button.removeAttribute('disabled');
+            });
+
+            startAll.removeAttribute('disabled');
+            startAll.querySelector('#startAll-notReady').style.display = 'none';
+            startAll.querySelector('#startAll-ready').style.display = 'flex';
+        } else {
+            startButtons.forEach(function(button) {
+                button.setAttribute('disabled', 'true');
+            });
+
+            startAll.setAttribute('disabled', 'true');
+            startAll.querySelector('#startAll-notReady').style.display = 'inline';
+            startAll.querySelector('#startAll-ready').style.display = 'none';
+        }
+    });
+
+    /* ----- */
+
     var dialogIndex = 0;
     var runnerNameEls = Array.prototype.slice.call(document.getElementsByClassName('runnerName'));
 
