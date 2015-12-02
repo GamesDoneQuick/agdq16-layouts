@@ -6,6 +6,7 @@ define(function() {
     var scheduleRep = nodecg.Replicant('schedule');
     var currentRunRep = nodecg.Replicant('currentRun');
     var totalRep = nodecg.Replicant('total');
+    var displayDurationRep = nodecg.Replicant('displayDuration');
 
     /* ----- */
 
@@ -25,7 +26,7 @@ define(function() {
     /* ----- */
 
     // This is really fragile, but whatever.
-    var NUM_REPLICANTS = 5;
+    var NUM_REPLICANTS = 6;
     var loadedReplicants = 0;
 
     currentBidsRep.on('declared', replicantDeclared);
@@ -33,6 +34,7 @@ define(function() {
     currentRunRep.on('declared', replicantDeclared);
     currentPrizesRep.on('declared', replicantDeclared);
     totalRep.on('declared', replicantDeclared);
+    displayDurationRep.on('declared', replicantDeclared);
 
     function replicantDeclared() {
         loadedReplicants++;
@@ -45,8 +47,14 @@ define(function() {
     /* ----- */
 
     return Object.create(Object.prototype, {
+        // Bids
         currentBids: {
             get: function() {return currentBidsRep.value;}
+        },
+
+        // Prizes
+        currentPrizesRep: {
+            value: currentPrizesRep
         },
         currentGrandPrizes: {
             get: function() {return currentGrandPrizes;}
@@ -54,6 +62,8 @@ define(function() {
         currentNormalPrizes: {
             get: function() {return currentNormalPrizes;}
         },
+
+        // Schedule
         schedule: {
             get: function() {return scheduleRep.value;}
         },
@@ -66,11 +76,13 @@ define(function() {
         currentRunRep: {
             value: currentRunRep
         },
+
+        // Other
         totalRep: {
             value: totalRep
         },
-        currentLayoutName: {
-            get: function() {return layout.currentLayoutName;}
+        displayDuration: {
+            get: function() {return displayDurationRep.value;}
         }
     });
 });

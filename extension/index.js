@@ -1,6 +1,9 @@
 'use strict';
 
 module.exports = function(nodecg) {
+    // Initialize this here because there's kinda nowhere better to do it.
+    nodecg.Replicant('displayDuration', {defaultValue: 10});
+
     try {
         require('./schedule')(nodecg);
     } catch (e) {

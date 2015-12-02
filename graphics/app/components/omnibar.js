@@ -30,7 +30,6 @@ define([
         totalShowing: true,
         labelShowing: false
     };
-    var displayDuration = 3;
     var lastShownGrandPrize;
 
     /* ----- */
@@ -377,7 +376,7 @@ define([
 
         // Exit Line 1
         tl
-            .add('showCTA_Line1Exit', '+=' + displayDuration)
+            .add('showCTA_Line1Exit', '+=' + globals.displayDuration)
             .to(ctaLeftText, CTA_VERT_SLIDE_TIME, {
                 y: -40,
                 ease: Power2.easeIn
@@ -407,7 +406,7 @@ define([
 
         // Exit Line 2
         tl
-            .add('showCTA_Line2Exit', '+=' + displayDuration)
+            .add('showCTA_Line2Exit', '+=' + globals.displayDuration)
             .to(ctaLeftText, CTA_VERT_SLIDE_TIME, {
                 x: ctaLeftText.hiddenX,
                 ease: Power2.easeIn
@@ -476,7 +475,7 @@ define([
             });
 
             // Give it some time to show
-            tl.to({}, displayDuration, {});
+            tl.to({}, globals.displayDuration, {});
         }
 
         tl.to({}, 0.3, {
@@ -600,7 +599,7 @@ define([
         }
 
         // Give the bid some time to show
-        tl.to({}, displayDuration, {});
+        tl.to({}, globals.displayDuration, {});
 
         // If we're just showing this one bid on-demand, show "Prizes" next.
         if (immediate) {
@@ -674,7 +673,7 @@ define([
         });
 
         // Give the prize some time to show
-        tl.to({}, displayDuration, {});
+        tl.to({}, globals.displayDuration, {});
 
         // If we're just showing this one prize on-demand, show "Up Next" next.
         if (immediate) {
