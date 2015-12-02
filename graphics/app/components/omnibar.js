@@ -121,14 +121,14 @@ define([
 
         if (state.labelShowing) {
             tmpTL.to(labelText, 0.25, {
-                opacity: 0,
+                alpha: 0,
                 ease: Power1.easeInOut,
                 onComplete: setLabelText,
                 onCompleteParams: [text, size]
             });
 
             tmpTL.to(labelText, 0.25, {
-                opacity: 1,
+                alpha: 1,
                 ease: Power1.easeInOut
             });
         }
