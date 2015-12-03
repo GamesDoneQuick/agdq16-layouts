@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="import" href="components/iron-flex-layout/classes/iron-flex-layout.html">
+    <link rel="import" href="components/paper-button/paper-button.html">
+    <link rel="import" href="components/nodecg-toggle/nodecg-toggle.html">
+    <link rel="stylesheet" href="shared-panel-styles.css">
+    <style>
+        #total {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        #update {
+            margin-right: 4px;
+        }
+
+        #edit {
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h2 id="total">?</h2>
+
+    <div class="layout horizontal" style="margin-bottom: 8px;">
+        <paper-button id="update" class="flex" raised>Force Update</paper-button>
+        <paper-button id="edit" class="nodecg-configure" nodecg-dialog="edit-total">Edit...</paper-button>
+    </div>
+
+    <nodecg-toggle replicant-name="autoUpdateTotal">Automatic Updates</nodecg-toggle>
+
+    <script>
+        var totalDisplay = document.getElementById('total');
+        var total = nodecg.Replicant('total');
+        total.on('change', function(oldVal, newVal) {
+            totalDisplay.innerText = newVal.formatted;
+        });
+
+        var toast = document.getElementById('toast');
+        var update = document.getElementById('update');
+        update.addEventListener('click', function() {
+            update.setAttribute('disabled', 'true');
+            nodecg.sendMessage('updateTotal', function (err, updated) {
+                update.removeAttribute('disabled');
+
+                if (err) {
+                    console.error(err.message);
+                    toast.text = 'Error updating total. Check console.';
+                    toast.show();
+                    return;
+                }
+
+                if (updated) {
+                    console.info('[agdq16-layouts] Total successfully updated');
+                    toast.text = 'Successfully updated total.';
+                    toast.show();
+                } else {
+                    console.info('[agdq16-layouts] Total unchanged, not updated');
+                    toast.text = 'Total unchanged, not updated.';
+                    toast.show();
+                }
+            });
+        });
+
+        var totalInput = window.top.document.querySelector('#agdq16-layouts_edit-total iframe')
+                .contentDocument.getElementById('input');
+        document.getElementById('edit').addEventListener('click', function() {
+            totalInput.value = total.value.raw;
+        });
+    </script>
+</body>
+</html>

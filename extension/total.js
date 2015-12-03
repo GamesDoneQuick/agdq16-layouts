@@ -1,6 +1,6 @@
 'use strict';
 
-var DONATION_STATS_URL = 'https://gamesdonequick.com/tracker/16?json';
+var DONATION_STATS_URL = 'https://gamesdonequick.com/tracker/17?json';
 var POLL_INTERVAL = 60 * 1000;
 
 var util = require('util');
@@ -9,17 +9,30 @@ var request = require('request');
 var numeral = require('numeral');
 
 module.exports = function (nodecg) {
-    var total = nodecg.Replicant('total', {defaultValue: '$0'});
-    var autoUpdateTotal = nodecg.Replicant('autoUpdateTotal', {defaultValue: true})
-        .on('change', function(oldVal, newVal) {
-            if (newVal) {
-                nodecg.log.info('Automatic updating of donation total enabled');
-                updateTotal(true);
-            } else {
-                nodecg.log.warn('Automatic updating of donation total DISABLED');
-                clearInterval(updateInterval);
-            }
-        });
+    var total = nodecg.Replicant('total', {
+        defaultValue: {
+            raw: 0,
+            formatted: '$0'
+        }
+    });
+
+    var autoUpdateTotal = nodecg.Replicant('autoUpdateTotal', {defaultValue: true});
+    autoUpdateTotal.on('change', function(oldVal, newVal) {
+        if (newVal) {
+            nodecg.log.info('Automatic updating of donation total enabled');
+            updateTotal(true);
+        } else {
+            nodecg.log.warn('Automatic updating of donation total DISABLED');
+            clearInterval(updateInterval);
+        }
+    });
+
+    nodecg.listenFor('setTotal', function(raw) {
+        total.value = {
+            raw: raw,
+            formatted: numeral(raw).format('$0,0')
+        };
+    });
 
     // Get initial data
     update();
@@ -58,10 +71,13 @@ module.exports = function (nodecg) {
         request(DONATION_STATS_URL, function (error, response, body) {
             if (!error && response.statusCode === 200) {
                 var stats = JSON.parse(body);
-                var freshTotal = numeral(parseFloat(stats.agg.amount || 0)).format('$0,0');
+                var freshTotal = parseFloat(stats.agg.amount || 0);
 
-                if (freshTotal !== total.value) {
-                    total.value = freshTotal;
+                if (freshTotal !== total.value.raw) {
+                    total.value = {
+                        raw: freshTotal,
+                        formatted: numeral(freshTotal).format('$0,0')
+                    };
                     deferred.resolve(true);
                 } else {
                     deferred.resolve(false);
@@ -69,7 +85,8 @@ module.exports = function (nodecg) {
             } else {
                 var msg = 'Could not get donation total, unknown error';
                 if (error) msg = util.format('Could not get donation total:', error.message);
-                else if (response) msg = util.format('Could not get donation total, response code %d', response.statusCode);
+                else if (response) msg = util.format('Could not get donation total, response code %d',
+                    response.statusCode);
                 nodecg.log.error(msg);
                 deferred.reject(msg);
             }

@@ -278,7 +278,7 @@ define([
     totalContainer.addChild(totalLeftBorder, totalText);
 
     globals.totalRep.on('change', function(oldVal, newVal) {
-        totalText.text = newVal;
+        totalText.text = newVal.formatted;
         var totalContainerWidth = totalContainer.getBounds().width;
         totalContainer.showingX = OMNIBAR_WIDTH_MINUS_LOGO - totalContainerWidth - PCF_LOGO_WIDTH - 36;
         totalContainer.hiddenX = totalContainer.showingX + OMNIBAR_WIDTH_MINUS_LOGO - totalContainer.showingX;
