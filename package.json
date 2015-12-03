@@ -41,6 +41,12 @@
         "width": 4,
         "headerColor": "#2d4e8a",
         "file": "checklist.html"
+      },{
+        "name": "omnibar",
+        "title": "Omnibar",
+        "width": 2,
+        "headerColor": "#2d4e8a",
+        "file": "omnibar.html"
       }
     ],
     "graphics": [
