@@ -19,6 +19,7 @@
 
     /* ----- */
 
+    var container = document.getElementById('container');
     var startButtons = Array.prototype.slice.call(document.querySelectorAll('#play'));
     var checklistStatus = document.getElementById('checklistStatus');
 
@@ -35,6 +36,8 @@
 
             checklistStatus.innerText = 'Checklist Complete';
             checklistStatus.style.fontWeight = 'normal';
+
+            container.style.backgroundColor = '';
         } else {
             startButtons.forEach(function(button) {
                 button.setAttribute('disabled', 'true');
@@ -46,6 +49,8 @@
 
             checklistStatus.innerText = 'Checklist Incomplete, complete before starting';
             checklistStatus.style.fontWeight = 'bold';
+
+            container.style.backgroundColor = '#FFCECE';
         }
     });
 
