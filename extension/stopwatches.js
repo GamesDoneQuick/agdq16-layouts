@@ -24,7 +24,7 @@ module.exports = function (nodecg) {
         if (stopwatches.value[index].time) {
             var ts = stopwatches.value[index].time.split(':');
             startMs = Date.UTC(1970, 0, 1, ts[0], ts[1], ts[2]);
-            
+
             if (stopwatches.value[index].lastTick) {
                 startMs += Date.now() - stopwatches.value[index].lastTick;
             }
@@ -98,7 +98,10 @@ module.exports = function (nodecg) {
 
     function resetStopwatch(index, cb) {
         if (index === 'all') {
-            rieussecs.forEach(function(sw) { sw.reset(); });
+            rieussecs.forEach(function(sw, index) {
+                sw.reset();
+                stopwatches.value[index].lastTick = null;
+            });
 
             if (typeof cb === 'function') {
                 cb();
@@ -107,6 +110,7 @@ module.exports = function (nodecg) {
             return stopwatches.value;
         } else if (index >= 0 && index < NUM_STOPWATCHES) {
             rieussecs[index].reset();
+            stopwatches.value[index].lastTick = null;
 
             if (typeof cb === 'function') {
                 cb();
