@@ -55,7 +55,6 @@ module.exports = function(nodecg) {
 
     return {
         reset: function() {
-            console.log('resetting checklist');
             checklist.value.forEach(function(task) {
                 task.complete = false;
             });
