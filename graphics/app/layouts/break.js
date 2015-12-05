@@ -18,6 +18,11 @@ define([
     stage.canvas.style.right = '0px';
     stage.canvas.style.backgroundColor = 'black';
 
+    // Start hidden
+    stage.visible = false;
+    stage.paused = true;
+    stage.canvas.style.display = 'none';
+
     /* ----- */
 
     var labelContainer = new createjs.Container();
