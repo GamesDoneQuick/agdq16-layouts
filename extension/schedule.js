@@ -105,8 +105,8 @@ module.exports = function (nodecg) {
 
                 // If no currentRun is set or if the order of the current run is greater than
                 // the length of the schedule, set current run to the first run.
-                if (typeof(currentRun.value.name) === 'undefined'
-                    || currentRun.value.order >= scheduleRep.value.length) {
+                if (typeof(currentRun.value.order) === 'undefined'
+                    || currentRun.value.order > scheduleRep.value.length) {
 
                     _setCurrentRun(scheduleRep.value[0]);
                 }
