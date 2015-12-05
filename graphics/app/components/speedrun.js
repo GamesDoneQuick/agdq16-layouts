@@ -89,6 +89,9 @@ define([
 
     /* ----- */
 
+    var stageMask = new createjs.Shape();
+    var stageMaskRect = stageMask.graphics.drawRect(0, 0, 0, 0).command;
+    stage.mask = stageMask;
     stage.addChild(bgContainer1, bgContainer2, foreground);
 
     /**
@@ -269,6 +272,8 @@ define([
             console.log('setSpeedRunDimensions | x: %s, y: %s, w: %s, h: %s', x, y, w, h);
 
             this.enable();
+            stageMaskRect.w = w;
+            stageMaskRect.h = h;
 
             if (typeof opts.nameY === 'undefined') {
                 throw new Error('opts.nameY must be defined');
