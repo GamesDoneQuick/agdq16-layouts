@@ -8,7 +8,7 @@ define(function() {
     function Stage(w, h, id) {
         // Create the canvas element that will become the render target.
         var stageEl = document.createElement('canvas');
-        stageEl.id = id;
+        if (id) stageEl.id = id;
         stageEl.width = w;
         stageEl.height = h;
         stageEl.style.position = 'absolute';
