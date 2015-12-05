@@ -30,7 +30,8 @@
             easel: '../components/EaselJS/lib/easeljs-0.8.1.min',
             classes: './classes',
             components: './components',
-            layouts: './layouts'
+            layouts: './layouts',
+            debounce: '../components/javascipt-debounce/dist/javascript-debounce.min'
         }
     });
 
