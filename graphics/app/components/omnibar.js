@@ -51,7 +51,6 @@ define([
         .drawRect(GDQ_LOGO_WIDTH, 0, OMNIBAR_WIDTH_MINUS_LOGO, OMNIBAR_HEIGHT);
     barBg.cache(GDQ_LOGO_WIDTH, 0, OMNIBAR_WIDTH_MINUS_LOGO, OMNIBAR_HEIGHT);
 
-
     /* ----- */
 
     var CTA_CENTER_X = PCF_LOGO_WIDTH / 2 + 12;
@@ -285,7 +284,7 @@ define([
 
         totalContainer.x = state.totalShowing ? totalContainer.showingX : totalContainer.hiddenX;
 
-        mainLine1.maxWidth = totalContainer.x - mainLine1.x - 12;
+        mainLine1.maxWidth = totalContainer.showingX - mainLine1.x - 12;
         mainLine2.maxWidth = mainLine1.maxWidth - 4;
     });
 
