@@ -76,8 +76,6 @@ define([
     });
 
     function showPrize(prize) {
-        console.log('showPrize', prize.name);
-
         var imgEl;
         if (preloadedImages[prize.name]) {
             imgEl = preloadedImages[prize.name];
