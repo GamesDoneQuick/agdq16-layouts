@@ -12,6 +12,7 @@ var request = require('request');
 var clone = require('clone');
 var Q = require('q');
 var format = require('util').format;
+var equals = require('deep-equal');
 
 module.exports = function (nodecg) {
     var checklist = require('./checklist')(nodecg);
@@ -102,6 +103,12 @@ module.exports = function (nodecg) {
                 });
                 /* jshint +W106 */
 
+                // If nothing has changed, return.
+                if (equals(formattedSchedule, scheduleRep.value)) {
+                    deferred.resolve(false);
+                    return;
+                }
+
                 scheduleRep.value = formattedSchedule;
 
                 // If no currentRun is set or if the order of the current run is greater than
@@ -149,6 +156,9 @@ module.exports = function (nodecg) {
     function _setCurrentRun(run) {
         var cr = clone(run);
         if (scheduleRep.value[cr.order]) cr.nextRun = scheduleRep.value[cr.order];
-        currentRun.value = cr;
+
+        if (!equals(cr, currentRun.value)) {
+            currentRun.value = cr;
+        }
     }
 };
