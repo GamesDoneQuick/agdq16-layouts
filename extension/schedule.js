@@ -1,6 +1,7 @@
 'use strict';
 
-var SCHEDULE_URL = 'https://gamesdonequick.com/tracker/search/?type=run&event=17';
+//var SCHEDULE_URL = 'https://gamesdonequick.com/tracker/search/?type=run&event=17';
+var SCHEDULE_URL = 'https://dl.dropboxusercontent.com/u/6089084/agdq_mock/schedule.json';
 var POLL_INTERVAL = 60 * 1000;
 var BOXART_ASPECT_RATIO = 1.397;
 var BOXART_WIDTH = 469;
