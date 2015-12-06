@@ -1,4 +1,4 @@
-/* global define, TimelineMax, TimelineLite, Power2, Power3 */
+/* global define, requirejs, TimelineMax, TimelineLite, Power2, Power3 */
 define([
     'preloader',
     'globals',
@@ -17,18 +17,18 @@ define([
     var createjs = requirejs('easel');
 
     /**
-     * Creates a new Nameplate instance.
+     * Creates a new CompactNameplate instance.
      * @constructor
      * @extends createjs.Container
      */
-    function Nameplate(index, alignment) {
+    function CompactNameplate(index, alignment) {
         /* jshint -W106 */
         this.Container_constructor();
         this.setup(index, alignment);
         /* jshint +W106 */
     }
 
-    var p = createjs.extend(Nameplate, createjs.Container);
+    var p = createjs.extend(CompactNameplate, createjs.Container);
 
     p.setup = function(index, alignment) {
         var stage = new Stage(WIDTH, 167); // Extra height to hit 256x257 minimum for hardware acceleration
@@ -289,5 +289,5 @@ define([
         this.stage.canvas.style.display = 'block';
     };
 
-    return createjs.promote(Nameplate, 'Container');
+    return createjs.promote(CompactNameplate, 'Container');
 });
