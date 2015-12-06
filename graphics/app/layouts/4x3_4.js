@@ -2,8 +2,8 @@
 define([
     'components/background',
     'components/speedrun',
-    'components/runners'
-], function(setBackground, speedrun, runners) {
+    'components/compact_nameplates'
+], function(setBackground, speedrun, compactNameplates) {
     'use strict';
 
     var LAYOUT_NAME = '4x3_4';
@@ -11,13 +11,15 @@ define([
     return {
         attached: function() {
             setBackground(LAYOUT_NAME);
+
             speedrun.configure(442, 154, 396, 170, {
                 nameY: 20,
                 categoryY: 81,
                 nameMaxHeight: 70,
                 showEstimate: true
             });
-            runners.configure([
+
+            compactNameplates.configure([
                 {
                     threeOrMore: true,
                     bottomBorder: true
@@ -35,6 +37,10 @@ define([
                     alignRight: true
                 }
             ]);
+        },
+
+        detached: function() {
+            compactNameplates.disable();
         }
     };
 });
