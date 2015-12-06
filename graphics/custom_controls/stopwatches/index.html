@@ -16,19 +16,23 @@
         body {margin: 0;}
 
         #container {
-            padding: 0.5em;
             height: 100vh;
             min-height: 500px;
             box-sizing: border-box;
         }
 
+        #checklistStatusContainer {
+            border-bottom: 1px solid #9E9E9E;
+            padding: 0.2em 0;
+            margin-bottom: 0.5em;
+        }
+
         #globalButtons {
             border-top: 1px solid #9E9E9E;
-            padding-top: 1em;
             margin-top: 0.5em;
             font-size: 1.1em;
             height: 2.5em;
-            margin-bottom: 1em;
+            padding: 1em 0.5em;
         }
 
         #globalButtons paper-button {
@@ -83,7 +87,7 @@
 </head>
 <body>
     <div id="container" class="layout vertical">
-        <div class="layout horizontal center-center">
+        <div id="checklistStatusContainer" class="layout horizontal center-center">
             <span id="checklistStatus"></span>
         </div>
 

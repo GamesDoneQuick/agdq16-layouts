@@ -19,8 +19,9 @@
 
     /* ----- */
 
-    var container = document.getElementById('container');
+    var globalButtons = document.getElementById('globalButtons');
     var startButtons = Array.prototype.slice.call(document.querySelectorAll('#play'));
+    var checklistStatusContainer = document.getElementById('checklistStatusContainer');
     var checklistStatus = document.getElementById('checklistStatus');
 
     var checklistComplete = nodecg.Replicant('checklistComplete');
@@ -36,8 +37,8 @@
 
             checklistStatus.innerText = 'Checklist Complete';
             checklistStatus.style.fontWeight = 'normal';
-
-            container.style.backgroundColor = '';
+            checklistStatusContainer.style.backgroundColor = '';
+            globalButtons.style.backgroundColor = '';
         } else {
             startButtons.forEach(function(button) {
                 button.setAttribute('disabled', 'true');
@@ -49,8 +50,8 @@
 
             checklistStatus.innerText = 'Checklist Incomplete, complete before starting';
             checklistStatus.style.fontWeight = 'bold';
-
-            container.style.backgroundColor = '#FFCECE';
+            checklistStatusContainer.style.backgroundColor = '#ff6d6b';
+            globalButtons.style.backgroundColor = '#ff6d6b';
         }
     });
 

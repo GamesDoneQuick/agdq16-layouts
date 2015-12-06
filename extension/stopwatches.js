@@ -45,10 +45,6 @@ module.exports = function (nodecg) {
             stopwatch.lastTick = Date.now();
         });
 
-        rieussec.on('state', function(state) {
-            stopwatch.state = state;
-        });
-
         return rieussec;
     });
 
@@ -140,6 +136,7 @@ module.exports = function (nodecg) {
         }
 
         rieussecs[index].start();
+        stopwatches.value[index].state = 'running';
         recalcPlaces();
         return stopwatches.value[index];
     }
@@ -151,6 +148,7 @@ module.exports = function (nodecg) {
         }
 
         rieussecs[index].pause();
+        stopwatches.value[index].state = 'paused';
         recalcPlaces();
         return stopwatches.value[index];
     }
@@ -179,6 +177,7 @@ module.exports = function (nodecg) {
 
         rieussecs[index].reset();
         stopwatches.value[index].lastTick = null;
+        stopwatches.value[index].state = 'stopped';
         recalcPlaces();
 
         return stopwatches.value[index];
