@@ -4,7 +4,7 @@ var Rieussec = require('rieussec');
 var NUM_STOPWATCHES = 4;
 
 module.exports = function (nodecg) {
-    var defaultStopwatch = {time: '00:00:00', state: 'stopped', milliseconds: 0};
+    var defaultStopwatch = {time: '00:00:00', state: 'stopped', milliseconds: 0, runnerName: '?'};
     var defaultStopwatches = [defaultStopwatch, defaultStopwatch, defaultStopwatch, defaultStopwatch];
     var stopwatches = nodecg.Replicant('stopwatches', {defaultValue: defaultStopwatches});
 
@@ -19,180 +19,232 @@ module.exports = function (nodecg) {
 
     // Make an array of 4 Rieussec stopwatches
     var rieussecs = [null, null, null, null].map(function(val, index) {
+        var stopwatch =  stopwatches.value[index];
+
         // Load the existing time and start the stopwatch at that.
         var startMs = 0;
-        if (stopwatches.value[index].time) {
-            var ts = stopwatches.value[index].time.split(':');
+        if (stopwatch.time) {
+            var ts = stopwatch.time.split(':');
             startMs = Date.UTC(1970, 0, 1, ts[0], ts[1], ts[2]);
 
-            if (stopwatches.value[index].lastTick) {
-                startMs += Date.now() - stopwatches.value[index].lastTick;
+            if (stopwatch.state === 'running') {
+                startMs += Date.now() - stopwatch.lastTick;
             }
         }
 
         var rieussec = new Rieussec();
         rieussec.setMilliseconds(startMs);
 
-        if (stopwatches.value[index].state === 'running') {
+        if (stopwatch.state === 'running') {
             rieussec.start();
         }
 
         rieussec.on('tick', function(ms) {
-            stopwatches.value[index].time = msToTime(ms);
-            stopwatches.value[index].milliseconds = ms;
-            stopwatches.value[index].lastTick = Date.now();
+            stopwatch.time = msToTime(ms);
+            stopwatch.milliseconds = ms;
+            stopwatch.lastTick = Date.now();
         });
 
         rieussec.on('state', function(state) {
-            stopwatches.value[index].state = state;
+            stopwatch.state = state;
         });
 
         return rieussec;
     });
 
-    nodecg.listenFor('startTime', startStopwatch);
-    nodecg.listenFor('pauseTime', pauseStopwatch);
-    nodecg.listenFor('finishTime', finishStopwatch);
-    nodecg.listenFor('resetTime', resetStopwatch);
-    nodecg.listenFor('setTime', setStopwatch);
+    var handleStartTimeRequest = function(index) {
+        if (index === 'all') {
+            for (var i = 0; i < NUM_STOPWATCHES; i++) {
+                startStopwatch(i);
+            }
+            return stopwatches.value;
+        } else {
+            return startStopwatch(index);
+        }
+    };
+
+    var handlePauseTimeRequest = function(index) {
+        if (index === 'all') {
+            for (var i = 0; i < NUM_STOPWATCHES; i++) {
+                pauseStopwatch(i);
+            }
+            return stopwatches.value;
+        } else {
+            return pauseStopwatch(index);
+        }
+    };
+
+    var handleFinishTimeRequest = function(index) {
+        if (index === 'all') {
+            for (var i = 0; i < NUM_STOPWATCHES; i++) {
+                finishStopwatch(i);
+            }
+            return stopwatches.value;
+        } else {
+            return finishStopwatch(index);
+        }
+    };
+
+    var handleResetTimeRequest = function(index, cb) {
+        var retValue;
+
+        if (index === 'all') {
+            for (var i = 0; i < NUM_STOPWATCHES; i++) {
+                resetStopwatch(i);
+            }
+            retValue = stopwatches.value;
+        } else {
+            retValue = resetStopwatch(index);
+        }
+
+        if (typeof cb === 'function') {
+            cb(retValue);
+        }
+
+        return retValue;
+    };
+
+    var handleSetTimeRequest = function(data, cb) {
+        var retValue;
+
+        if (data.index === 'all') {
+            for (var i = 0; i < NUM_STOPWATCHES; i++) {
+                setStopwatch({index: i, ms: data.ms});
+            }
+            retValue = stopwatches.value;
+        } else {
+            retValue = setStopwatch(data);
+        }
+
+        if (typeof cb === 'function') {
+            cb();
+        }
+
+        return retValue;
+    };
+
+    nodecg.listenFor('startTime', handleStartTimeRequest);
+
+    nodecg.listenFor('pauseTime', handlePauseTimeRequest);
+
+    nodecg.listenFor('finishTime', handleFinishTimeRequest);
+
+    nodecg.listenFor('resetTime', handleResetTimeRequest);
+
+    nodecg.listenFor('setTime', handleSetTimeRequest);
 
     function startStopwatch(index) {
-        if (index === 'all') {
-            rieussecs.forEach(function(sw) { sw.start(); });
-            return stopwatches.value;
-        } else if (index >= 0 && index < NUM_STOPWATCHES) {
-            rieussecs[index].start();
-            return stopwatches.value[index];
-        } else {
-            nodecg.log.error('index "%d" sent to "startTime" is out of bounds', index);
-            return false;
+        if (index < 0 || index >= NUM_STOPWATCHES) {
+            nodecg.log.error('index "%d" sent to "startStopwatch" is out of bounds', index);
+            return;
         }
+
+        rieussecs[index].start();
+        recalcPlaces();
+        return stopwatches.value[index];
     }
 
     function pauseStopwatch(index) {
-        if (index === 'all') {
-            rieussecs.forEach(function(sw) { sw.pause(); });
-            return stopwatches.value;
-        } else if (index >= 0 && index < NUM_STOPWATCHES) {
-            rieussecs[index].pause();
-            return stopwatches.value[index];
-        } else {
-            nodecg.log.error('index "%d" sent to "pauseTime" is out of bounds', index);
-            return false;
+        if (index < 0 || index >= NUM_STOPWATCHES) {
+            nodecg.log.error('index "%d" sent to "pauseStopwatch" is out of bounds', index);
+            return;
         }
+
+        rieussecs[index].pause();
+        recalcPlaces();
+        return stopwatches.value[index];
     }
 
     function finishStopwatch(index) {
-        if (index === 'all') {
-            rieussecs.forEach(function(sw) { sw.pause(); });
-            return stopwatches.value;
-        } else if (index >= 0 && index < NUM_STOPWATCHES) {
-            rieussecs[index].pause();
-            stopwatches.value[index].state = 'finished';
-            return stopwatches.value[index];
-        } else {
+        if (index < 0 || index >= NUM_STOPWATCHES) {
             nodecg.log.error('index "%d" sent to "finishTime" is out of bounds', index);
-            return false;
+            return;
         }
+
+        var stopwatch = stopwatches.value[index];
+        if (stopwatch.state === 'finished') return;
+
+        rieussecs[index].pause();
+        stopwatch.state = 'finished';
+        recalcPlaces();
+
+        return stopwatch;
     }
 
-    function resetStopwatch(index, cb) {
-        if (index === 'all') {
-            rieussecs.forEach(function(sw, index) {
-                sw.reset();
-                stopwatches.value[index].lastTick = null;
-            });
-
-            if (typeof cb === 'function') {
-                cb();
-            }
-
-            return stopwatches.value;
-        } else if (index >= 0 && index < NUM_STOPWATCHES) {
-            rieussecs[index].reset();
-            stopwatches.value[index].lastTick = null;
-
-            if (typeof cb === 'function') {
-                cb();
-            }
-
-            return stopwatches.value[index];
-        } else {
-            nodecg.log.error('index "%d" sent to "resetTime" is out of bounds', index);
-
-            // TODO: This should display some kind of error in the reset-stopwatch dialog.
-            if (typeof cb === 'function') {
-                cb();
-            }
-
-            return false;
+    function resetStopwatch(index) {
+        if (index < 0 || index >= NUM_STOPWATCHES) {
+            nodecg.log.error('index "%d" sent to "resetStopwatch" is out of bounds', index);
+            return;
         }
+
+        rieussecs[index].reset();
+        stopwatches.value[index].lastTick = null;
+        recalcPlaces();
+
+        return stopwatches.value[index];
     }
 
     function startFinishStopwatch(index) {
-        if (index === 'all') {
-            rieussecs.forEach(function(sw, index) {
-                if (stopwatches.value[index].state === 'running') {
-                    finishStopwatch(index);
-                } else {
-                    startStopwatch(index);
-                }
-            });
-            return stopwatches.value;
-        } else if (index >= 0 && index < NUM_STOPWATCHES) {
-            if (stopwatches.value[index].state === 'running') {
-                finishStopwatch(index);
-            } else {
-                startStopwatch(index);
-            }
-            return stopwatches.value[index];
-        } else {
+        if (index < 0 || index >= NUM_STOPWATCHES) {
             nodecg.log.error('index "%d" sent to "startFinishStopwatch" is out of bounds', index);
-            return false;
+            return;
         }
+
+        if (stopwatches.value[index].state === 'running') {
+            finishStopwatch(index);
+        } else {
+            startStopwatch(index);
+        }
+
+        return stopwatches.value[index];
     }
 
-    function setStopwatch (data, cb) {
+    function setStopwatch (data) {
         var index = data.index;
-        if (index >= 0 && index < NUM_STOPWATCHES) {
-            // Pause all timers while we do our work.
-            // Best way to ensure that all the tick cycles stay in sync.
-            rieussecs.forEach(function(rieussec){
-                rieussec._cachedState = rieussec._state;
-                rieussec.pause();
-            });
-
-            rieussecs[index].setMilliseconds(data.ms, true);
-            var decimal = rieussecs[index]._milliseconds % 1;
-
-            // This is a silly hack, but set the decimal of all the Rieussec's millisecond counters to the same value.
-            // This too helps ensure that the tick cycles remain in sync.
-            rieussecs.forEach(function(rieussec){
-                var ms = Math.floor(rieussec._milliseconds) + decimal;
-                rieussec.setMilliseconds(ms);
-            });
-
-            rieussecs.forEach(function(rieussec){
-                if (rieussec._cachedState === 'running') {
-                    rieussec.start();
-                }
-            });
-
-            if (typeof cb === 'function') {
-                cb();
-            }
-
-            return stopwatches.value[index];
-        } else {
-            nodecg.log.error('index "%d" sent to "setTime" is out of bounds', index);
-
-            // TODO: This should display some kind of error in the edit-stopwatch dialog.
-            if (typeof cb === 'function') {
-                cb();
-            }
-
-            return false;
+        if (index < 0 || index >= NUM_STOPWATCHES) {
+            nodecg.log.error('index "%d" sent to "setStopwatch" is out of bounds', index);
+            return;
         }
+
+        // Pause all timers while we do our work.
+        // Best way to ensure that all the tick cycles stay in sync.
+        rieussecs.forEach(function(rieussec){
+            rieussec._cachedState = rieussec._state;
+            rieussec.pause();
+        });
+
+        rieussecs[index].setMilliseconds(data.ms, true);
+        var decimal = rieussecs[index]._milliseconds % 1;
+
+        // This is a silly hack, but set the decimal of all the Rieussec's millisecond counters to the same value.
+        // This too helps ensure that the tick cycles remain in sync.
+        rieussecs.forEach(function(rieussec){
+            var ms = Math.floor(rieussec._milliseconds) + decimal;
+            rieussec.setMilliseconds(ms);
+        });
+
+        rieussecs.forEach(function(rieussec){
+            if (rieussec._cachedState === 'running') {
+                rieussec.start();
+            }
+        });
+
+        return stopwatches.value[index];
+    }
+
+    function recalcPlaces() {
+        var finishedStopwatches = stopwatches.value.filter(function(s) {
+            s.place = 0;
+            return s.state === 'finished';
+        });
+
+        finishedStopwatches.sort(function(a, b) {
+            return a.ms - b.ms;
+        });
+
+        finishedStopwatches.forEach(function(s, index) {
+            s.place = index + 1;
+        });
     }
 
     var app = require('express')();
@@ -206,7 +258,7 @@ module.exports = function (nodecg) {
         });
 
         app.put('/agdq16-layouts/stopwatch/:index/start', function (req, res) {
-            var result = startStopwatch(req.params.index);
+            var result = handleStartTimeRequest(req.params.index);
             if (result) {
                 res.status(200).json(result);
             } else {
@@ -215,7 +267,7 @@ module.exports = function (nodecg) {
         });
 
         app.put('/agdq16-layouts/stopwatch/:index/pause', function (req, res) {
-            var result = pauseStopwatch(req.params.index);
+            var result = handlePauseTimeRequest(req.params.index);
             if (result) {
                 res.status(200).json(result);
             } else {
@@ -224,7 +276,7 @@ module.exports = function (nodecg) {
         });
 
         app.put('/agdq16-layouts/stopwatch/:index/finish', function (req, res) {
-            var result = finishStopwatch(req.params.index);
+            var result = handleFinishTimeRequest(req.params.index);
             if (result) {
                 res.status(200).json(result);
             } else {
@@ -233,7 +285,7 @@ module.exports = function (nodecg) {
         });
 
         app.put('/agdq16-layouts/stopwatch/:index/reset', function (req, res) {
-            var result = resetStopwatch(req.params.index);
+            var result = handleResetTimeRequest(req.params.index);
             if (result) {
                 res.status(200).json(result);
             } else {
@@ -242,7 +294,18 @@ module.exports = function (nodecg) {
         });
 
         app.put('/agdq16-layouts/stopwatch/:index/startfinish', function (req, res) {
-            var result = startFinishStopwatch(req.params.index);
+            var index = req.params.index;
+            var result;
+
+            if (index === 'all') {
+                for (var i = 0; i < NUM_STOPWATCHES; i++) {
+                    startFinishStopwatch(i);
+                }
+                result = stopwatches.value;
+            } else {
+                result = startFinishStopwatch(index);
+            }
+
             if (result) {
                 res.status(200).json(result);
             } else {
