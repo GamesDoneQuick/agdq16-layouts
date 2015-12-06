@@ -7,6 +7,7 @@ define(function() {
     var currentRunRep = nodecg.Replicant('currentRun');
     var totalRep = nodecg.Replicant('total');
     var displayDurationRep = nodecg.Replicant('displayDuration');
+    var stopwatchesRep = nodecg.Replicant('stopwatches');
 
     /* ----- */
 
@@ -26,7 +27,7 @@ define(function() {
     /* ----- */
 
     // This is really fragile, but whatever.
-    var NUM_REPLICANTS = 6;
+    var NUM_REPLICANTS = 7;
     var loadedReplicants = 0;
 
     currentBidsRep.on('declared', replicantDeclared);
@@ -35,6 +36,7 @@ define(function() {
     currentPrizesRep.on('declared', replicantDeclared);
     totalRep.on('declared', replicantDeclared);
     displayDurationRep.on('declared', replicantDeclared);
+    stopwatchesRep.on('declared', replicantDeclared);
 
     function replicantDeclared() {
         loadedReplicants++;
@@ -83,6 +85,9 @@ define(function() {
         },
         displayDuration: {
             get: function() {return displayDurationRep.value;}
+        },
+        stopwatchesRep: {
+            value: stopwatchesRep
         }
     });
 });

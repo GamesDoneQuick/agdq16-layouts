@@ -1,8 +1,9 @@
 /* global define */
 define([
     'components/background',
-    'components/speedrun'
-], function(setBackground, speedrun) {
+    'components/speedrun',
+    'components/runners'
+], function(setBackground, speedrun, runners) {
     'use strict';
 
     var LAYOUT_NAME = '4x3_4';
@@ -16,6 +17,24 @@ define([
                 nameMaxHeight: 70,
                 showEstimate: true
             });
+            runners.configure([
+                {
+                    threeOrMore: true,
+                    bottomBorder: true
+                },{
+                    threeOrMore: true,
+                    y: 78,
+                    alignRight: true
+                },{
+                    threeOrMore: true,
+                    y: 511,
+                    bottomBorder: true
+                },{
+                    threeOrMore: true,
+                    y: 589,
+                    alignRight: true
+                }
+            ]);
         }
     };
 });

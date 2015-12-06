@@ -32,7 +32,11 @@ define(function () {
 
         // Omnibar
         {id: 'omnibar-logo-gdq', src: 'img/omnibar/logo-gdq.png'},
-        {id: 'omnibar-logo-pcf', src: 'img/omnibar/logo-pcf.png'}
+        {id: 'omnibar-logo-pcf', src: 'img/omnibar/logo-pcf.png'},
+
+        // Nameplates
+        {id: 'nameplate-music-note', src: 'img/nameplate/music-note.png'},
+        {id: 'nameplate-twitch-logo', src: 'img/nameplate/twitch-logo.png'}
     ]);
 
     return queue;
