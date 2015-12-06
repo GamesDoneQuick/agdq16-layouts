@@ -17,16 +17,8 @@ module.exports = function(nodecg) {
 
     var currentRun = nodecg.Replicant('currentRun');
     nodecg.listenFor('logAdPlay', function(ad) {
-        var runnerNames = currentRun.value.runners.reduce(function(prev, curr) {
-            if (typeof prev === 'string') {
-                return prev + ' ' + curr.name;
-            } else {
-                return prev.name + ' ' + curr.name;
-            }
-        });
-
         var logStr = format('%s, %s, %s, %s\n',
-            new Date().toISOString(), ad.filename, currentRun.value.name, runnerNames);
+            new Date().toISOString(), ad.filename, currentRun.value.name, currentRun.value.concatenatedRunners);
 
         fs.appendFile('logs/ad_log.csv', logStr, function (err) {
             if (err) {

@@ -2,14 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="import" href="components/paper-button/paper-button.html">
     <link rel="import" href="components/paper-input/paper-input.html">
     <link rel="import" href="components/iron-flex-layout/classes/iron-flex-layout.html">
     <link rel="import" href="elements/edit-runner.html">
+    <style>
+        h5 {margin-bottom: -16px;}
+    </style>
 </head>
 <body>
-    <div class="layout horizontal">
+    <div class="layout horizontal flex">
         <!-- Left Column -->
-        <div class="flex layout vertical justified" style="margin-right: 8px;">
+        <div class="flex layout vertical" style="margin-right: 8px;">
+            <h5>General Run Info</h5>
             <paper-input type="text" label="Name"></paper-input>
             <paper-input type="text" label="Console"></paper-input>
             <paper-input type="text" label="Estimate"></paper-input>
@@ -40,11 +45,26 @@
             }
 
             // Add the new edit-runner element.
-            newVal.runners.forEach(function(runner) {
+            newVal.runners.forEach(function(runner, index) {
                 var editRunnerEl = document.createElement('edit-runner');
                 editRunnerEl.runner = runner;
+                editRunnerEl.index = index;
                 runners.appendChild(editRunnerEl);
             })
+        });
+
+        document.addEventListener('dialog-confirmed', function() {
+            currentRun.value.name = nameEl.value;
+            currentRun.value.console = consoleEl.value;
+            currentRun.value.estimate = estimateEl.value;
+            currentRun.value.category = categoryEl.value;
+
+            var numRunners = currentRun.value.runners.length;
+            for (var i = 0; i < numRunners; i++) {
+                var editRunnerEl = document.querySelector('edit-runner:nth-child(' + (i + 1) + ')');
+                currentRun.value.runners[i].name = editRunnerEl.$.nameInput.value;
+                currentRun.value.runners[i].stream = editRunnerEl.$.streamInput.value
+            }
         });
     </script>
 </body>

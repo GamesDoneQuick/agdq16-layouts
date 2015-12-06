@@ -21,41 +21,67 @@
         "width": 4,
         "headerColor": "#2d4e8a",
         "file": "schedule.html"
-      },{
+      },
+      {
         "name": "edit-current-run",
         "title": "Edit Current Run",
         "width": 4,
         "dialog": true,
+        "dialogButtons": [
+          {
+            "name": "save",
+            "type": "confirm"
+          },
+          {
+            "name": "cancel",
+            "type": "dismiss"
+          }
+        ],
         "file": "dialogs/edit-current-run.html"
-      },{
+      },
+      {
         "name": "advertisements",
         "title": "Advertisements",
         "width": 4,
         "headerColor": "#2d4e8a",
         "file": "advertisements.html"
-      },{
+      },
+      {
         "name": "checklist",
         "title": "Checklist",
         "width": 4,
         "headerColor": "#2d4e8a",
         "file": "checklist.html"
-      },{
+      },
+      {
         "name": "omnibar",
         "title": "Omnibar",
         "width": 2,
         "headerColor": "#2d4e8a",
         "file": "omnibar.html"
-      },{
+      },
+      {
         "name": "total",
         "title": "Total",
         "width": 2,
         "headerColor": "#2d4e8a",
         "file": "total.html"
-      },{
+      },
+      {
         "name": "edit-total",
         "title": "Edit Total",
         "width": 2,
         "dialog": true,
+        "dialogButtons": [
+          {
+            "name": "save",
+            "type": "confirm"
+          },
+          {
+            "name": "cancel",
+            "type": "dismiss"
+          }
+        ],
         "file": "dialogs/edit-total.html"
       }
     ],

@@ -4,17 +4,23 @@
 <dom-module id="edit-runner">
     <style>
         :host {
-            @apply(--layout-horizontal);
-            @apply(--layout-justified);
-            height: 42px;
+            @apply(--layout-vertical);
         }
 
         :host:not(:last-child) {
-            margin-bottom: 6px;
+            margin-bottom: 12px;
+        }
+
+        #nameInput {
+            margin-bottom: -12px;
         }
     </style>
 
-    <template></template>
+    <template>
+        <h5>Runner [[index]]</h5>
+        <paper-input id="nameInput" type="text" label="Name" value="[[runner.name]]"></paper-input>
+        <paper-input id="streamInput" type="text" label="Twitch Username" value="[[runner.stream]]"></paper-input>
+    </template>
 </dom-module>
 
 <script>

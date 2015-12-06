@@ -95,6 +95,13 @@ module.exports = function (nodecg) {
                         order: run.fields.order,
                         estimate: run.fields.run_time || 'Unknown',
                         runners: run.fields.runners || [],
+                        concatenatedRunners: run.fields.runners.reduce(function(prev, curr) {
+                            if (typeof prev === 'object') {
+                                return prev.name + ', ' + curr.name;
+                            } else {
+                                return prev + ', ' + curr.name;
+                            }
+                        }),
                         boxart: {
                             url: boxartUrl
                         },

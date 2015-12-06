@@ -8,18 +8,13 @@
 <body>
     <paper-input id="input" label="Donation Total" type="number"></paper-input>
 
-    <div class="buttons">
-        <paper-button id="confirm" dialog-confirm autofocus>Apply</paper-button>
-        <paper-button dialog-dismiss>Cancel</paper-button>
-    </div>
-
     <script>
         var input = document.getElementById('input');
-
         var total = nodecg.Replicant('total');
-        document.getElementById('confirm').addEventListener('click', function() {
+
+        document.addEventListener('dialog-confirmed', function() {
             nodecg.sendMessage('setTotal', input.value);
-        }, false);
-</script>
+        });
+    </script>
 </body>
 </html>

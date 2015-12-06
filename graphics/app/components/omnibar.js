@@ -450,14 +450,7 @@ define([
                      */
                     var upNextRun = layout.currentLayoutName === 'break' ? globals.currentRun : globals.nextRun;
                     if (upNextRun) {
-                        var runnerNames = upNextRun.runners.reduce(function(prev, curr) {
-                            if (typeof prev === 'object') {
-                                return prev.name + ', ' + curr.name;
-                            } else {
-                                return prev + ', ' + curr.name;
-                            }
-                        });
-                        showMainLine1(runnerNames);
+                        showMainLine1(upNextRun.concatenatedRunners);
                         showMainLine2(upNextRun.name + ' - ' + upNextRun.category);
                     } else {
                         tl.clear();
