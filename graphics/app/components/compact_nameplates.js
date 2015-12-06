@@ -12,6 +12,11 @@ define([
         new CompactNameplate(3, 'right')
     ];
 
+    // Start disabled
+    compactNameplates.forEach(function(nameplate) {
+        nameplate.disable();
+    });
+
     return {
         disable: function() {
             compactNameplates.forEach(function(nameplate) {
