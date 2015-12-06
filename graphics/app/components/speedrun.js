@@ -16,7 +16,7 @@ define([
     // The "g" here means "Global". IDK, just some way of signifying these vars are permanent.
     var gWidth, gHeight, gOpts, boxartHeight;
 
-    var createjs = require('easel');
+    var createjs = requirejs('easel');
     var stage = new Stage(0, 0, 'speedrun');
     var shadow = new createjs.Shadow('black', 2, 2, 0);
 

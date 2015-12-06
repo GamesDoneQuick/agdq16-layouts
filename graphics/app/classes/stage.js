@@ -2,7 +2,7 @@
 define(function() {
     'use strict';
 
-    var createjs = require('easel');
+    var createjs = requirejs('easel');
     var containerEl = document.getElementById('container');
 
     function Stage(w, h, id) {

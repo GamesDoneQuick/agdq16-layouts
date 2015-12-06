@@ -15,7 +15,7 @@ define([
     var RED = '#d38585';
     var GREEN = '#a7d385';
 
-    var createjs = require('easel');
+    var createjs = requirejs('easel');
     var stage = new Stage(1280, 72, 'omnibar');
     stage.canvas.style.position = 'absolute';
     stage.canvas.style.bottom = '0px';

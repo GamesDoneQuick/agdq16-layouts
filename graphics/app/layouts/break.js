@@ -1,4 +1,4 @@
-/* global define, TimelineMax, Power2 */
+/* global define, requirejs, TimelineMax, Power2 */
 define([
     'classes/stage',
     'components/background',
@@ -12,7 +12,7 @@ define([
     var STAGE_HEIGHT = 330;
     var DESCRIPTION_HEIGHT = 53;
 
-    var createjs = require('easel');
+    var createjs = requirejs('easel');
     var stage = new Stage(STAGE_WIDTH, STAGE_HEIGHT, 'break-prizes');
     stage.canvas.style.top = '308px';
     stage.canvas.style.right = '0px';

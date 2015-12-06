@@ -14,7 +14,7 @@ define([
     var NAME_RECT_HEIGHT = 35;
     var NAME_RECT_WIDTH = 331;
 
-    var createjs = require('easel');
+    var createjs = requirejs('easel');
 
     /**
      * Creates a new Nameplate instance.
