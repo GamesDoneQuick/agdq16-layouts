@@ -44,6 +44,7 @@ body {
     position: absolute;
     font-family: 'proxima-nova';
     font-weight: 800;
+    color: rgb(0, 255, 0);
 }
 
 .fullscreen {
