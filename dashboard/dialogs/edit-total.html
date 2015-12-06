@@ -13,7 +13,7 @@
         var total = nodecg.Replicant('total');
 
         document.addEventListener('dialog-confirmed', function() {
-            nodecg.sendMessage('setTotal', input.value);
+            nodecg.sendMessage('setTotal', parseFloat(input.value));
         });
     </script>
 </body>

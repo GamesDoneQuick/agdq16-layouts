@@ -29,7 +29,7 @@ module.exports = function (nodecg) {
 
     nodecg.listenFor('setTotal', function(raw) {
         total.value = {
-            raw: raw,
+            raw: parseFloat(raw),
             formatted: numeral(raw).format('$0,0')
         };
     });
