@@ -41,8 +41,8 @@ body {
 
 #fontPreloader {
     position: absolute;
-    visibility: hidden;
     font-family: 'proxima-nova';
+    font-weight: 800;
 }
 
 .fullscreen {
