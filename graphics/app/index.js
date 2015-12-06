@@ -1,4 +1,4 @@
-/* global requirejs, Typekit, TweenLite */
+/* global requirejs, TweenLite */
 (function() {
     'use strict';
 
@@ -92,6 +92,16 @@
                         TweenLite.to(document.body, 0.5, {delay: 0.2, opacity: 1, ease: Power1.easeInOut});
                     }
                 );
+            }
+        });
+    }
+
+    if (window.process && window.process.versions && window.process.versions.electron) {
+        console.log('electron environment detected, hooking f5 keyup');
+        document.addEventListener('keyup', function(e) {
+            console.log(e.which);
+            if (e.which === 116) {
+                document.location.reload();
             }
         });
     }
