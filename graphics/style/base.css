@@ -1,7 +1,6 @@
 body {
     margin: 0;
     opacity: 0;
-    background-color: rgb(0, 255, 0);
 }
 
 #container {
@@ -9,6 +8,7 @@ body {
     width: 1280px;
     height: 720px;
     overflow: hidden;
+    background-color: rgb(0, 255, 0);
 }
 
 #background {
