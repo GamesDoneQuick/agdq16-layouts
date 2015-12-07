@@ -225,14 +225,6 @@ module.exports = function (nodecg) {
         });
 
         targetRieussec.setMilliseconds(data.ms, true);
-        var decimal = targetRieussec._milliseconds % 1;
-
-        // This is a silly hack, but set the decimal of all the Rieussec's millisecond counters to the same value.
-        // This too helps ensure that the tick cycles remain in sync.
-        rieussecs.forEach(function(rieussec, i){
-            var ms = Math.floor(rieussec._milliseconds) + decimal;
-            rieussec.setMilliseconds(ms);
-        });
 
         rieussecs.forEach(function(rieussec){
             if (rieussec._wasRunningBeforeEdit) {
