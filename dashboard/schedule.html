@@ -26,6 +26,10 @@
         #edit {
             margin-bottom: 0;
         }
+
+        #typeahead {
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -33,14 +37,12 @@
 
     <div class="layout horizontal">
         <!-- Left Column -->
-        <div class="flex layout vertical justified" style="margin-right: 8px;">
-            <div class="layout horizontal end" style="margin-top: -14px; margin-bottom: 10px;">
+        <div class="flex-4 layout vertical justified" style="margin-right: 8px;">
+            <div class="layout vertical end" style="margin-top: -14px;">
                 <nodecg-typeahead-input id="typeahead" max-suggestions="3" placeholder="Search">
                 </nodecg-typeahead-input>
 
-                <paper-button id="take" class="nodecg-success flex layout horizontal center-center"
-                              style="margin-left: 6px;">
-
+                <paper-button id="take" class="nodecg-success flex layout horizontal center-center">
                     <span>Take</span>
                     <iron-icon icon="chevron-right"></iron-icon>
                 </paper-button>
@@ -71,17 +73,18 @@
             </div>
 
 
-            <paper-button id="update" raised>Force Schedule Update</paper-button>
+            <paper-button id="update" raised>Force Update</paper-button>
         </div>
 
         <!-- Right Column -->
-        <div class="flex" style="margin-left: 8px;">
+        <div class="flex-6" style="margin-left: 8px;">
             <h5>Current Run Info</h5>
 
             <div class="layout vertical">
                 <label-value label="Name"></label-value>
                 <label-value label="Console"></label-value>
                 <label-value label="Runners"></label-value>
+                <label-value label="Commentators"></label-value>
                 <label-value label="Estimate"></label-value>
                 <label-value label="Category"></label-value>
                 <label-value label="Order"></label-value>
@@ -187,6 +190,7 @@
             var runInfoName = document.querySelector('label-value[label="Name"]');
             var runInfoConsole = document.querySelector('label-value[label="Console"]');
             var runInfoRunners = document.querySelector('label-value[label="Runners"]');
+            var runInfoCommentators = document.querySelector('label-value[label="Commentators"]');
             var runInfoEstimate = document.querySelector('label-value[label="Estimate"]');
             var runInfoCategory = document.querySelector('label-value[label="Category"]');
             var runInfoOrder = document.querySelector('label-value[label="Order"]');
@@ -196,6 +200,7 @@
                 runInfoName.value = newVal.name;
                 runInfoConsole.value = newVal.console;
                 runInfoRunners.value = newVal.concatenatedRunners;
+                runInfoCommentators.value = newVal.commentators;
                 runInfoEstimate.value = newVal.estimate;
                 runInfoCategory.value = newVal.category;
                 runInfoOrder.value = newVal.order;
