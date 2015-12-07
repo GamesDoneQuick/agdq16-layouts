@@ -6,7 +6,7 @@ var POLL_INTERVAL = 60 * 1000;
 var BOXART_ASPECT_RATIO = 1.397;
 var BOXART_WIDTH = 469;
 var BOXART_HEIGHT = Math.round(BOXART_WIDTH * BOXART_ASPECT_RATIO);
-var BOXART_DEFAULT_URL = 'https://static-cdn.jtvnw.net/ttv-static/404_boxart-'+BOXART_WIDTH+'x'+BOXART_HEIGHT+'.jpg';
+var BOXART_DEFAULT_URL = '/graphics/agdq16-layouts/img/placeholder/boxart.png';
 
 var request = require('request');
 var clone = require('clone');
