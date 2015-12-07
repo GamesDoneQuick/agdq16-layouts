@@ -16,6 +16,7 @@
         <div class="flex layout vertical" style="margin-right: 8px;">
             <h5>General Run Info</h5>
             <paper-input type="text" label="Name"></paper-input>
+            <paper-input type="text" label="Commentators"></paper-input>
             <paper-input type="text" label="Console"></paper-input>
             <paper-input type="text" label="Estimate"></paper-input>
             <paper-input type="text" label="Category"></paper-input>
@@ -27,6 +28,7 @@
 
     <script>
         var nameEl = document.querySelector('paper-input[label="Name"]');
+        var commentatorsEl = document.querySelector('paper-input[label="Commentators"]');
         var consoleEl = document.querySelector('paper-input[label="Console"]');
         var estimateEl = document.querySelector('paper-input[label="Estimate"]');
         var categoryEl = document.querySelector('paper-input[label="Category"]');
@@ -35,6 +37,7 @@
         var currentRun = nodecg.Replicant('currentRun');
         currentRun.on('change', function(oldVal, newVal) {
             nameEl.value = newVal.name;
+            commentatorsEl.value = newVal.commentators;
             consoleEl.value = newVal.console;
             estimateEl.value = newVal.estimate;
             categoryEl.value = newVal.category;
@@ -55,6 +58,7 @@
 
         document.addEventListener('dialog-confirmed', function() {
             currentRun.value.name = nameEl.value;
+            currentRun.value.commentators = commentatorsEl.value;
             currentRun.value.console = consoleEl.value;
             currentRun.value.estimate = estimateEl.value;
             currentRun.value.category = categoryEl.value;
