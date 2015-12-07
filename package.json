@@ -106,6 +106,6 @@
     "md5-file": "^2.0.4",
     "numeral": "^1.5.3",
     "request": "^2.67.0",
-    "rieussec": "^0.2.4"
+    "rieussec": "^0.3.0"
   }
 }
