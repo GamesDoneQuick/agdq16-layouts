@@ -9,13 +9,15 @@ module.exports = function (nodecg) {
     var stopwatches = nodecg.Replicant('stopwatches', {defaultValue: defaultStopwatches});
 
     // Add the runner's name to the stopwatch, because testrunner needs that for his API stuff.
-    // We cheat and don't define a default here, because extension/schedule.js should have already done it.
-    nodecg.Replicant('currentRun')
-        .on('change', function(oldVal, newVal) {
-            newVal.runners.forEach(function(runner, index) {
-                stopwatches.value[index].runnerName = runner.name || '?';
-            });
+    var currentRun = nodecg.Replicant('currentRun');
+    currentRun.on('change', function(oldVal, newVal) {
+        stopwatches.value.forEach(function(stopwatch, i) {
+            var runner = newVal.runners[i];
+            if (runner) {
+                stopwatch.runnerName = runner.name || '?';
+            }
         });
+    });
 
     // Make an array of 4 Rieussec stopwatches
     var rieussecs = [null, null, null, null].map(function(val, index) {
