@@ -157,26 +157,30 @@
                     case 'paused':
                         this.$.time.style.color = '#b67102';
                         this.style.backgroundColor = '#E9C341';
+                        this.$.play.style.display = 'block';
                         this.$.pause.style.display = 'none';
                         this.$.finish.style.display = 'block';
                         break;
                     case 'finished':
                         this.$.time.style.color = '#29813f';
                         this.style.backgroundColor = '#9FD0AB';
-                        this.$.finish.style.display = 'none';
+                        this.$.play.style.display = 'block';
                         this.$.pause.style.display = 'block';
+                        this.$.finish.style.display = 'none';
                         break;
                     case 'running':
+                        this.$.time.style.color = 'black';
+                        this.style.backgroundColor = 'transparent';
                         this.$.play.style.display = 'none';
                         this.$.pause.style.display = 'block';
                         this.$.finish.style.display = 'block';
-                        this.$.time.style.color = 'black';
-                        this.style.backgroundColor = 'transparent';
                         break;
                     default:
                         this.$.time.style.color = 'black';
                         this.style.backgroundColor = 'transparent';
+                        this.$.play.style.display = 'block';
                         this.$.pause.style.display = 'none';
+                        this.$.finish.style.display = 'block';
                 }
             }.bind(this));
 
