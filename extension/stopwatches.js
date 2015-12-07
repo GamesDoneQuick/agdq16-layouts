@@ -1,22 +1,27 @@
 'use strict';
 
+var clone = require('clone');
 var Rieussec = require('rieussec');
 var NUM_STOPWATCHES = 4;
 
 module.exports = function (nodecg) {
-    var defaultStopwatch = {time: '00:00:00', state: 'stopped', milliseconds: 0, runnerName: '?'};
-    var defaultStopwatches = [defaultStopwatch, defaultStopwatch, defaultStopwatch, defaultStopwatch];
-    var stopwatches = nodecg.Replicant('stopwatches', {defaultValue: defaultStopwatches});
+    var defaultStopwatch = {time: '00:00:00', state: 'stopped', milliseconds: 0, runnerName: '?', place: 0};
+    var stopwatches = nodecg.Replicant('stopwatches', {
+        defaultValue: [
+            clone(defaultStopwatch),
+            clone(defaultStopwatch),
+            clone(defaultStopwatch),
+            clone(defaultStopwatch)
+        ]
+    });
 
     // Add the runner's name to the stopwatch, because testrunner needs that for his API stuff.
     var currentRun = nodecg.Replicant('currentRun');
     currentRun.on('change', function(oldVal, newVal) {
-        stopwatches.value.forEach(function(stopwatch, i) {
+        for (var i = 0; i < NUM_STOPWATCHES; i++) {
             var runner = newVal.runners[i];
-            if (runner) {
-                stopwatch.runnerName = runner.name || '?';
-            }
-        });
+            stopwatches.value[i].runnerName = runner ? runner.name : '?';
+        }
     });
 
     // Make an array of 4 Rieussec stopwatches
