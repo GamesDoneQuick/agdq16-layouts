@@ -17,7 +17,7 @@
     </style>
 
     <template>
-        <h5>Runner [[index]]</h5>
+        <h5>Runner [[_calcRunnerDisplayIndex(index)]]</h5>
         <paper-input id="nameInput" type="text" label="Name" value="[[runner.name]]"></paper-input>
         <paper-input id="streamInput" type="text" label="Twitch Username" value="[[runner.stream]]"></paper-input>
     </template>
@@ -25,6 +25,10 @@
 
 <script>
     Polymer({
-        is: 'edit-runner'
+        is: 'edit-runner',
+
+        _calcRunnerDisplayIndex: function(index) {
+            return index+1;
+        }
     })
 </script>
