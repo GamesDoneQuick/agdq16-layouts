@@ -42,7 +42,12 @@ module.exports = function (nodecg) {
         rieussec.on('tick', function(ms) {
             stopwatch.time = msToTime(ms);
             stopwatch.milliseconds = ms;
-            stopwatch.lastTick = Date.now();
+
+            if (stopwatch.state === 'running') {
+                stopwatch.lastTick = Date.now();
+            } else {
+                stopwatch.lastTick = null;
+            }
         });
 
         return rieussec;
@@ -176,6 +181,7 @@ module.exports = function (nodecg) {
         }
 
         rieussecs[index].reset();
+        stopwatches.value[index].ms = 0;
         stopwatches.value[index].lastTick = null;
         stopwatches.value[index].state = 'stopped';
         recalcPlaces();
@@ -205,30 +211,36 @@ module.exports = function (nodecg) {
             return;
         }
 
+        var targetRieussec = rieussecs[index];
+        var targetStopwatch = stopwatches.value[index];
+
         // Pause all timers while we do our work.
         // Best way to ensure that all the tick cycles stay in sync.
         rieussecs.forEach(function(rieussec){
-            rieussec._cachedState = rieussec._state;
-            rieussec.pause();
+            rieussec._wasRunningBeforeEdit = rieussec._state === 'running';
+
+            if (rieussec._wasRunningBeforeEdit) {
+                rieussec.pause();
+            }
         });
 
-        rieussecs[index].setMilliseconds(data.ms, true);
-        var decimal = rieussecs[index]._milliseconds % 1;
+        targetRieussec.setMilliseconds(data.ms, true);
+        var decimal = targetRieussec._milliseconds % 1;
 
         // This is a silly hack, but set the decimal of all the Rieussec's millisecond counters to the same value.
         // This too helps ensure that the tick cycles remain in sync.
-        rieussecs.forEach(function(rieussec){
+        rieussecs.forEach(function(rieussec, i){
             var ms = Math.floor(rieussec._milliseconds) + decimal;
             rieussec.setMilliseconds(ms);
         });
 
         rieussecs.forEach(function(rieussec){
-            if (rieussec._cachedState === 'running') {
+            if (rieussec._wasRunningBeforeEdit) {
                 rieussec.start();
             }
         });
 
-        return stopwatches.value[index];
+        return targetStopwatch;
     }
 
     function recalcPlaces() {
@@ -323,6 +335,9 @@ module.exports = function (nodecg) {
 };
 
 function msToTime(duration) {
+    // This rounding is extremely important. It prevents all sorts of errors!
+    duration = Math.floor(duration);
+
     var seconds = parseInt((duration/1000)%60),
         minutes = parseInt((duration/(1000*60))%60),
         hours = parseInt((duration/(1000*60*60))%24);

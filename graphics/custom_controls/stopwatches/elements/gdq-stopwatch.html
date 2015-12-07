@@ -140,57 +140,56 @@
          * Lifecycle
          */
         ready: function() {
-            var self = this;
-
             nodecg.Replicant('stopwatches').on('change', function(oldVal, newVal) {
                 if (!newVal) {
                     return;
-                } else if (!newVal[self.index]) {
+                } else if (!newVal[this.index]) {
                     throw new Error('Index "%s" out of bounds (replicant length: %d',
-                            self.index, newVal.length);
+                            this.index, this.length);
                 }
 
-                self.time = newVal[self.index].time;
-                self.runner = newVal[self.index].runnerName;
-                self._setRunning(newVal[self.index].state === 'running');
+                var thisStopwatch = newVal[this.index];
 
-                switch (newVal[self.index].state) {
+                this.time = thisStopwatch.time;
+                this.runner = thisStopwatch.runnerName;
+
+                switch (thisStopwatch.state) {
                     case 'paused':
-                        self.$.time.style.color = '#b67102';
-                        self.style.backgroundColor = '#E9C341';
-                        self.$.pause.style.display = 'none';
-                        self.$.finish.style.display = 'block';
+                        this.$.time.style.color = '#b67102';
+                        this.style.backgroundColor = '#E9C341';
+                        this.$.pause.style.display = 'none';
+                        this.$.finish.style.display = 'block';
                         break;
                     case 'finished':
-                        self.$.time.style.color = '#29813f';
-                        self.style.backgroundColor = '#9FD0AB';
-                        self.$.finish.style.display = 'none';
-                        self.$.pause.style.display = 'block';
+                        this.$.time.style.color = '#29813f';
+                        this.style.backgroundColor = '#9FD0AB';
+                        this.$.finish.style.display = 'none';
+                        this.$.pause.style.display = 'block';
                         break;
                     case 'running':
-                        self.$.play.style.display = 'none';
-                        self.$.pause.style.display = 'block';
-                        self.$.finish.style.display = 'block';
-                        self.$.time.style.color = 'black';
-                        self.style.backgroundColor = 'transparent';
+                        this.$.play.style.display = 'none';
+                        this.$.pause.style.display = 'block';
+                        this.$.finish.style.display = 'block';
+                        this.$.time.style.color = 'black';
+                        this.style.backgroundColor = 'transparent';
                         break;
                     default:
-                        self.$.time.style.color = 'black';
-                        self.style.backgroundColor = 'transparent';
-                        self.$.pause.style.display = 'none';
+                        this.$.time.style.color = 'black';
+                        this.style.backgroundColor = 'transparent';
+                        this.$.pause.style.display = 'none';
                 }
-            });
+            }.bind(this));
 
             nodecg.Replicant('currentRun').on('change', function(oldVal, newVal) {
                 if (!newVal) return;
 
                 // Hide the entire element if there is no runner at this index.
-                if (newVal.runners[self.index]) {
-                    self.removeAttribute('disabled');
+                if (newVal.runners[this.index]) {
+                    this.removeAttribute('disabled');
                 } else {
-                    self.setAttribute('disabled', true);
+                    this.setAttribute('disabled', true);
                 }
-            });
+            }.bind(this));
         },
 
         /*
