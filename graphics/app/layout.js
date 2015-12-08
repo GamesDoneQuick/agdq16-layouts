@@ -42,20 +42,6 @@ define([
 
     var currentLayoutName, currentLayoutIndex;
     var numLayouts = Object.keys(layouts).length;
-    window.nextLayout = function() {
-          if (typeof currentLayoutIndex === 'undefined') {
-              setLayout(Object.keys(layouts)[0]);
-              return;
-          }
-
-        currentLayoutIndex += 1;
-        if (currentLayoutIndex >= numLayouts) {
-            currentLayoutIndex = 0;
-            console.log('--- END OF LAYOUTS, STARTING FROM BEGINNING ---');
-        }
-
-        setLayout(Object.keys(layouts)[currentLayoutIndex]);
-    };
 
     function setLayout(name) {
         console.log('layout |', name);
@@ -71,6 +57,22 @@ define([
     }
 
     return Object.create(Object.prototype, {
+        next: {
+            value: function() {
+                if (typeof currentLayoutIndex === 'undefined') {
+                    setLayout(Object.keys(layouts)[0]);
+                    return;
+                }
+
+                currentLayoutIndex += 1;
+                if (currentLayoutIndex >= numLayouts) {
+                    currentLayoutIndex = 0;
+                    console.log('--- END OF LAYOUTS, STARTING FROM BEGINNING ---');
+                }
+
+                setLayout(Object.keys(layouts)[currentLayoutIndex]);
+            }
+        },
         changeTo: {
             value: setLayout
         },
