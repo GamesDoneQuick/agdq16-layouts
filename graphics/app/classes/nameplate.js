@@ -9,6 +9,9 @@ define([
     'use strict';
 
     var createjs = requirejs('easel');
+    var AUDIO_ICON_WIDTH = 36;
+    var AUDIO_ICON_HEIGHT = 36;
+    var AUDIO_ICON_SCALE = 0.42;
 
     /**
      * Creates a new Nameplate instance.
@@ -62,6 +65,7 @@ define([
         this.twitchText.textBaseline = 'middle';
 
         this.twitchContainer.addChild(this.twitchBackground, this.twitchIcon, this.twitchText);
+        this.twitchContainer.visible = false;
 
         /* ----- */
 
@@ -70,11 +74,15 @@ define([
 
         /* ----- */
 
-        /*this.musicNote = new createjs.Bitmap(preloader.getResult('nameplate-music-note'));
-        this.musicNoteColorFilter = new createjs.ColorFilter(0,0,0);
-        this.musicNote.filters = [this.musicNoteColorFilter];
-        this.musicNote.alpha = 0.08;
-        this.musicNote.cache(0, 0, MUSIC_NOTE_WIDTH, MUSIC_NOTE_HEIGHT);*/
+        this.audioIcon = new createjs.Bitmap(preloader.getResult('nameplate-audio-off'));
+        this.audioIcon.regX = AUDIO_ICON_WIDTH / 2;
+        this.audioIconColorFilter = new createjs.ColorFilter(0,0,0);
+        this.audioIcon.filters = [this.audioIconColorFilter];
+        this.audioIcon.alpha = 0.2;
+        this.audioIcon.cache(0, 0, AUDIO_ICON_WIDTH, AUDIO_ICON_HEIGHT);
+        this.audioIcon.visible = false;
+        this.audioIcon.scaleX = AUDIO_ICON_SCALE;
+        this.audioIcon.scaleY = AUDIO_ICON_SCALE;
 
         /* ----- */
 
@@ -87,8 +95,8 @@ define([
         this.backgroundFill = this.background.graphics.beginFill('#00AEEF').command;
         this.backgroundRect = this.background.graphics.drawRect(0, 0, 0, 0).command;
 
-        this.addChild(this.background, this.nameText, this.timeText, this.estimateText, this.twitchContainer,
-            this.bottomBorder, this.cover1, this.cover2);
+        this.addChild(this.background, this.nameText, this.timeText, this.estimateText, this.audioIcon,
+            this.twitchContainer, this.bottomBorder, this.cover1, this.cover2);
         stage.addChild(this);
 
         /* ----- */
@@ -106,6 +114,15 @@ define([
                     this.nameText.text = name;
                     this.twitchText.text = stream;
                     this.estimateText.text = 'EST: ' + estimate;
+
+                    this.repositionAudioIcon();
+
+                    if (stream) {
+                        this.restartTwitchTimeline();
+                    } else if (this.twitchTl) {
+                        this.twitchTl.kill();
+                        this.twitchContainer.visible = false;
+                    }
                 }.bind(this)
             }, 'enter');
 
@@ -139,7 +156,7 @@ define([
             if (runner) {
                 handleCurrentRunChange(runner.name, runner.stream, newVal.estimate);
             } else {
-                handleCurrentRunChange('?', '?', newVal.estimate);
+                handleCurrentRunChange('?', '', newVal.estimate);
             }
         }.bind(this));
 
@@ -171,6 +188,8 @@ define([
 
         var verticalCenter = opts.height / 2;
         var horizontalMargin = opts.width * 0.015;
+
+        this.alignment = opts.alignment;
 
         this.backgroundRect.w = opts.width;
         this.backgroundRect.h = opts.height;
@@ -260,15 +279,40 @@ define([
         this.twitchText.maxWidth = this.twitchBackgroundRect.w - Math.abs(this.twitchBackground.x - this.twitchText.x)
             - horizontalMargin;
 
-        /* ----- */
+        if (opts.audioIcon) {
+            this.audioIcon.visible = true;
+            this.repositionAudioIcon();
+        } else {
+            this.audioIcon.visible = false;
+        }
 
+        if (this.twitchText.text) {
+            this.restartTwitchTimeline();
+        }
+    };
+
+    p.repositionAudioIcon = function() {
+        this.audioIcon.y =  this.estimateText.y + 3.5;
+
+        if (this.alignment === 'right') {
+            this.audioIcon.x = this.estimateText.x - this.estimateText.getBounds().width - 16;
+            this.audioIcon.scaleX = AUDIO_ICON_SCALE;
+        } else {
+            this.audioIcon.x = this.estimateText.x + this.estimateText.getBounds().width + 16;
+            this.audioIcon.scaleX = -AUDIO_ICON_SCALE;
+        }
+    };
+
+
+    p.restartTwitchTimeline = function() {
         if (this.twitchTl) {
             this.twitchTl.kill();
         }
 
         this.twitchTl = new TimelineMax({repeat: -1});
 
-        var twitchHideX = opts.alignment === 'right' ? this.twitchBackgroundRect.w : -this.twitchBackgroundRect.w;
+        var twitchHideX = this.alignment === 'right' ? this.twitchBackgroundRect.w : -this.twitchBackgroundRect.w;
+        this.twitchContainer.visible = true;
         this.twitchContainer.x = twitchHideX;
 
         this.twitchTl.to({}, 3, {});

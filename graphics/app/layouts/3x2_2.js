@@ -25,7 +25,8 @@ define([
                 width: 430,
                 height: 52,
                 y: 427,
-                bottomBorder: true
+                bottomBorder: true,
+                audioIcon: true
             },[
                 {
                     x: 0,

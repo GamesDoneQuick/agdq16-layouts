@@ -7,8 +7,8 @@ define([
 ], function (preloader, globals, Stage, debounce) {
     'use strict';
 
-    var MUSIC_NOTE_WIDTH = 34;
-    var MUSIC_NOTE_HEIGHT = 45;
+    var AUDIO_ICON_WIDTH = 36;
+    var AUDIO_ICON_HEIGHT = 36;
     var WIDTH = 396;
     var HEIGHT = 76;
     var NAME_RECT_HEIGHT = 35;
@@ -80,6 +80,7 @@ define([
         this.twitchText.maxWidth = 270;
 
         this.twitchContainer.addChild(this.twitchBackground, this.twitchIcon, this.twitchText);
+        this.twitchContainer.visible = false;
 
         /* ----- */
 
@@ -91,12 +92,14 @@ define([
 
         /* ----- */
 
-        this.musicNote = new createjs.Bitmap(preloader.getResult('nameplate-music-note'));
-        this.musicNoteColorFilter = new createjs.ColorFilter(0,0,0);
-        this.musicNote.filters = [this.musicNoteColorFilter];
-        this.musicNote.alpha = 0.08;
-        this.musicNote.cache(0, 0, MUSIC_NOTE_WIDTH, MUSIC_NOTE_HEIGHT);
-        this.musicNote.y = 14;
+        this.audioIcon = new createjs.Bitmap(preloader.getResult('nameplate-audio-off'));
+        this.audioIcon.regX = AUDIO_ICON_WIDTH / 2;
+        this.audioIcon.regY = AUDIO_ICON_HEIGHT / 2;
+        this.audioIconColorFilter = new createjs.ColorFilter(0,0,0);
+        this.audioIcon.filters = [this.audioIconColorFilter];
+        this.audioIcon.alpha = 0.08;
+        this.audioIcon.cache(0, 0, AUDIO_ICON_WIDTH, AUDIO_ICON_HEIGHT);
+        this.audioIcon.y = HEIGHT / 2;
 
         /* ----- */
 
@@ -111,11 +114,12 @@ define([
         this.background.graphics.drawRect(0, 0, WIDTH, HEIGHT);
 
         this.addChild(this.background, this.nameBackground, this.nameText, this.timeText, this.placeText,
-            this.twitchContainer, this.musicNote, this.bottomBorder, this.cover1, this.cover2);
+            this.twitchContainer, this.audioIcon, this.bottomBorder, this.cover1, this.cover2);
         stage.addChild(this);
 
         /* ----- */
 
+        this.alignment = alignment;
         if (alignment === 'right') {
             this.nameBackground.x = 65;
 
@@ -135,7 +139,7 @@ define([
 
             this.placeText.textAlign = 'right';
 
-            this.musicNote.x = 12;
+            this.audioIcon.x = (WIDTH - NAME_RECT_WIDTH) / 2;
 
             this.cover1.scaleX = -1;
             this.cover1.x = WIDTH;
@@ -154,7 +158,12 @@ define([
 
             this.timeText.x = this.nameText.x;
 
-            this.musicNote.x = 346;
+            this.audioIcon.x = NAME_RECT_WIDTH + (WIDTH - NAME_RECT_WIDTH) / 2;
+        }
+
+        this.twitchTl = new TimelineMax({repeat: -1});
+        if (this.twitchText.text) {
+            this.restartTwitchTimeline();
         }
 
         /* ----- */
@@ -170,6 +179,14 @@ define([
                 onComplete: function() {
                     this.nameText.text = name;
                     this.twitchText.text = stream;
+
+                    if (stream) {
+                        this.restartTwitchTimeline();
+                    } else {
+                        this.twitchTl.seek(0);
+                        this.twitchTl.pause();
+                        this.twitchContainer.visible = false;
+                    }
                 }.bind(this)
             }, 'enter');
 
@@ -252,30 +269,34 @@ define([
                     break;
             }
         }.bind(this));
-
-        /* ----- */
-
-        var twitchHideX = alignment === 'right' ? 322 : -322;
-        this.twitchContainer.x = twitchHideX;
-
-        var tl = new TimelineMax({repeat: -1});
-
-        tl.to({}, 29, {});
-
-        tl.to(this.twitchContainer, 1.2, {
-            x: 0,
-            ease: Power2.easeInOut
-        });
-
-        tl.to(this.twitchContainer, 0.9, {
-            x: twitchHideX,
-            ease: Power2.easeIn
-        }, '+=5');
     };
 
     p.configure = function(opts) {
         this.stage.canvas.style.top = opts.y + 'px';
         this.bottomBorder.visible = opts.bottomBorder;
+    };
+
+    p.restartTwitchTimeline = function() {
+        this.twitchTl.seek(0);
+        this.twitchTl.play();
+
+        var twitchHideX = this.alignment === 'right' ? 322 : -322;
+        this.twitchContainer.x = twitchHideX;
+        this.twitchContainer.visible = true;
+
+        this.twitchTl = new TimelineMax({repeat: -1});
+
+        this.twitchTl.to({}, 3, {});
+
+        this.twitchTl.to(this.twitchContainer, 1.2, {
+            x: 0,
+            ease: Power2.easeInOut
+        });
+
+        this.twitchTl.to(this.twitchContainer, 0.9, {
+            x: twitchHideX,
+            ease: Power2.easeIn
+        }, '+=5');
     };
 
     p.disable = function() {

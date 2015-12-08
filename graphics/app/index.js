@@ -85,7 +85,7 @@
                         'obs',
                         'advertisements'
                     ], function(bg, speedrun, omnibar, layout) {
-                        layout.changeTo('4x3_1');
+                        layout.changeTo('4x3_2');
                         window.layout = layout;
                         layoutState.value = 'open';
 

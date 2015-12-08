@@ -35,7 +35,8 @@ define(function () {
         {id: 'omnibar-logo-pcf', src: 'img/omnibar/logo-pcf.png'},
 
         // Nameplates
-        {id: 'nameplate-music-note', src: 'img/nameplate/music-note.png'},
+        {id: 'nameplate-audio-on', src: 'img/nameplate/audio-on.png'},
+        {id: 'nameplate-audio-off', src: 'img/nameplate/audio-off.png'},
         {id: 'nameplate-twitch-logo', src: 'img/nameplate/twitch-logo.png'}
     ]);
 
