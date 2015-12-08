@@ -1,10 +1,12 @@
-/* global define, TweenLite, TimelineLite, Power3, Power2, Power1, Elastic, Back */
+/* global define, requirejs, TweenLite, TimelineLite, Power3, Power2, Power1, Elastic, Back */
 define([
     'preloader',
     'globals',
     'classes/stage',
-    'layout'
-], function (preloader, globals, Stage, layout) {
+    'layout',
+    'numeral',
+    'tabulate'
+], function (preloader, globals, Stage, layout, numeral, tabulate) {
     'use strict';
 
     var OMNIBAR_HEIGHT = 55;
@@ -16,13 +18,12 @@ define([
     var GREEN = '#a7d385';
 
     var createjs = requirejs('easel');
-    var stage = new Stage(1280, 72, 'omnibar');
+    var stage = new Stage(1280, OMNIBAR_HEIGHT, 'omnibar');
     stage.canvas.style.position = 'absolute';
     stage.canvas.style.bottom = '0px';
     stage.canvas.style.zIndex = '1';
 
     var omnibar = new createjs.Container();
-    omnibar.y = 17;
     stage.addChild(omnibar);
 
     var tl = new TimelineLite({autoRemoveChildren: true});
@@ -334,10 +335,6 @@ define([
     var mainContainer = new createjs.Container();
     mainContainer.x = GDQ_LOGO_WIDTH;
     mainContainer.addChild(mainLine1, mainLine2, labelBg, labelText, totalContainer);
-
-    var mainContainerMask = new createjs.Shape();
-    mainContainerMask.graphics.drawRect(GDQ_LOGO_WIDTH, 0, OMNIBAR_WIDTH_MINUS_LOGO, OMNIBAR_HEIGHT);
-    mainContainer.mask = mainContainerMask;
 
     omnibar.addChild(barBg, mainContainer, cta, gdqLogo, pcfLogo);
 
