@@ -1,4 +1,4 @@
-/* global requirejs, TweenLite */
+/* global requirejs, TweenLite, Power1 */
 (function() {
     'use strict';
 
@@ -31,7 +31,8 @@
             classes: './classes',
             components: './components',
             layouts: './layouts',
-            debounce: '../components/javascipt-debounce/dist/javascript-debounce.min'
+            debounce: '../components/javascipt-debounce/dist/javascript-debounce.min',
+            numeral: '../components/numeral/min/numeral.min'
         }
     });
 
@@ -84,12 +85,16 @@
                         'obs',
                         'advertisements'
                     ], function(bg, speedrun, omnibar, layout) {
-                        layout.changeTo('4x3_4');
+                        layout.changeTo('4x3_1');
                         window.layout = layout;
                         layoutState.value = 'open';
 
                         // Fade up the body once everything is loaded
-                        TweenLite.to(document.body, 0.5, {delay: 0.2, opacity: 1, ease: Power1.easeInOut});
+                        TweenLite.to(document.body, 0.5, {
+                            delay: 0.2,
+                            opacity: 1,
+                            ease: Power1.easeInOut
+                        });
                     }
                 );
             }

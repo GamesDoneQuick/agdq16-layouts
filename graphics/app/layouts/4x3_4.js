@@ -2,8 +2,9 @@
 define([
     'components/background',
     'components/speedrun',
-    'components/compact_nameplates'
-], function(setBackground, speedrun, compactNameplates) {
+    'components/compact_nameplates',
+    'components/nameplates'
+], function(setBackground, speedrun, compactNameplates, nameplates) {
     'use strict';
 
     var LAYOUT_NAME = '4x3_4';
@@ -18,6 +19,8 @@ define([
                 nameMaxHeight: 70,
                 showEstimate: true
             });
+
+            nameplates.disable();
 
             compactNameplates.configure([
                 {

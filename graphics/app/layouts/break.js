@@ -3,8 +3,9 @@ define([
     'classes/stage',
     'components/background',
     'components/speedrun',
+    'components/nameplates',
     'globals'
-], function(Stage, setBackground, speedrun, globals) {
+], function(Stage, setBackground, speedrun, nameplates, globals) {
     'use strict';
 
     var LAYOUT_NAME = 'break';
@@ -134,6 +135,7 @@ define([
         attached: function() {
             setBackground(LAYOUT_NAME);
             speedrun.disable();
+            nameplates.disable();
             stage.visible = true;
             stage.paused = false;
             stage.canvas.style.display = 'block';

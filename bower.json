@@ -16,6 +16,7 @@
     "paper-icon-button": "PolymerElements/paper-icon-button#~1.0.5",
     "nodecg-replicant-input": "NodeCGElements/nodecg-replicant-input#~0.3.1",
     "nodecg-toggle": "NodeCGElements/nodecg-toggle#~0.1.1",
-    "javascipt-debounce": "javascript-debounce#~1.0.0"
+    "javascipt-debounce": "javascript-debounce#~1.0.0",
+    "numeral": "~1.5.3"
   }
 }
