@@ -1,4 +1,4 @@
-/* global define, requirejs, TimelineLite, Power2, Power3 */
+/* global define, requirejs, TimelineMax, TimelineLite, Power2, Power3 */
 define([
     'preloader',
     'globals',
@@ -15,10 +15,10 @@ define([
      * @constructor
      * @extends createjs.Container
      */
-    function Nameplate(index, alignment) {
+    function Nameplate(index) {
         /* jshint -W106 */
         this.Container_constructor();
-        this.setup(index, alignment);
+        this.setup(index);
         /* jshint +W106 */
     }
 
@@ -147,14 +147,18 @@ define([
             var stopwatch = newVal[index];
             this.timeText.text = tabulate(stopwatch.time);
 
+            this.timeText.color = 'white';
+            this.estimateText.color = '#afe2f8';
+            this.backgroundFill.style = '#00AEEF';
+
             switch (stopwatch.state) {
                 case 'paused':
+                    this.timeText.color = '#007c9e';
                     break;
                 case 'finished':
                     this.backgroundFill.style = '#60bb46';
+                    this.estimateText.color = '#b7dcaf';
                     break;
-                default:
-                    this.backgroundFill.style = '#00AEEF';
             }
         }.bind(this));
     };

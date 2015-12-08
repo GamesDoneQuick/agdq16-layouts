@@ -211,9 +211,13 @@ define([
             var stopwatch = newVal[index];
             this.timeText.text = stopwatch.time;
             this.placeText.text = '';
+            this.timeText.color = 'white';
+            this.backgroundFill.style = '#00AEEF';
+            this.nameBackgroundFill.style = '#0072bc';
 
             switch (stopwatch.state) {
                 case 'paused':
+                    this.timeText.color = '#007c9e';
                     break;
                 case 'finished':
                     this.backgroundFill.style = '#60bb46';
@@ -246,9 +250,6 @@ define([
                     }
 
                     break;
-                default:
-                    this.backgroundFill.style = '#00AEEF';
-                    this.nameBackgroundFill.style = '#0072bc';
             }
         }.bind(this));
 
