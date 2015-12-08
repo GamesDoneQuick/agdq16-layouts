@@ -117,7 +117,7 @@ module.exports = function (nodecg) {
 
         if (data.index === 'all') {
             for (var i = 0; i < NUM_STOPWATCHES; i++) {
-                setStopwatch({index: i, ms: data.ms});
+                setStopwatch({index: i, ms: data.milliseconds});
             }
             retValue = stopwatches.value;
         } else {
@@ -188,7 +188,7 @@ module.exports = function (nodecg) {
         }
 
         rieussecs[index].reset();
-        stopwatches.value[index].ms = 0;
+        stopwatches.value[index].milliseconds = 0;
         stopwatches.value[index].lastTick = null;
         stopwatches.value[index].state = 'stopped';
         recalcPlaces();
@@ -231,7 +231,7 @@ module.exports = function (nodecg) {
             }
         });
 
-        targetRieussec.setMilliseconds(data.ms, true);
+        targetRieussec.setMilliseconds(data.milliseconds, true);
 
         rieussecs.forEach(function(rieussec){
             if (rieussec._wasRunningBeforeEdit) {
@@ -249,7 +249,7 @@ module.exports = function (nodecg) {
         });
 
         finishedStopwatches.sort(function(a, b) {
-            return a.ms - b.ms;
+            return a.milliseconds - b.milliseconds;
         });
 
         finishedStopwatches.forEach(function(s, index) {

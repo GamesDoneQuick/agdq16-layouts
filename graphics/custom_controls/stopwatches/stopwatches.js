@@ -107,7 +107,7 @@
             var ms = Date.UTC(1970, 0, 1, ts[0], ts[1], ts[2]);
 
             confirmEdit.setAttribute('disabled', 'true');
-            nodecg.sendMessage('setTime', {index: dialogIndex, ms: ms}, function() {
+            nodecg.sendMessage('setTime', {index: dialogIndex, milliseconds: ms}, function() {
                 editDialog.close();
                 confirmEdit.removeAttribute('disabled');
             });
