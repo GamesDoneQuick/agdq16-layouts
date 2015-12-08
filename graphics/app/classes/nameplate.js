@@ -105,7 +105,7 @@ define([
                 onComplete: function() {
                     this.nameText.text = name;
                     this.twitchText.text = stream;
-                    this.estimateText.text = estimate;
+                    this.estimateText.text = 'EST: ' + estimate;
                 }.bind(this)
             }, 'enter');
 
