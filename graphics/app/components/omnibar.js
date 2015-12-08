@@ -272,21 +272,33 @@ define([
     totalLeftBorder.graphics.beginFill('white').drawRect(0, 0, 3, OMNIBAR_HEIGHT);
 
     var totalText = new createjs.Text('', '800 30px proxima-nova', 'white');
+    totalText.rawValue = 0;
     totalText.x = 13;
     totalText.y = 10;
 
     totalContainer.addChild(totalLeftBorder, totalText);
 
     globals.totalRep.on('change', function(oldVal, newVal) {
-        totalText.text = newVal.formatted;
-        var totalContainerWidth = totalContainer.getBounds().width;
-        totalContainer.showingX = OMNIBAR_WIDTH_MINUS_LOGO - totalContainerWidth - PCF_LOGO_WIDTH - 36;
-        totalContainer.hiddenX = totalContainer.showingX + OMNIBAR_WIDTH_MINUS_LOGO - totalContainer.showingX;
+        var TIME_PER_DOLLAR = 0.03;
+        var delta = newVal.raw - totalText.rawValue;
+        var duration = Math.min(delta * TIME_PER_DOLLAR, 5);
+        TweenLite.to(totalText, duration, {
+            rawValue: newVal.raw,
+            ease: Power2.easeOut,
+            onUpdate: function() {
+                var formattedTotal = numeral(totalText.rawValue).format('$0,0');
+                totalText.text =  tabulate(formattedTotal);
 
-        totalContainer.x = state.totalShowing ? totalContainer.showingX : totalContainer.hiddenX;
+                var totalContainerWidth = totalContainer.getBounds().width;
+                totalContainer.showingX = OMNIBAR_WIDTH_MINUS_LOGO - totalContainerWidth - PCF_LOGO_WIDTH - 36;
+                totalContainer.hiddenX = totalContainer.showingX + OMNIBAR_WIDTH_MINUS_LOGO - totalContainer.showingX;
 
-        mainLine1.maxWidth = totalContainer.showingX - mainLine1.x - 12;
-        mainLine2.maxWidth = mainLine1.maxWidth - 4;
+                totalContainer.x = state.totalShowing ? totalContainer.showingX : totalContainer.hiddenX;
+
+                mainLine1.maxWidth = totalContainer.showingX - mainLine1.x - 12;
+                mainLine2.maxWidth = mainLine1.maxWidth - 4;
+            }
+        });
     });
 
     function showTotal() {
@@ -676,7 +688,6 @@ define([
         }
     }
 
-    /***** TESTING *****/
     nodecg.listenFor('barDemand', function(data) {
         switch (data.type) {
             case 'bid':
