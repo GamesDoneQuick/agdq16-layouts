@@ -40,12 +40,12 @@ define([
 
         /* ----- */
 
-        this.nameText = new createjs.Text('', '', 'white');
+        this.nameText = new createjs.Text('?', '', 'white');
+        this.nameText.textBaseline = 'alphabetic';
 
         /* ----- */
 
-        this.estimateText = new createjs.Text('', '', '#afe2f8');
-        this.estimateText.textBaseline = 'bottom';
+        this.estimateText = new createjs.Text('EST: ?', '', '#afe2f8');
 
         /* ----- */
 
@@ -169,21 +169,22 @@ define([
         this.stage.canvas.style.top = opts.y + 'px';
         this.stage.canvas.style.left = opts.x + 'px';
 
-        var verticalMargin = 0;
+        var verticalCenter = opts.height / 2;
         var horizontalMargin = opts.width * 0.015;
 
         this.backgroundRect.w = opts.width;
         this.backgroundRect.h = opts.height;
 
         this.timeText.font = '800 ' + opts.timeFontSize + 'px proxima-nova';
-        this.timeText.y = opts.height / 2;
+        this.timeText.y = verticalCenter;
 
         this.nameText.font = '900 ' + opts.nameFontSize + 'px proxima-nova';
-        this.nameText.y = verticalMargin;
+        this.nameText.y = verticalCenter;
         this.nameText.maxWidth = opts.width - this.timeText.getBounds().width - (horizontalMargin * 2)
             - (opts.width * 0.03);
 
-        var twitchRectHeight = opts.nameFontSize * 1.175;
+        var nameTextBounds = this.nameText.getTransformedBounds();
+        var twitchRectHeight = nameTextBounds.y + nameTextBounds.height;
         this.twitchBackgroundRect.w = this.nameText.maxWidth + horizontalMargin + 10;
         this.twitchBackgroundRect.h = twitchRectHeight;
         var twitchFontSize = opts.nameFontSize * 0.9;
@@ -196,7 +197,7 @@ define([
         this.twitchIcon.y = twitchCenterY;
 
         this.estimateText.font = '800 ' + opts.estimateFontSize + 'px proxima-nova';
-        this.estimateText.y = opts.height - verticalMargin;
+        this.estimateText.y = twitchRectHeight - (opts.nameFontSize * 0.1);
 
         this.cover1Rect.h = opts.height;
         this.cover2Rect.h = opts.height;
