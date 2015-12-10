@@ -8,12 +8,16 @@ define([
     'use strict';
 
     var LAYOUT_NAME = '4x3_3';
+    var COLUMN_WIDTH = 396;
+    var COLUMN_X = 442;
+    var sponsorsAndTwitter = document.getElementById('sponsorsAndTwitter');
+    var twitterDisplay = document.querySelector('twitter-display');
 
     return {
         attached: function() {
             setBackground(LAYOUT_NAME);
 
-            speedrun.configure(442, 154, 396, 179, {
+            speedrun.configure(COLUMN_X, 154, COLUMN_WIDTH, 179, {
                 nameY: 17,
                 categoryY: 84,
                 showEstimate: true,
@@ -36,6 +40,22 @@ define([
                     bottomBorder: true
                 }
             ]);
+
+            sponsorsAndTwitter.style.top = '412px';
+            sponsorsAndTwitter.style.left = COLUMN_X + 'px';
+            sponsorsAndTwitter.style.width = COLUMN_WIDTH + 'px';
+            sponsorsAndTwitter.style.height = '253px';
+
+            twitterDisplay.bodyStyle = {
+                fontSize: 24,
+                top: 50,
+                horizontalMargin: 9
+            };
+            twitterDisplay.namebarStyle = {
+                top: 164,
+                width: 354,
+                fontSize: 26
+            };
         },
 
         detached: function() {

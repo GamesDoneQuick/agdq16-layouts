@@ -83,6 +83,13 @@
           }
         ],
         "file": "dialogs/edit-total.html"
+      },
+      {
+        "name": "twitter",
+        "title": "Twitter",
+        "width": 3,
+        "headerColor": "#55acee",
+        "file": "twitter.html"
       }
     ],
     "graphics": [
@@ -103,9 +110,11 @@
     "clone": "^1.0.2",
     "debounce": "^1.0.0",
     "deep-equal": "^1.0.1",
+    "emoji": "^0.3.2",
     "md5-file": "^2.0.4",
     "numeral": "^1.5.3",
     "request": "^2.67.0",
-    "rieussec": "^0.3.0"
+    "rieussec": "^0.3.0",
+    "twitter-stream-api": "^0.4.1"
   }
 }

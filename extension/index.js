@@ -54,6 +54,13 @@ module.exports = function(nodecg) {
     }
 
     try {
+        require('./twitter')(nodecg);
+    } catch (e) {
+        nodecg.log.error('Failed to load "twitter" lib:', e.stack);
+        process.exit(1);
+    }
+
+    try {
         require('./state')(nodecg);
     } catch (e) {
         nodecg.log.error('Failed to load "state" lib:', e.stack);

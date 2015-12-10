@@ -17,6 +17,9 @@
     "nodecg-replicant-input": "NodeCGElements/nodecg-replicant-input#~0.3.1",
     "nodecg-toggle": "NodeCGElements/nodecg-toggle#~0.1.1",
     "javascipt-debounce": "javascript-debounce#~1.0.0",
-    "numeral": "~1.5.3"
+    "numeral": "~1.5.3",
+    "nodecg-replicant": "NodeCGElements/nodecg-replicant#~0.5.3",
+    "iron-image": "PolymerElements/iron-image#~1.0.4",
+    "moment": "~2.10.6"
   }
 }

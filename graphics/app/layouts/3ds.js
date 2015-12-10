@@ -7,6 +7,8 @@ define([
     'use strict';
 
     var LAYOUT_NAME = '3ds';
+    var sponsorsAndTwitter = document.getElementById('sponsorsAndTwitter');
+    var twitterDisplay = document.querySelector('twitter-display');
 
     return {
         attached: function() {
@@ -29,6 +31,23 @@ define([
                 timeFontSize: 72,
                 bottomBorder: true
             }]);
+
+            sponsorsAndTwitter.style.top = '477px';
+            sponsorsAndTwitter.style.left = '928px';
+            sponsorsAndTwitter.style.width = '352px';
+            sponsorsAndTwitter.style.height = '188px';
+
+            twitterDisplay.bodyStyle = {
+                fontSize: 25,
+                top: 19,
+                horizontalMargin: 10
+            };
+
+            twitterDisplay.namebarStyle = {
+                top: 137,
+                width: 316,
+                fontSize: 22
+            };
         }
     };
 });

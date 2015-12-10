@@ -8,6 +8,7 @@ define([
     'use strict';
 
     var LAYOUT_NAME = '4x3_4';
+    var sponsorsAndTwitter = document.getElementById('sponsorsAndTwitter');
 
     return {
         attached: function() {
@@ -40,10 +41,13 @@ define([
                     alignRight: true
                 }
             ]);
+
+            sponsorsAndTwitter.style.display = 'none';
         },
 
         detached: function() {
             compactNameplates.disable();
+            sponsorsAndTwitter.style.display = 'block';
         }
     };
 });

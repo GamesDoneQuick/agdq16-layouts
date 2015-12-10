@@ -7,6 +7,8 @@ define([
     'use strict';
 
     var LAYOUT_NAME = '16x9_1';
+    var sponsorsAndTwitter = document.getElementById('sponsorsAndTwitter');
+    var twitterDisplay = document.querySelector('twitter-display');
 
     return {
         attached: function() {
@@ -27,6 +29,23 @@ define([
                 estimateFontSize: 23,
                 timeFontSize: 61
             }]);
+
+            sponsorsAndTwitter.style.top = '302px';
+            sponsorsAndTwitter.style.left = '967px';
+            sponsorsAndTwitter.style.width = '313px';
+            sponsorsAndTwitter.style.height = '363px';
+
+            twitterDisplay.bodyStyle = {
+                fontSize: 26,
+                top: 57,
+                horizontalMargin: 22
+            };
+
+            twitterDisplay.namebarStyle = {
+                top: 264,
+                width: 297,
+                fontSize: 21
+            };
         }
     };
 });

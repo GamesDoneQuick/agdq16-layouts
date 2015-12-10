@@ -1,0 +1,202 @@
+<link rel="import" href="../../../components/polymer/polymer.html">
+<link rel="import" href="../../../components/iron-image/iron-image.html">
+<link rel="stylesheet" href="/agdq16-layouts/emoji.css">
+<link rel="stylesheet" href="/agdq16-layouts/twitter/shared.css">
+
+<dom-module id="twitter-display">
+    <style>
+        :host {
+            display: block;
+            position: absolute;
+            color: white;
+            font-family: 'proxima-nova';
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+        }
+
+        #background {
+            transform: translateX(-100%);
+            background-color: #003143;
+            z-index: 0;
+        }
+
+        #background,
+        #image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        #image {
+            opacity: 0;
+            z-index: 1;
+        }
+
+        #body {
+            position: absolute;
+            font-size: 26px;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            transform: translateY(-5%);
+            opacity: 0;
+            word-wrap: break-word;
+            word-break: break-word;
+            line-height: 1.2em;
+        }
+
+        #namebar {
+            position: absolute;
+            right: 0;
+            height: 33px;
+            background-color: #0075a1;
+            box-sizing: border-box;
+            transform: translateX(105%);
+        }
+
+        #icon {
+            position: absolute;
+            left: -3px;
+            top: -6px;
+        }
+
+        #username {
+            line-height: 33px;
+            margin-left: 60px;
+        }
+    </style>
+
+    <template>
+        <div id="background"></div>
+        <iron-image id="image" sizing="contain"></iron-image>
+        <div id="body"></div>
+        <div id="namebar">
+            <img id="icon" src="twitter.png">
+            <span id="username"></span>
+        </div>
+    </template>
+</dom-module>
+
+<script>
+(function () {
+    'use strict';
+
+    var BODY_DISPLAY_DURATION = 7;
+    var BASE_IMAGE_DURATION = 5;
+    var imgPreloaderEl = document.createElement('img');
+
+    function oneTime(target, type, callback) {
+        var listener = function(e) {
+            callback(e);
+            e.target.removeEventListener(type, listener);
+        };
+        target.addEventListener(type, listener);
+    }
+
+    Polymer({
+        is: 'twitter-display',
+
+        properties: {
+            bodyStyle: {
+                type: Object,
+                observer: '_bodyStyleChanged'
+            },
+            namebarStyle: {
+                type: Object,
+                observer: '_namebarStyleChanged'
+            }
+        },
+
+        ready: function () {
+            var self = this;
+
+            var tl = new TimelineLite({autoRemoveChilren: true});
+            nodecg.listenFor('showTweet', function (tweet) {
+                tl.to(this.$.background, 1, {
+                    onStart: function () {
+                        this.$.body.innerHTML = tweet.text;
+                        this.$.username.innerText = '@' + tweet.user.screen_name;
+
+                        // If the body is too close to the namebar, shrink the body's font size until it isn't
+                        while (this.$.body.getBoundingClientRect().bottom + this.bodyStyle.top
+                                > this.$.namebar.getBoundingClientRect().top) {
+
+                            var currentFontSize = parseInt(this.$.body.style.fontSize);
+                            this.$.body.style.fontSize = (currentFontSize-1) + 'px';
+                        }
+                    }.bind(this),
+                    x: '0%',
+                    ease: Power3.easeInOut
+                });
+
+                // If this tweet has pictures...
+                if (tweet.imageUrls && tweet.imageUrls.length > 0) {
+                    var imageDuration = BASE_IMAGE_DURATION - tweet.imageUrls.length * 0.5;
+                    tweet.imageUrls.forEach(function(url) {
+                        tl.call(function () {
+                            imgPreloaderEl.src = url;
+                            if (imgPreloaderEl.complete) {
+                                self.$.image.src = url;
+                            } else {
+                                tl.pause();
+                                oneTime(imgPreloaderEl, 'load', function () {
+                                    self.$.image.src = url;
+                                    tl.resume();
+                                });
+                            }
+                        });
+
+                        tl.to(this.$.image, 1, {
+                            opacity: 1,
+                            ease: Power1.easeInOut
+                        });
+
+                        tl.to(this.$.image, 1, {
+                            opacity: 0,
+                            ease: Power1.easeInOut
+                        }, '+=' + imageDuration);
+                    }.bind(this));
+                }
+
+                tl.to(this.$.namebar, 0.7, {
+                    x: '0%',
+                    ease: Power2.easeOut
+                }, '-=0.1');
+
+                tl.to(this.$.body, 0.6, {
+                    y: '0%',
+                    opacity: 1,
+                    ease: Power1.easeOut
+                }, '-=0.25');
+
+                tl.to(this, 1, {
+                    opacity: 0,
+                    ease: Power1.easeInOut
+                }, '+=' + BODY_DISPLAY_DURATION);
+
+                // Reset
+                tl.set(this, {opacity: 1});
+                tl.set(this.$.background, {opacity: 1, x: '-100%'});
+                tl.set(this.$.namebar, {x: '100%'});
+                tl.set(this.$.body, {fontSize: this.bodyStyle.fontSize, opacity: 0, y: '-5%'});
+            }.bind(this));
+        },
+
+        _bodyStyleChanged: function (newVal) {
+            var bodyEl = this.$.body;
+            bodyEl.style.top = newVal.top + 'px';
+            bodyEl.style.fontSize = newVal.fontSize + 'px';
+            //bodyEl.style.lineHeight = newVal.fontSize + 'px';
+            bodyEl.style.marginLeft = newVal.horizontalMargin + 'px';
+            bodyEl.style.marginRight = newVal.horizontalMargin + 'px';
+        },
+
+        _namebarStyleChanged: function (newVal) {
+            var namebarEl = this.$.namebar;
+            namebarEl.style.top = newVal.top + 'px';
+            namebarEl.style.width = newVal.width + 'px';
+            namebarEl.style.fontSize = newVal.fontSize + 'px';
+        }
+    });
+})();
+</script>

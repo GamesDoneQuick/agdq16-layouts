@@ -4,18 +4,22 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style/base.css">
     <link rel="stylesheet" href="style/fonts.css">
+    <script src="components/gsap/src/minified/TweenMax.min.js"></script>
+    <link rel="import" href="app/components/twitter-display/twitter-display.html">
 </head>
 <body>
     <div id="fontPreloader">preload the font</div>
 
     <div id="container" style="-webkit-app-region: drag">
+        <div id="sponsorsAndTwitter">
+            <twitter-display></twitter-display>
+        </div>
         <div id="ftbCover" class="fullscreen"></div>
         <div id="imageAdContainer" class="fullscreen"></div>
     </div>
 
     <!--<script src="https://use.typekit.net/ymd2qus.js"></script>-->
     <script src="lib/preloadjs-NEXT.min.js"></script>
-    <script src="components/gsap/src/minified/TweenMax.min.js"></script>
     <script src="lib/obs-remote.js"></script>
     <script src="lib/require.js"></script>
     <script src="app/index.js"></script>

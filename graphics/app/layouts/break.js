@@ -13,6 +13,9 @@ define([
     var STAGE_HEIGHT = 330;
     var DESCRIPTION_HEIGHT = 53;
 
+    var sponsorsAndTwitter = document.getElementById('sponsorsAndTwitter');
+    var twitterDisplay = document.querySelector('twitter-display');
+
     var createjs = requirejs('easel');
     var stage = new Stage(STAGE_WIDTH, STAGE_HEIGHT, 'break-prizes');
     stage.canvas.style.top = '308px';
@@ -139,6 +142,22 @@ define([
             stage.visible = true;
             stage.paused = false;
             stage.canvas.style.display = 'block';
+
+            sponsorsAndTwitter.style.top = '479px';
+            sponsorsAndTwitter.style.left = '387px';
+            sponsorsAndTwitter.style.width = '516px';
+            sponsorsAndTwitter.style.height = '146px';
+
+            twitterDisplay.bodyStyle = {
+                fontSize: 21,
+                top: 15,
+                horizontalMargin: 13
+            };
+            twitterDisplay.namebarStyle = {
+                top: 98,
+                width: 305,
+                fontSize: 20
+            };
         },
         detached: function() {
             stage.visible = false;

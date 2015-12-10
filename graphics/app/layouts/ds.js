@@ -7,6 +7,7 @@ define([
     'use strict';
 
     var LAYOUT_NAME = 'ds';
+    var sponsorsAndTwitter = document.getElementById('sponsorsAndTwitter');
 
     return {
         attached: function() {
@@ -27,6 +28,12 @@ define([
                 estimateFontSize: 18,
                 timeFontSize: 48
             }]);
+
+            sponsorsAndTwitter.style.display = 'none';
+        },
+
+        detached: function() {
+            sponsorsAndTwitter.style.display = 'block';
         }
     };
 });
