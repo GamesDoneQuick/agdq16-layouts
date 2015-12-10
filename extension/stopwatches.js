@@ -18,10 +18,18 @@ module.exports = function (nodecg) {
     // Add the runner's name to the stopwatch, because testrunner needs that for his API stuff.
     var currentRun = nodecg.Replicant('currentRun');
     currentRun.on('change', function(oldVal, newVal) {
-        for (var i = 0; i < NUM_STOPWATCHES; i++) {
-            var runner = newVal.runners[i];
-            stopwatches.value[i].runnerName = runner ? runner.name : '?';
+        var i;
+        if (newVal.runners) {
+            for (i = 0; i < NUM_STOPWATCHES; i++) {
+                var runner = newVal.runners[i];
+                stopwatches.value[i].runnerName = runner ? runner.name : '?';
+            }
+        } else {
+            for (i = 0; i < NUM_STOPWATCHES; i++) {
+                stopwatches.value[i].runnerName = '?';
+            }
         }
+
     });
 
     // Make an array of 4 Rieussec stopwatches
