@@ -43,12 +43,12 @@
         console.error(e);
     }*/
 
+    var preloaderDone = false;
+    var replicantsDone = false;
     init();
 
     function init() {
         requirejs(['preloader', 'globals', 'easel'], function (preloader, globals, createjs) {
-            var preloaderDone = false;
-            var replicantsDone = false;
 
             preloader.on('complete', handlePreloadComplete);
 
@@ -72,32 +72,30 @@
             }
 
             createjs.Ticker.timingMode = createjs.Ticker.RAF;
+        });
+    }
 
-            function checkReplicantsAndPreloader() {
-                if (!preloaderDone || !replicantsDone) return;
+    function checkReplicantsAndPreloader() {
+        if (!preloaderDone || !replicantsDone) return;
 
-                requirejs(
-                    [
-                        'components/background',
-                        'components/speedrun',
-                        'components/omnibar',
-                        'layout',
-                        'obs',
-                        'advertisements'
-                    ], function(bg, speedrun, omnibar, layout) {
-                        layout.changeTo('4x3_2');
-                        window.layout = layout;
-                        layoutState.value = 'open';
+        requirejs([
+            'components/background',
+            'components/speedrun',
+            'components/omnibar',
+            'layout',
+            'obs',
+            'advertisements'
+        ], function(bg, speedrun, omnibar, layout) {
+            layout.changeTo('ds_portrait');
+            window.layout = layout;
+            layoutState.value = 'open';
 
-                        // Fade up the body once everything is loaded
-                        TweenLite.to(document.body, 0.5, {
-                            delay: 0.2,
-                            opacity: 1,
-                            ease: Power1.easeInOut
-                        });
-                    }
-                );
-            }
+            // Fade up the body once everything is loaded
+            TweenLite.to(document.body, 0.5, {
+                delay: 0.2,
+                opacity: 1,
+                ease: Power1.easeInOut
+            });
         });
     }
 
