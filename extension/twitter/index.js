@@ -1,9 +1,6 @@
 /* jshint -W106 */
 'use strict';
 
-//var GDQ_ID = '95356132';
-var GDQ_ID = '23874413';
-
 var path = require('path');
 var app = require('express')();
 var jEmoji = require('emoji');
@@ -11,40 +8,48 @@ var TwitterStream = require('twitter-stream-api');
 
 module.exports = function(nodecg) {
     if (!nodecg.bundleConfig) {
-        nodecg.log.error('cfg/toth3-overlay.json was not found. ' +
+        nodecg.log.error('cfg/agdq16-layouts.json was not found. ' +
             'This file is where the Twitter API keys are set. ' +
             'Without those, the Twitter graphic cannot function.');
         return;
     }
     else if (typeof nodecg.bundleConfig.twitter === 'undefined') {
-        nodecg.log.error('"twitter" is not defined in cfg/toth3-overlay.json! ' +
+        nodecg.log.error('"twitter" is not defined in cfg/agdq16-layouts.json! ' +
             'This object contains other properties that are required for the Twitter graphic to function.');
         return;
     }
+    else if (typeof nodecg.bundleConfig.twitter.userId === 'undefined') {
+        nodecg.log.error('twitter.userId is not defined in cfg/agdq16-layouts.json! ' +
+            'This ID (obtained from http://mytwitterid.com/ or similar) ' +
+            ' is required for the Twitter graphic to function.');
+        return;
+    }
     else if (typeof nodecg.bundleConfig.twitter.consumerKey === 'undefined') {
-        nodecg.log.error('twitter.consumerKey is not defined in cfg/toth3-overlay.json! ' +
+        nodecg.log.error('twitter.consumerKey is not defined in cfg/agdq16-layouts.json! ' +
             'This key (obtained from your Twitter developer account) ' +
             ' is required for the Twitter graphic to function.');
         return;
     }
     else if (typeof nodecg.bundleConfig.twitter.consumerSecret === 'undefined') {
-        nodecg.log.error('twitter.consumerSecret is not defined in cfg/toth3-overlay.json! ' +
+        nodecg.log.error('twitter.consumerSecret is not defined in cfg/agdq16-layouts.json! ' +
             'This secret (obtained from your Twitter developer account) ' +
             ' is required for the Twitter graphic to function.');
         return;
     }
     else if (typeof nodecg.bundleConfig.twitter.accessTokenKey === 'undefined') {
-        nodecg.log.error('twitter.accessTokenKey is not defined in cfg/toth3-overlay.json! ' +
+        nodecg.log.error('twitter.accessTokenKey is not defined in cfg/agdq16-layouts.json! ' +
             'This key (obtained from your Twitter developer account) ' +
             ' is required for the Twitter graphic to function.');
         return;
     }
     else if (typeof nodecg.bundleConfig.twitter.accessTokenSecret === 'undefined') {
-        nodecg.log.error('twitter.accessTokenSecret is not defined in cfg/toth3-overlay.json! ' +
+        nodecg.log.error('twitter.accessTokenSecret is not defined in cfg/agdq16-layouts.json! ' +
             'This secret (obtained from your Twitter developer account) ' +
             ' is required for the Twitter graphic to function.');
         return;
     }
+
+    var TARGET_USER_ID = nodecg.bundleConfig.twitter.userId;
 
     // Create a route to serve the emoji lib
     app.get('/agdq16-layouts/emoji.png', function(req, res) {
@@ -99,12 +104,12 @@ module.exports = function(nodecg) {
     });
 
     function handleStatus(status) {
-        if (status.user.id_str !== GDQ_ID) return;
+        if (status.user.id_str !== TARGET_USER_ID) return;
         addTweet(status);
     }
 
     function handleRetweet(retweet) {
-        if (retweet.user.id_str !== GDQ_ID) return;
+        if (retweet.user.id_str !== TARGET_USER_ID) return;
         var retweetedStatus = retweet.retweeted_status;
         retweetedStatus.gdqRetweetId = retweet.id_str;
         addTweet(retweetedStatus);
@@ -115,12 +120,12 @@ module.exports = function(nodecg) {
     }
 
     function handleFavorite(favorite) {
-        if (favorite.source.id_str !== GDQ_ID) return;
+        if (favorite.source.id_str !== TARGET_USER_ID) return;
         addTweet(favorite.target_object);
     }
 
     function handleUnfavorite(unfavorite) {
-        if (unfavorite.source.id_str !== GDQ_ID) return;
+        if (unfavorite.source.id_str !== TARGET_USER_ID) return;
         removeTweetById(unfavorite.target_object.id_str);
     }
 
