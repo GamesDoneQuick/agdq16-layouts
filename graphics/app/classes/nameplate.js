@@ -296,10 +296,10 @@ define([
 
         if (this.alignment === 'right') {
             this.audioIcon.x = this.estimateText.x - this.estimateText.getBounds().width - 16;
-            this.audioIcon.scaleX = AUDIO_ICON_SCALE;
+            this.audioIcon.scaleX = -AUDIO_ICON_SCALE;
         } else {
             this.audioIcon.x = this.estimateText.x + this.estimateText.getBounds().width + 16;
-            this.audioIcon.scaleX = -AUDIO_ICON_SCALE;
+            this.audioIcon.scaleX = AUDIO_ICON_SCALE;
         }
     };
 
