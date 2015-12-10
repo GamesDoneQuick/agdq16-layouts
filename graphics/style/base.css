@@ -11,7 +11,7 @@ body {
     overflow: hidden;
 }
 
-#background {
+#container > #background {
     z-index: -1;
 }
 
