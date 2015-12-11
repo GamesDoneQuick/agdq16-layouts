@@ -111,8 +111,26 @@
         ready: function () {
             var self = this;
 
-            var tl = new TimelineLite({autoRemoveChilren: true});
+            var tl = new TimelineLite({
+                autoRemoveChilren: true,
+                onComplete: function() {
+                    // Remove will-change every time the timeline is emptied
+                    self.$.background.style.willChange = '';
+                    self.$.image.style.willChange = '';
+                    self.$.namebar.style.willChange = '';
+                    self.$.body.style.willChange = '';
+                    self.style.willChange = '';
+                }.bind(this)
+            });
+
             nodecg.listenFor('showTweet', function (tweet) {
+                // Set will-change on all the elements we're about to animate.
+                this.$.background.style.willChange = 'transform';
+                this.$.image.style.willChange = 'opacity';
+                this.$.namebar.style.willChange = 'transform';
+                this.$.body.style.willChange = 'opacity, transform';
+                this.style.willChange = 'opacity';
+
                 tl.to(this.$.background, 1, {
                     onStart: function () {
                         this.$.body.fontSize = this.bodyStyle.fontSize + 'px';
@@ -122,7 +140,7 @@
                     }.bind(this),
                     x: '0%',
                     ease: Power3.easeInOut
-                });
+                }, '+=0.2'); // Small delay to give `will-change` time to do its optimizations.
 
                 // If this tweet has pictures...
                 if (tweet.imageUrls && tweet.imageUrls.length > 0) {
@@ -142,13 +160,25 @@
                         });
 
                         tl.to(this.$.image, 1, {
+                            onStart: function() {
+                                debug.time('tweetImageFadeIn');
+                            },
                             opacity: 1,
-                            ease: Power1.easeInOut
+                            ease: Power1.easeInOut,
+                            onComplete: function() {
+                                debug.timeEnd('tweetImageFadeIn');
+                            }
                         });
 
                         tl.to(this.$.image, 1, {
+                            onStart: function() {
+                                debug.time('tweetImageFadeOut');
+                            },
                             opacity: 0,
-                            ease: Power1.easeInOut
+                            ease: Power1.easeInOut,
+                            onComplete: function() {
+                                debug.timeEnd('tweetImageFadeOut');
+                            }
                         }, '+=' + imageDuration);
                     }.bind(this));
                 }
