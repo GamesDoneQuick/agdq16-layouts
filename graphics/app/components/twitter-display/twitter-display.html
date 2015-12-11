@@ -115,7 +115,7 @@
             nodecg.listenFor('showTweet', function (tweet) {
                 tl.to(this.$.background, 1, {
                     onStart: function () {
-                        this.$.body.fontSize = this.bodyStyle.fontSize;
+                        this.$.body.fontSize = this.bodyStyle.fontSize + 'px';
                         this.$.body.innerHTML = tweet.text;
                         this.$.username.innerText = '@' + tweet.user.screen_name;
                         this.scaleDownBodyIfNecessary();
