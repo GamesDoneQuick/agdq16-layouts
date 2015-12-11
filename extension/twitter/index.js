@@ -105,6 +105,9 @@ module.exports = function(nodecg) {
 
     function handleStatus(status) {
         if (status.user.id_str !== TARGET_USER_ID) return;
+
+        // Filter out @ replies
+        if (status.text.charAt(0) === '@') return;
         addTweet(status);
     }
 
