@@ -2,18 +2,19 @@
 define([
     'preloader',
     'globals',
-    'classes/stage'
-], function (preloader, globals, Stage) {
+    'classes/stage',
+    'debug'
+], function (preloader, globals, Stage, debug) {
     'use strict';
 
     var BOXART_WIDTH = 469;
     var BOXART_ASPECT_RATIO = 1.397;
-    var BG_SCROLL_TIME = 30;
-    var BG_FADE_TIME = 2;
+    var BOXART_SCROLL_TIME = 10;
+    var BOXART_FADE_TIME = 2;
 
     // We'll be changing these every time we switch to a new layout.
     // The "g" here means "Global". IDK, just some way of signifying these vars are permanent.
-    var gWidth, gHeight, gOpts, boxartHeight;
+    var gWidth, gHeight, gOpts, gBoxartImage, boxartHeight;
 
     var createjs = requirejs('easel');
     var stage = new Stage(0, 0, 'speedrun');
@@ -21,19 +22,19 @@ define([
 
     /* ----- */
 
-    var bgContainer1 = new createjs.Container();
-    var bgContainer2 = new createjs.Container();
+    var boxartContainer1 = new createjs.Container();
+    var boxartContainer2 = new createjs.Container();
 
     var color1 = new createjs.Shape();
     var color2 = new createjs.Shape();
 
-    var background1 = new createjs.Bitmap();
-    background1.alpha = 0.3;
-    background1.compositeOperation = 'luminosity';
-    var background2 = background1.clone();
+    var boxart1 = new createjs.Bitmap();
+    boxart1.alpha = 0.3;
+    boxart1.compositeOperation = 'luminosity';
+    var boxart2 = boxart1.clone();
 
-    bgContainer1.addChild(color1, background1);
-    bgContainer2.addChild(color2, background2);
+    boxartContainer1.addChild(color1, boxart1);
+    boxartContainer2.addChild(color2, boxart2);
 
     /* ----- */
 
@@ -50,14 +51,14 @@ define([
     category.x = 34;
     category.y = 4;
 
-    var categoryBackground = new createjs.Shape();
-    categoryBackground.graphics
+    var categoryBoxart = new createjs.Shape();
+    categoryBoxart.graphics
         .beginStroke('#0075a1')
         .beginFill('white')
         .drawRect(0, 0, 0, 31);
-    var categoryRect = categoryBackground.graphics.command;
+    var categoryRect = categoryBoxart.graphics.command;
 
-    categoryContainer.addChild(categoryBackground, category);
+    categoryContainer.addChild(categoryBoxart, category);
 
     /* ----- */
 
@@ -67,14 +68,14 @@ define([
     estimate.textAlign = 'right';
     estimate.y = 4;
 
-    var estimateBackground = new createjs.Shape();
-    estimateBackground.graphics
+    var estimateBoxart = new createjs.Shape();
+    estimateBoxart.graphics
         .beginStroke('#0075a1')
         .beginFill('white')
         .drawRect(0, 0, 0, 31);
-    var estimateRect = estimateBackground.graphics.command;
+    var estimateRect = estimateBoxart.graphics.command;
 
-    estimateContainer.addChild(estimateBackground, estimate);
+    estimateContainer.addChild(estimateBoxart, estimate);
     window.estimateContainer = estimateContainer;
 
     /* ----- */
@@ -91,7 +92,7 @@ define([
     var stageMask = new createjs.Shape();
     var stageMaskRect = stageMask.graphics.drawRect(0, 0, 0, 0).command;
     stage.mask = stageMask;
-    stage.addChild(bgContainer1, bgContainer2, foreground);
+    stage.addChild(boxartContainer1, boxartContainer2, foreground);
 
     /**
      *  Re-caches the foreground elements (name, console icon, estimate, category)
@@ -100,18 +101,19 @@ define([
         foreground.cache(0, 0, gWidth, gHeight);
     }
 
+    var showingBoxart = boxartContainer1;
+    var hiddenBoxart = boxartContainer2;
+    var currentBoxartScrollTl;
+    var boxartScrollInterval;
+
     /**
      *  Does one iteration of the boxart scroll animation.
      */
-    var showingBg = bgContainer1;
-    var hiddenBg = bgContainer2;
-    var currentBoxartScrollTl;
-    var boxartScrollInterval;
     function boxartScroll() {
         var tl = new TimelineLite();
         currentBoxartScrollTl = tl;
 
-        tl.fromTo(showingBg, BG_SCROLL_TIME,
+        tl.fromTo(showingBoxart, BOXART_SCROLL_TIME + BOXART_FADE_TIME,
             {y: 0},
             {
                 immediateRender: false,
@@ -120,65 +122,77 @@ define([
             }
         );
 
-        tl.add('crossfade', BG_SCROLL_TIME - BG_FADE_TIME);
-        tl.to(showingBg, BG_FADE_TIME, {
+        tl.add('crossfade', BOXART_SCROLL_TIME);
+        tl.to(showingBoxart, BOXART_FADE_TIME, {
+            onStart: function() {
+                debug.time('boxartCrossfade');
+            },
             alpha: 0,
-            ease: Power1.easeInOut
+            ease: Power1.easeInOut,
+            onComplete: function(boxartWeJustHid) {
+                if (boxartWeJustHid.image !== gBoxartImage) {
+                    recacheBoxartAfterImageLoad(boxartWeJustHid);
+                }
+            },
+            onCompleteParams: [showingBoxart]
         }, 'crossfade');
-        tl.to(hiddenBg, BG_FADE_TIME, {
+        tl.to(hiddenBoxart, BOXART_FADE_TIME, {
             alpha: 1,
-            ease: Power1.easeInOut
-        }, 'crossfade');
-        tl.fromTo(hiddenBg, BG_SCROLL_TIME,
-            {y: 0},
-            {
-                immediateRender: false,
-                y: gHeight - boxartHeight,
-                ease: Linear.easeNone
+            ease: Power1.easeInOut,
+            onComplete: function() {
+                debug.timeEnd('boxartCrossfade');
             }
-            , 'crossfade');
+        }, 'crossfade');
 
-        var tmp = showingBg;
-        showingBg = hiddenBg;
-        hiddenBg = tmp;
+        var tmp = showingBoxart;
+        showingBoxart = hiddenBoxart;
+        hiddenBoxart = tmp;
     }
 
     /**
-     *  Waits for the boxart image to be fully loaded, then redraws both background elements.
+     *  Waits for the boxart image to be fully loaded, then redraws both boxart elements.
      */
-    function redrawBoxartAfterImageLoad() {
-        if (!background1.image) return;
+    function recacheBoxartAfterImageLoad(boxartContainer) {
+        var bitmap = boxartContainer.children[1];
+        if (!bitmap.image) return;
 
-        if (background1.image.complete) {
-            redrawAndCacheBoxart();
+        bitmap.image = gBoxartImage;
+        if (bitmap.image.complete) {
+            cacheBoxartContainer(boxartContainer);
         } else {
-            background1.image.addEventListener('load', redrawAndCacheBoxart);
+            bitmap.image.addEventListener('load', function() {
+                cacheBoxartContainer(boxartContainer);
+            });
         }
     }
 
-    /**
-     *  Re-draws and re-caches the boxart to fit the current width.
-     */
-    function redrawAndCacheBoxart() {
+    function cacheBoxartContainer(boxartContainer) {
+        boxartContainer.cache(0, 0, gWidth, Math.ceil(boxartHeight));
+    }
+
+    function reformatBoxart() {
         boxartHeight = gWidth * BOXART_ASPECT_RATIO;
-        background1.scaleX = background2.scaleX = gWidth / BOXART_WIDTH;
-        background1.scaleY = background2.scaleY = gWidth / BOXART_WIDTH;
+        boxart1.scaleX = boxart2.scaleX = gWidth / BOXART_WIDTH;
+        boxart1.scaleY = boxart2.scaleY = gWidth / BOXART_WIDTH;
         color1.graphics.clear().beginFill('#00ADEF').drawRect(0, 0, gWidth, boxartHeight);
         color2.graphics.clear().beginFill('#00ADEF').drawRect(0, 0, gWidth, boxartHeight);
 
-        // TODO: For some reason, caching the boxart makes perf WAY WORSE in OBS1.
-        //bgContainer1.cache(0, 0, gWidth, Math.ceil(boxartHeight));
-        //bgContainer2.cache(0, 0, gWidth, Math.ceil(boxartHeight));
+        // Caching seems to have no discernible performance benefit in this particular case,
+        // and in OBS1 CLR Browser Sources actually seems to make performance far worse.
+        boxart1.image = gBoxartImage;
+        boxart2.image = gBoxartImage;
+        cacheBoxartContainer(boxartContainer1);
+        cacheBoxartContainer(boxartContainer2);
 
         // Reset the scroll
         clearInterval(boxartScrollInterval);
         if (currentBoxartScrollTl) currentBoxartScrollTl.clear();
 
-        showingBg.alpha = 1;
-        hiddenBg.alpha = 0;
+        showingBoxart.alpha = 1;
+        hiddenBoxart.alpha = 0;
 
         boxartScroll();
-        boxartScrollInterval = setInterval(boxartScroll, (BG_SCROLL_TIME - BG_FADE_TIME) * 1000);
+        boxartScrollInterval = setInterval(boxartScroll, BOXART_SCROLL_TIME * 1000);
     }
 
     function calcAndSetNameStyle() {
@@ -226,12 +240,21 @@ define([
 
     // This needs to be near the bottom of this file.
     globals.currentRunRep.on('change', function(oldVal, newVal) {
-        // Set the boxart
-        // TODO: give this a nice fade transition, rather than a hard cut
         var img = document.createElement('img');
         img.src = newVal.boxart.url;
-        background1.image = background2.image = img;
-        redrawBoxartAfterImageLoad();
+        gBoxartImage = img;
+
+        // If we have at least BOXART_FADE_TIME before the next fade begins,
+        // immediately load the new boxart into hiddenBoxart so its shows ASAP.
+        if(currentBoxartScrollTl) {
+            var currentTime = currentBoxartScrollTl.time();
+            if (currentTime > BOXART_FADE_TIME
+                    && currentTime < currentBoxartScrollTl.duration() - BOXART_FADE_TIME * 2) {
+                // This is confusing. You'd think it'd be hiddenBoxart that we change, but no.
+                // This is becuase they're flipped immediately every time showBoxart() is called.
+                recacheBoxartAfterImageLoad(showingBoxart);
+            }
+        }
 
         name.text = newVal.name.toUpperCase();
 
@@ -247,12 +270,12 @@ define([
 
         // EaselJS has problems applying  shadows to stroked graphics.
         // To work around this, we remove the shadow, cache the graphic, then apply the shadow to the cache.
-        categoryBackground.shadow = null;
-        categoryBackground.cache(0, 0, categoryRect.w, categoryRect.h);
-        categoryBackground.shadow = shadow;
-        estimateBackground.shadow = null;
-        estimateBackground.cache(0, 0, estimateRect.w, estimateRect.h);
-        estimateBackground.shadow = shadow;
+        categoryBoxart.shadow = null;
+        categoryBoxart.cache(0, 0, categoryRect.w, categoryRect.h);
+        categoryBoxart.shadow = shadow;
+        estimateBoxart.shadow = null;
+        estimateBoxart.cache(0, 0, estimateRect.w, estimateRect.h);
+        estimateBoxart.shadow = shadow;
 
         calcAndSetNameStyle();
         repositionConsole();
@@ -288,7 +311,7 @@ define([
          *  @param {Boolean} [opts.showEstimate] - Whether or not to show the run's estimate.
          */
         configure:  function (x, y, w, h, opts) {
-            console.log('setSpeedRunDimensions | x: %s, y: %s, w: %s, h: %s', x, y, w, h);
+            debug.log('setSpeedRunDimensions | x: %s, y: %s, w: %s, h: %s', x, y, w, h);
 
             this.enable();
             stageMaskRect.w = w;
@@ -334,7 +357,7 @@ define([
                 estimateContainer.visible = false;
             }
 
-            redrawBoxartAfterImageLoad();
+            reformatBoxart();
             calcAndSetNameStyle();
             repositionConsole();
             recacheForeground();
