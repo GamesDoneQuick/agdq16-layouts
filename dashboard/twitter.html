@@ -6,13 +6,58 @@
     <link rel="import" href="elements/tweet-item.html">
     <link rel="stylesheet" href="/agdq16-layouts/emoji.css">
     <link rel="stylesheet" href="/agdq16-layouts/twitter/shared.css">
+    <style>
+        #scrollWrapper {
+            overflow-y: scroll;
+            height: 300px;
+            padding-right: 6px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            background: #757575;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+        }
+
+        ::-webkit-scrollbar-thumb:window-inactive {
+            background: #b9b9b9;;
+        }
+
+        #empty {
+            text-align: center;
+            border: 4px dashed #B7B7B7;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 <body>
+<div id="scrollWrapper">
     <template is="dom-bind">
         <nodecg-replicant replicant-name="tweets" value="{{value}}"></nodecg-replicant>
+
+        <template is="dom-if" if="[[!value.length]]">
+            <div id="empty">There are no tweets in the queue.</div>
+        </template>
+
         <template is="dom-repeat" items="[[value]]" as="tweet">
             <tweet-item value="[[tweet]]"></tweet-item>
         </template>
     </template>
+</div>
 </body>
 </html>
