@@ -311,7 +311,7 @@ define([
          *  @param {Boolean} [opts.showEstimate] - Whether or not to show the run's estimate.
          */
         configure:  function (x, y, w, h, opts) {
-            debug.log('setSpeedRunDimensions | x: %s, y: %s, w: %s, h: %s', x, y, w, h);
+            debug.log('[speedun] setSpeedRunDimensions(%s, %s, %s, %s)', x, y, w, h);
 
             this.enable();
             stageMaskRect.w = w;

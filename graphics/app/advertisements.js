@@ -1,8 +1,9 @@
 /* global define, Power1, TweenLite, TimelineLite, createjs */
 define([
+    'debug',
     'preloader',
     'classes/stage'
-],function(preloader, Stage) {
+],function(debug, preloader, Stage) {
     'use strict';
 
     var FADE_DURATION = 0.5;
@@ -14,7 +15,7 @@ define([
     var adState = nodecg.Replicant('adState');
 
     function loadAd(ad) {
-        console.log('[advertisements] Loading %s', ad.filename);
+        debug.log('[advertisements] Loading %s', ad.filename);
 
         var preloadType = ad.type === 'video'
             ? createjs.AbstractLoader.VIDEO
@@ -34,12 +35,12 @@ define([
     });
 
     nodecg.listenFor('adRemoved', function(ad) {
-        console.log('[advertisements] Removing %s', ad.filename);
+        debug.log('[advertisements] Removing %s', ad.filename);
         preloader.remove('ad-' + ad.filename);
     });
 
     nodecg.listenFor('adChanged', function(ad) {
-        console.log('[advertisements] Reloading %s', ad.filename);
+        debug.log('[advertisements] Reloading %s', ad.filename);
         preloader.remove('ad-' + ad.filename);
         loadAd(ad);
     });
@@ -134,7 +135,7 @@ define([
     function showAdImage(img) {
         // If the new ad is the same as the old one, do nothing.
         if (currentImage === img) {
-            console.log('[advertisements] New img is identical to current image, aborting.');
+            debug.log('[advertisements] New img is identical to current image, aborting.');
             return;
         }
 

@@ -48,25 +48,25 @@
     init();
 
     function init() {
-        requirejs(['preloader', 'globals', 'easel'], function (preloader, globals, createjs) {
+        requirejs(['debug', 'preloader', 'globals', 'easel'], function (debug, preloader, globals, createjs) {
 
             preloader.on('complete', handlePreloadComplete);
 
             function handlePreloadComplete() {
                 preloader.removeAllEventListeners('complete');
                 preloaderDone = true;
-                console.log('preloading complete');
+                debug.log('preloading complete');
                 checkReplicantsAndPreloader();
             }
 
             if (window.replicantsDeclared) {
                 replicantsDone = true;
-                console.log('replicants declared');
+                debug.log('replicants declared');
                 checkReplicantsAndPreloader();
             } else {
                 document.addEventListener('replicantsDeclared', function() {
                     replicantsDone = true;
-                    console.log('replicants declared');
+                    debug.log('replicants declared');
                     checkReplicantsAndPreloader();
                 });
             }
@@ -102,7 +102,6 @@
     if (window.process && window.process.versions && window.process.versions.electron) {
         console.log('electron environment detected, hooking f5 keyup');
         document.addEventListener('keyup', function(e) {
-            console.log(e.which);
             if (e.which === 116) {
                 document.location.reload();
             }

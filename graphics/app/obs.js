@@ -1,8 +1,9 @@
 /* global define, OBSRemote */
 define([
+    'debug',
     'layout',
     'debounce'
-], function (layout, debounce) {
+], function (debug, layout, debounce) {
     'use strict';
 
     var obs = new OBSRemote();
@@ -20,26 +21,26 @@ define([
     }, 10);
 
     obs.onConnectionOpened = function () {
-        console.log('OBS | Connected.');
+        console.log('[OBS] Connected.');
         _handleSceneSwitch();
     };
 
     obs.onConnectionClosed = function () {
-        console.log('OBS | Connection closed.');
+        console.log('[OBS] Connection closed.');
         retryConnection();
     };
 
     obs.onConnectionFailed = function () {
-        console.log('OBS | Failed to connect.');
+        console.log('[OBS] Failed to connect.');
         retryConnection();
     };
 
     obs.onAuthenticationFailed = function (remainingAttempts) {
-        console.log('OBS | Authentication failed, %s attempts remaining.', remainingAttempts);
+        console.log('[OBS] Authentication failed, %s attempts remaining.', remainingAttempts);
     };
 
     obs.onSceneSwitched = function(scene) {
-        console.log('OBS | Switched to scene "%s".', scene.name);
+        debug.log('[OBS] Switched to scene "%s".', scene.name);
         _handleSceneSwitch();
     };
     obs.onSourceChanged = _handleSceneSwitch;

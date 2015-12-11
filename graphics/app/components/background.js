@@ -1,14 +1,15 @@
 /* global define */
 define([
+    'debug',
     'preloader'
-], function(preloader) {
+], function(debug, preloader) {
     'use strict';
 
     var containerEl = document.getElementById('container');
     var lastBg;
 
     return function(bgName) {
-        console.log('setBackground |', bgName);
+        debug.log('[backgound] setBackground(%s)', bgName);
 
         // Remove the last background, if any.
         if (lastBg) {

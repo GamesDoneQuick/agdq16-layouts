@@ -1,5 +1,7 @@
 /* global define */
 define([
+    'debug',
+
     'layouts/3ds',
 
     'layouts/3x2_1',
@@ -17,34 +19,34 @@ define([
 
     'layouts/ds',
     'layouts/ds_portrait'
-], function() {
+], function(debug) {
     'use strict';
 
     var layouts = {
-        '3ds': arguments[0],
+        '3ds': arguments[1],
 
-        '3x2_1': arguments[1],
-        '3x2_2': arguments[2],
+        '3x2_1': arguments[2],
+        '3x2_2': arguments[3],
 
-        '4x3_1': arguments[3],
-        '4x3_2': arguments[4],
-        '4x3_3': arguments[5],
-        '4x3_4': arguments[6],
+        '4x3_1': arguments[4],
+        '4x3_2': arguments[5],
+        '4x3_3': arguments[6],
+        '4x3_4': arguments[7],
 
-        '16x9_1': arguments[7],
-        '16x9_2': arguments[8],
+        '16x9_1': arguments[8],
+        '16x9_2': arguments[9],
 
-        'break': arguments[9],
+        'break': arguments[10],
 
-        'ds': arguments[10],
-        'ds_portrait': arguments[11]
+        'ds': arguments[11],
+        'ds_portrait': arguments[12]
     };
 
     var currentLayoutName, currentLayoutIndex;
     var numLayouts = Object.keys(layouts).length;
 
     function setLayout(name) {
-        console.log('layout |', name);
+        debug.log('[layout] setLayout(%s)', name);
 
         if (currentLayoutName && layouts[currentLayoutName].detached){
             layouts[currentLayoutName].detached();
