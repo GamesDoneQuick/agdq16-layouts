@@ -115,9 +115,7 @@
             nodecg.listenFor('showTweet', function (tweet) {
                 tl.to(this.$.background, 1, {
                     onStart: function () {
-                        //this.$.body.innerHTML = tweet.text;
-                        this.$.body.innerHTML = 'Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$' +
-                                'Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg';
+                        this.$.body.innerHTML = tweet.text;
                         this.$.username.innerText = '@' + tweet.user.screen_name;
                         this.scaleDownBodyIfNecessary();
                     }.bind(this),
