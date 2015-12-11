@@ -1,4 +1,4 @@
-/* global define, TimelineLite, Power1, Linear */
+/* global define, requirejs, TimelineLite, Power1, Linear */
 define([
     'preloader',
     'globals',
@@ -8,7 +8,6 @@ define([
 
     var BOXART_WIDTH = 469;
     var BOXART_ASPECT_RATIO = 1.397;
-    var CONSOLE_WIDTH = 34;
     var BG_SCROLL_TIME = 30;
     var BG_FADE_TIME = 2;
 
@@ -80,7 +79,7 @@ define([
 
     /* ----- */
 
-    var consoleBitmap = new createjs.Bitmap(preloader.getResult('console-psp'));
+    var consoleBitmap = new createjs.Bitmap();
 
     /* ----- */
 
@@ -208,6 +207,24 @@ define([
         }
     }
 
+    function repositionConsole() {
+        if (!gOpts) return;
+
+        var bounds = consoleBitmap.getBounds();
+        consoleBitmap.regY = (bounds.height - 4) / 2;
+
+        console.log(estimateContainer.getBounds());
+        if (gOpts.showEstimate) {
+            consoleBitmap.regX = 0;
+            consoleBitmap.x = 8;
+            consoleBitmap.y = estimateContainer.y + (estimateContainer.getBounds().height - 2) / 2;
+        } else {
+            consoleBitmap.regX = consoleBitmap.getBounds().width - 4;
+            consoleBitmap.x = gWidth - 8;
+            consoleBitmap.y = categoryContainer.y + (categoryContainer.getBounds().height - 2) / 2;
+        }
+    }
+
     // This needs to be near the bottom of this file.
     globals.currentRunRep.on('change', function(oldVal, newVal) {
         // Set the boxart
@@ -227,6 +244,8 @@ define([
         estimate.x = estimateRect.w - 34;
         estimateContainer.regX = estimateRect.w - 2;
 
+        consoleBitmap.image = preloader.getResult('console-' + newVal.console);
+
         // EaselJS has problems applying  shadows to stroked graphics.
         // To work around this, we remove the shadow, cache the graphic, then apply the shadow to the cache.
         categoryBackground.shadow = null;
@@ -237,6 +256,7 @@ define([
         estimateBackground.shadow = shadow;
 
         calcAndSetNameStyle();
+        repositionConsole();
         recacheForeground();
     });
 
@@ -285,7 +305,6 @@ define([
 
             gOpts = opts;
             opts.scale = opts.scale || 1;
-            opts.consolePosition = opts.consolePosition || 'right';
 
             gWidth = w;
             gHeight = h;
@@ -302,7 +321,6 @@ define([
 
             name.scaleX = name.scaleY = opts.scale;
             categoryContainer.scaleX = categoryContainer.scaleY = opts.scale;
-            consoleBitmap.scaleX = consoleBitmap.scaleY = opts.scale;
 
             name.x = w - 10;
 
@@ -313,19 +331,13 @@ define([
                 estimateContainer.x = gWidth;
                 estimateContainer.y = categoryContainer.y + categoryRect.h + 14;
                 estimate.x = estimateRect.w - 34;
-
-                consoleBitmap.y = estimateContainer.y;
-                consoleBitmap.regX = 0;
-                consoleBitmap.x = 8;
             } else {
                 estimateContainer.visible = false;
-                consoleBitmap.regX = CONSOLE_WIDTH-4;
-                consoleBitmap.x = w - 8;
-                consoleBitmap.y = categoryContainer.y;
             }
 
             redrawBoxartAfterImageLoad();
             calcAndSetNameStyle();
+            repositionConsole();
             recacheForeground();
         }
     };
