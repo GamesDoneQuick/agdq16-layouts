@@ -5,7 +5,7 @@ var Rieussec = require('rieussec');
 var NUM_STOPWATCHES = 4;
 
 module.exports = function (nodecg) {
-    var defaultStopwatch = {time: '00:00:00', state: 'stopped', milliseconds: 0, runnerName: '?', place: 0};
+    var defaultStopwatch = {time: '0:00:00', state: 'stopped', milliseconds: 0, runnerName: '?', place: 0};
     var stopwatches = nodecg.Replicant('stopwatches', {
         defaultValue: [
             clone(defaultStopwatch),
