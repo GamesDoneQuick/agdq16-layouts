@@ -33,10 +33,10 @@ define([
                 timeFontSize: 36
             }]);
 
-            sponsorsAndTwitter.style.top = '383px';
+            sponsorsAndTwitter.style.top = '384px';
             sponsorsAndTwitter.style.left = COLUMN_X + 'px';
             sponsorsAndTwitter.style.width = COLUMN_WIDTH + 'px';
-            sponsorsAndTwitter.style.height = '282px';
+            sponsorsAndTwitter.style.height = '281px';
 
             twitterDisplay.bodyStyle = {
                 fontSize: 21,
