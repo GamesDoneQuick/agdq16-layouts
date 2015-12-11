@@ -218,7 +218,7 @@ define([
             consoleBitmap.x = 8;
             consoleBitmap.y = estimateContainer.y + (estimateContainer.getBounds().height - 2) / 2;
         } else {
-            consoleBitmap.regX = consoleBitmap.getBounds().width - 2;
+            consoleBitmap.regX = consoleBitmap.getBounds().width;
             consoleBitmap.x = gWidth - 8;
             consoleBitmap.y = categoryContainer.y + (categoryContainer.getBounds().height - 2) / 2;
         }
