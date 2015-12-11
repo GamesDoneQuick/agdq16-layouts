@@ -212,8 +212,7 @@ define([
 
         var bounds = consoleBitmap.getBounds();
         consoleBitmap.regY = (bounds.height - 4) / 2;
-
-        console.log(estimateContainer.getBounds());
+        
         if (gOpts.showEstimate) {
             consoleBitmap.regX = 0;
             consoleBitmap.x = 8;
