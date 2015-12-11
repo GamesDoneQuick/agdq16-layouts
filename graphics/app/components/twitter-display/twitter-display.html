@@ -83,6 +83,7 @@
 
     var BODY_DISPLAY_DURATION = 7;
     var BASE_IMAGE_DURATION = 5;
+    var MIN_BOTTOM_BODY_MARGIN = 28;
     var imgPreloaderEl = document.createElement('img');
 
     function oneTime(target, type, callback) {
@@ -114,16 +115,11 @@
             nodecg.listenFor('showTweet', function (tweet) {
                 tl.to(this.$.background, 1, {
                     onStart: function () {
-                        this.$.body.innerHTML = tweet.text;
+                        //this.$.body.innerHTML = tweet.text;
+                        this.$.body.innerHTML = 'Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$' +
+                                'Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg$Wg';
                         this.$.username.innerText = '@' + tweet.user.screen_name;
-
-                        // If the body is too close to the namebar, shrink the body's font size until it isn't
-                        while (this.$.body.getBoundingClientRect().bottom + this.bodyStyle.top
-                                > this.$.namebar.getBoundingClientRect().top) {
-
-                            var currentFontSize = parseInt(this.$.body.style.fontSize);
-                            this.$.body.style.fontSize = (currentFontSize-1) + 'px';
-                        }
+                        this.scaleDownBodyIfNecessary();
                     }.bind(this),
                     x: '0%',
                     ease: Power3.easeInOut
@@ -169,6 +165,8 @@
                     ease: Power1.easeOut
                 }, '-=0.25');
 
+                return;
+
                 tl.to(this, 1, {
                     opacity: 0,
                     ease: Power1.easeInOut
@@ -186,9 +184,9 @@
             var bodyEl = this.$.body;
             bodyEl.style.top = newVal.top + 'px';
             bodyEl.style.fontSize = newVal.fontSize + 'px';
-            //bodyEl.style.lineHeight = newVal.fontSize + 'px';
             bodyEl.style.marginLeft = newVal.horizontalMargin + 'px';
             bodyEl.style.marginRight = newVal.horizontalMargin + 'px';
+            this.async(this.scaleDownBodyIfNecessary);
         },
 
         _namebarStyleChanged: function (newVal) {
@@ -196,6 +194,21 @@
             namebarEl.style.top = newVal.top + 'px';
             namebarEl.style.width = newVal.width + 'px';
             namebarEl.style.fontSize = newVal.fontSize + 'px';
+        },
+
+        scaleDownBodyIfNecessary: function() {
+            if (!this.$.body.innerHTML
+                || !this.bodyStyle
+                || !this.bodyStyle.top) {
+                return;
+            }
+
+            // If the body is too close to the namebar, shrink the body's font size until it isn't
+            while (this.$.body.getBoundingClientRect().bottom + MIN_BOTTOM_BODY_MARGIN
+                   > this.$.namebar.getBoundingClientRect().top) {
+                var currentFontSize = parseInt(this.$.body.style.fontSize);
+                this.$.body.style.fontSize = (currentFontSize-1) + 'px';
+            }
         }
     });
 })();
