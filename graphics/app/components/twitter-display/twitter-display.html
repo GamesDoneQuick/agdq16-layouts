@@ -115,6 +115,7 @@
             nodecg.listenFor('showTweet', function (tweet) {
                 tl.to(this.$.background, 1, {
                     onStart: function () {
+                        this.$.body.fontSize = this.bodyStyle.fontSize;
                         this.$.body.innerHTML = tweet.text;
                         this.$.username.innerText = '@' + tweet.user.screen_name;
                         this.scaleDownBodyIfNecessary();
@@ -172,7 +173,7 @@
                 tl.set(this, {opacity: 1});
                 tl.set(this.$.background, {opacity: 1, x: '-100%'});
                 tl.set(this.$.namebar, {x: '100%'});
-                tl.set(this.$.body, {fontSize: this.bodyStyle.fontSize, opacity: 0, y: '-5%'});
+                tl.set(this.$.body, {opacity: 0, y: '-5%'});
             }.bind(this));
         },
 
