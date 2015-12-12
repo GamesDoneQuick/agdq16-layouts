@@ -38,6 +38,7 @@ define([
             sponsorsAndTwitter.style.width = '352px';
             sponsorsAndTwitter.style.height = '188px';
 
+            sponsorDisplay.orientation = 'horizontal';
             sponsorDisplay.style.margin = '0px 0px';
 
             twitterDisplay.bodyStyle = {

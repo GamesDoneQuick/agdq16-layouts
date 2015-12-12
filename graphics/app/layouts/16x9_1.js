@@ -36,6 +36,7 @@ define([
             sponsorsAndTwitter.style.width = '313px';
             sponsorsAndTwitter.style.height = '363px';
 
+            sponsorDisplay.orientation = 'vertical';
             sponsorDisplay.style.margin = '0px 0px';
 
             twitterDisplay.bodyStyle = {

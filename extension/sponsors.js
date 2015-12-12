@@ -95,7 +95,7 @@ module.exports = function(nodecg) {
                 // Look for an existing entry in the replicant with this filename, and update if found and md5 changed.
                 var foundExistingSponsor = sponsors.value.some(function(sponsor) {
                     if (sponsor.name === sponsorName) {
-                        if (sponsor[orientation].checksum !== sum) {
+                        if (!sponsor[orientation] || sponsor[orientation].checksum !== sum) {
                             sponsor[orientation] = fileData;
                         }
                         return true;

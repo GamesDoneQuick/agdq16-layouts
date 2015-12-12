@@ -39,6 +39,7 @@ define([
             sponsorsAndTwitter.style.width = COLUMN_WIDTH + 'px';
             sponsorsAndTwitter.style.height = '281px';
 
+            sponsorDisplay.orientation = 'vertical';
             sponsorDisplay.style.margin = '0px 0px';
 
             twitterDisplay.bodyStyle = {
