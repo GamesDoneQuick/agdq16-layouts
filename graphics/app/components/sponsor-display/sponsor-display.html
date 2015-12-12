@@ -7,6 +7,13 @@
             display: block;
             width: 100%;
             height: 100%;
+            box-sizing: border-box;
+        }
+
+        #wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
         }
 
         iron-image {
@@ -25,10 +32,12 @@
     </style>
 
     <template>
-        <iron-image id="currentVertical" sizing="contain" preload></iron-image>
-        <iron-image id="nextVertical" sizing="contain" preload></iron-image>
-        <iron-image id="currentHorizontal" sizing="contain" preload></iron-image>
-        <iron-image id="nextHorizontal" sizing="contain" preload></iron-image>
+        <div id="wrapper">
+            <iron-image id="currentVertical" sizing="contain" preload></iron-image>
+            <iron-image id="nextVertical" sizing="contain" preload></iron-image>
+            <iron-image id="currentHorizontal" sizing="contain" preload></iron-image>
+            <iron-image id="nextHorizontal" sizing="contain" preload></iron-image>
+        </div>
     </template>
 </dom-module>
 
