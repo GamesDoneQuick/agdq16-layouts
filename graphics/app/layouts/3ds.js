@@ -24,13 +24,12 @@ define([
 
             nameplates.configure({},[{
                 x: 335,
-                y: 567,
+                y: 581,
                 width: 592,
-                height: 98,
-                nameFontSize: 50,
-                estimateFontSize: 32,
-                timeFontSize: 72,
-                bottomBorder: true
+                height: 70,
+                nameFontSize: 40,
+                estimateFontSize: 28,
+                timeFontSize: 68
             }]);
 
             sponsorsAndTwitter.style.top = '477px';
