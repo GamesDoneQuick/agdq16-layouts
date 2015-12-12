@@ -14,6 +14,7 @@ define([
     var DESCRIPTION_HEIGHT = 53;
 
     var sponsorsAndTwitter = document.getElementById('sponsorsAndTwitter');
+    var sponsorDisplay = document.querySelector('sponsor-display');
     var twitterDisplay = document.querySelector('twitter-display');
 
     var createjs = requirejs('easel');
@@ -148,6 +149,8 @@ define([
             sponsorsAndTwitter.style.width = '516px';
             sponsorsAndTwitter.style.height = '146px';
 
+            sponsorDisplay.style.display = 'none';
+
             twitterDisplay.bodyStyle = {
                 fontSize: 21,
                 top: 15,
@@ -163,6 +166,7 @@ define([
             stage.visible = false;
             stage.paused = true;
             stage.canvas.style.display = 'none';
+            sponsorDisplay.style.display = 'block';
         }
     };
 });

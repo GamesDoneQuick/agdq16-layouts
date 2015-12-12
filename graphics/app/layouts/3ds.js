@@ -8,6 +8,7 @@ define([
 
     var LAYOUT_NAME = '3ds';
     var sponsorsAndTwitter = document.getElementById('sponsorsAndTwitter');
+    var sponsorDisplay = document.querySelector('sponsor-display');
     var twitterDisplay = document.querySelector('twitter-display');
 
     return {
@@ -36,6 +37,8 @@ define([
             sponsorsAndTwitter.style.left = '928px';
             sponsorsAndTwitter.style.width = '352px';
             sponsorsAndTwitter.style.height = '188px';
+
+            sponsorDisplay.style.margin = '0px 0px';
 
             twitterDisplay.bodyStyle = {
                 fontSize: 25,

@@ -8,6 +8,7 @@ define([
 
     var LAYOUT_NAME = '16x9_1';
     var sponsorsAndTwitter = document.getElementById('sponsorsAndTwitter');
+    var sponsorDisplay = document.querySelector('sponsor-display');
     var twitterDisplay = document.querySelector('twitter-display');
 
     return {
@@ -34,6 +35,8 @@ define([
             sponsorsAndTwitter.style.left = '967px';
             sponsorsAndTwitter.style.width = '313px';
             sponsorsAndTwitter.style.height = '363px';
+
+            sponsorDisplay.style.margin = '0px 0px';
 
             twitterDisplay.bodyStyle = {
                 fontSize: 26,

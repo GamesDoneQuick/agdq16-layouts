@@ -8,9 +8,10 @@ define([
 
     var LAYOUT_NAME = 'ds_portrait';
     var COLUMN_WIDTH = 305;
-    var COLUMN_X = 975
+    var COLUMN_X = 975;
 
     var sponsorsAndTwitter = document.getElementById('sponsorsAndTwitter');
+    var sponsorDisplay = document.querySelector('sponsor-display');
     var twitterDisplay = document.querySelector('twitter-display');
 
     return {
@@ -37,6 +38,8 @@ define([
             sponsorsAndTwitter.style.left = COLUMN_X + 'px';
             sponsorsAndTwitter.style.width = COLUMN_WIDTH + 'px';
             sponsorsAndTwitter.style.height = '281px';
+
+            sponsorDisplay.style.margin = '0px 0px';
 
             twitterDisplay.bodyStyle = {
                 fontSize: 21,

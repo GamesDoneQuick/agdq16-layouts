@@ -39,12 +39,12 @@ module.exports = function(nodecg) {
         process.exit(1);
     }
 
-    /*try {
+    try {
         require('./sponsors')(nodecg);
     } catch (e) {
         nodecg.log.error('Failed to load "sponsors" lib:', e.stack);
         process.exit(1);
-    }*/
+    }
 
     try {
         require('./advertisements')(nodecg);

@@ -6,12 +6,14 @@
     <link rel="stylesheet" href="style/fonts.css">
     <script src="components/gsap/src/minified/TweenMax.min.js"></script>
     <link rel="import" href="app/components/twitter-display/twitter-display.html">
+    <link rel="import" href="app/components/sponsor-display/sponsor-display.html">
 </head>
 <body>
     <div id="fontPreloader">preload the font</div>
 
     <div id="container" style="-webkit-app-region: drag">
         <div id="sponsorsAndTwitter">
+            <sponsor-display></sponsor-display>
             <twitter-display></twitter-display>
         </div>
         <div id="ftbCover" class="fullscreen"></div>
