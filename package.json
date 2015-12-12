@@ -10,6 +10,9 @@
     "Alex Van Camp <email@alexvan.camp>",
     "Chris Hanel <chrishanel@gmail.com>"
   ],
+  "scripts": {
+    "electron": "electron electron.js"
+  },
   "description": "The on-stream graphics used during Awesome Games Done Quick 2016.",
   "license": "Apache-2.0",
   "nodecg": {
@@ -116,5 +119,8 @@
     "request": "^2.67.0",
     "rieussec": "^0.3.0",
     "twitter-stream-api": "^0.4.1"
+  },
+  "devDependencies": {
+    "electron-prebuilt": "^0.36.0"
   }
 }
