@@ -47,8 +47,8 @@ define([
             sponsorsAndTwitter.style.width = COLUMN_WIDTH + 'px';
             sponsorsAndTwitter.style.height = '253px';
 
-            sponsorDisplay.orientation = 'horizontal';
-            sponsorDisplay.style.padding = '20px 20px';
+            sponsorDisplay.orientation = 'vertical';
+            sponsorDisplay.style.padding = '30px 30px';
 
             twitterDisplay.bodyStyle = {
                 fontSize: 24,
