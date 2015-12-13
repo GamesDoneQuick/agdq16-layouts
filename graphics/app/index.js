@@ -7,13 +7,13 @@
     // Hack to prevent other instances of the layout from breaking the layoutState.
     // They have a brief window in which to change it before singleInstance kicks them off.
     layoutState.on('declared', function(rep) {
-        if (rep.value === 'closed') {
-            layoutState.value = 'preloading';
+        if (rep.value.page === 'closed') {
+            layoutState.value.page = 'preloading';
 
             // Prevent NodeCG restarts from breaking the layoutState.
             layoutState.on('change', function(oldVal, newVal) {
-                if (newVal === 'closed') {
-                    layoutState.value = 'open';
+                if (newVal.page === 'closed') {
+                    layoutState.value.page = 'open';
                 }
             });
         }
@@ -88,7 +88,7 @@
         ], function(bg, speedrun, omnibar, layout) {
             layout.changeTo('ds_portrait');
             window.layout = layout;
-            layoutState.value = 'open';
+            layoutState.value.page = 'open';
 
             // Fade up the body once everything is loaded
             TweenLite.to(document.body, 0.5, {

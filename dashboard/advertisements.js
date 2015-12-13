@@ -8,7 +8,7 @@
 
     var layoutState = nodecg.Replicant('layoutState');
     layoutState.on('change', function(oldVal, newVal) {
-        switch (newVal) {
+        switch (newVal.page) {
             case 'closed':
                 notReadyCover.style.display = 'flex';
                 notReadyCover_closed.style.display = 'inline';

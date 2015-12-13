@@ -22,6 +22,8 @@ define([
 ], function(debug) {
     'use strict';
 
+    var layoutState = nodecg.Replicant('layoutState');
+
     var layouts = {
         '3ds': arguments[1],
 
@@ -47,6 +49,8 @@ define([
 
     function setLayout(name) {
         debug.log('[layout] setLayout(%s)', name);
+
+        layoutState.value.currentLayout = name;
 
         if (currentLayoutName && layouts[currentLayoutName].detached){
             layouts[currentLayoutName].detached();
