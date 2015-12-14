@@ -128,8 +128,9 @@ define([
             this.twitchText.textAlign = 'right';
             this.twitchText.x = WIDTH- 38;
 
+            this.twitchBackground.skewX = 10;
             this.twitchBackground.scaleX = -1;
-            this.twitchBackground.x = WIDTH + 4;
+            this.twitchBackground.x = WIDTH + 10;
 
             this.timeText.textAlign = 'right';
             this.timeText.x = this.nameText.x;
