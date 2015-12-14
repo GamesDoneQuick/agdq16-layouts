@@ -6,7 +6,7 @@
  */
 
 var X32_UDP_PORT = 10023;
-var FADE_THRESHOLD = 0.15;
+var FADE_THRESHOLD = 0.12;
 var DEFAULT_CHANNEL_OBJ = {
     sd: {muted: true, fadedBelowThreshold: true},
     hd: {muted: true, fadedBelowThreshold: true}
