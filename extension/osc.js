@@ -17,11 +17,21 @@ var osc = require('osc');
 
 module.exports = function(nodecg) {
     if (!nodecg.bundleConfig) {
-        throw new Error('cfg/agdq16-layouts.json does not exist. This config file is mandatory.');
-    } else if (!Array.isArray(nodecg.bundleConfig.gameAudioChannels)) {
-        throw new Error('cfg/agdq16-layouts.json must have the property "gameAudioChannels" and it must be an array.');
-    } else if (typeof nodecg.bundleConfig.x32Address !== 'string') {
-        throw new Error('cfg/agdq16-layouts.json must have the property "x32Address" and it must be a string.');
+        nodecg.log.error('[osc] cfg/agdq16-layouts.json does not exist. OSC functionality will not work.');
+        return;
+    }
+    else if (typeof nodecg.bundleConfig.x32 !== 'object') {
+        nodecg.log.error('[osc] cfg/agdq16-layouts.json must have the property "x32" and it must be an object.');
+        return;
+    }
+    else if (!Array.isArray(nodecg.bundleConfig.x32.gameAudioChannels)) {
+        nodecg.log.error('[osc] cfg/agdq16-layouts.json must have the property "x32.gameAudioChannels" ' +
+            'and it must be an array.');
+        return;
+    }
+    else if (typeof nodecg.bundleConfig.x32.address !== 'string') {
+        nodecg.log.error('[osc] cfg/agdq16-layouts.json must have the property "x32.address" and it must be a string.');
+        return;
     }
 
     var gameAudioChannels = nodecg.Replicant('gameAudioChannels', {
@@ -35,7 +45,7 @@ module.exports = function(nodecg) {
     });
 
     var channelNumberToReplicantObject = {};
-    nodecg.bundleConfig.gameAudioChannels.forEach(function(item, index) {
+    nodecg.bundleConfig.x32.gameAudioChannels.forEach(function(item, index) {
         if (typeof item.sd === 'number') {
             channelNumberToReplicantObject[item.sd] = gameAudioChannels.value[index].sd;
         }
@@ -48,7 +58,7 @@ module.exports = function(nodecg) {
     var udpPort = new osc.UDPPort({
         localAddress: '0.0.0.0',
         localPort: 52361,
-        remoteAddress: nodecg.bundleConfig.x32Address,
+        remoteAddress: nodecg.bundleConfig.x32.address,
         remotePort: X32_UDP_PORT,
         metadata: true
     });
