@@ -96,9 +96,6 @@ define([
         this.audioIcon.regX = AUDIO_ICON_WIDTH / 2;
         this.audioIcon.regY = AUDIO_ICON_HEIGHT / 2;
         this.audioIconColorFilter = new createjs.ColorFilter(0,0,0);
-        this.audioIcon.filters = [this.audioIconColorFilter];
-        this.audioIcon.alpha = 0.08;
-        this.audioIcon.cache(0, 0, AUDIO_ICON_WIDTH, AUDIO_ICON_HEIGHT);
         this.audioIcon.y = HEIGHT / 2;
 
         /* ----- */
@@ -267,6 +264,23 @@ define([
                     }
 
                     break;
+            }
+        }.bind(this));
+
+        globals.gameAudioChannelsRep.on('change', function(oldVal, newVal) {
+            var channels = newVal[index];
+            var canHearSd = !channels.sd.muted && !channels.sd.fadedBelowThreshold;
+            var canHearHd = !channels.hd.muted && !channels.hd.fadedBelowThreshold;
+            if (canHearSd || canHearHd) {
+                if (!this.audioIcon.filters) return;
+                this.audioIcon.filters = null;
+                this.audioIcon.alpha = 1;
+                this.audioIcon.uncache();
+            } else {
+                if (this.audioIcon.filters && this.audioIcon.filters.length > 0) return;
+                this.audioIcon.filters = [this.audioIconColorFilter];
+                this.audioIcon.alpha = 0.08;
+                this.audioIcon.cache(0, 0, AUDIO_ICON_WIDTH, AUDIO_ICON_HEIGHT);
             }
         }.bind(this));
     };

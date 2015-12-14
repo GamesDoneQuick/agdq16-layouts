@@ -8,6 +8,7 @@ define(function() {
     var totalRep = nodecg.Replicant('total');
     var displayDurationRep = nodecg.Replicant('displayDuration');
     var stopwatchesRep = nodecg.Replicant('stopwatches');
+    var gameAudioChannelsRep = nodecg.Replicant('gameAudioChannels');
 
     /* ----- */
 
@@ -27,7 +28,7 @@ define(function() {
     /* ----- */
 
     // This is really fragile, but whatever.
-    var NUM_REPLICANTS = 7;
+    var NUM_REPLICANTS = 8;
     var loadedReplicants = 0;
 
     currentBidsRep.on('declared', replicantDeclared);
@@ -37,6 +38,7 @@ define(function() {
     totalRep.on('declared', replicantDeclared);
     displayDurationRep.on('declared', replicantDeclared);
     stopwatchesRep.on('declared', replicantDeclared);
+    gameAudioChannelsRep.on('declared', replicantDeclared);
 
     function replicantDeclared() {
         loadedReplicants++;
@@ -88,6 +90,9 @@ define(function() {
         },
         stopwatchesRep: {
             value: stopwatchesRep
+        },
+        gameAudioChannelsRep: {
+            value: gameAudioChannelsRep
         }
     });
 });
