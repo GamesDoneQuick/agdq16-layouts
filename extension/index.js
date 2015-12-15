@@ -75,6 +75,13 @@ module.exports = function(nodecg) {
     }
 
     try {
+        require('./nowplaying')(nodecg);
+    } catch (e) {
+        nodecg.log.error('Failed to load "nowplaying" lib:', e.stack);
+        process.exit(1);
+    }
+
+    try {
         require('./state')(nodecg);
     } catch (e) {
         nodecg.log.error('Failed to load "state" lib:', e.stack);

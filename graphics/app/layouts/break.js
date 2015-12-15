@@ -13,6 +13,7 @@ define([
     var STAGE_HEIGHT = 330;
     var DESCRIPTION_HEIGHT = 53;
 
+    var nowPlaying = document.querySelector('now-playing');
     var sponsorsAndTwitter = document.getElementById('sponsorsAndTwitter');
     var sponsorDisplay = document.querySelector('sponsor-display');
     var twitterDisplay = document.querySelector('twitter-display');
@@ -144,6 +145,8 @@ define([
             stage.paused = false;
             stage.canvas.style.display = 'block';
 
+            nowPlaying.style.display = 'flex';
+
             sponsorsAndTwitter.style.top = '479px';
             sponsorsAndTwitter.style.left = '387px';
             sponsorsAndTwitter.style.width = '516px';
@@ -166,6 +169,7 @@ define([
             stage.visible = false;
             stage.paused = true;
             stage.canvas.style.display = 'none';
+            nowPlaying.style.display = 'none';
             sponsorDisplay.style.display = 'block';
         }
     };

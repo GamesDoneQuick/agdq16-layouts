@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="import" href="components/paper-button/paper-button.html">
+    <link rel="import" href="components/iron-flex-layout/classes/iron-flex-layout.html">
+    <style>
+        paper-button {
+            display: block;
+        }
+
+        #show {
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+<marquee scrollamount="1" scrolldelay="30" truespeed="truespeed">Waiting for data...</marquee>
+<paper-button id="show" class="nodecg-info">Show for 15 seconds</paper-button>
+
+<script>
+    var marquee = document.getElementsByTagName('marquee')[0];
+    var show = document.getElementById('show');
+
+    var pulsing = nodecg.Replicant('nowPlayingPulsing');
+    pulsing.on('change', function(oldVal, newVal) {
+        if (newVal) {
+            show.setAttribute('disabled', 'true');
+        } else {
+            show.removeAttribute('disabled');
+        }
+    });
+
+    var nowPlaying = nodecg.Replicant('nowPlaying');
+    nowPlaying.on('change', function(oldVal, newVal) {
+        marquee.innerText = newVal.song + ' - ' + newVal.album;
+    });
+
+    show.addEventListener('click', function() {
+        nodecg.sendMessage('pulseNowPlaying');
+    });
+</script>
+</body>
+</html>

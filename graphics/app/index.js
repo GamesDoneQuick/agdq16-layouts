@@ -86,7 +86,7 @@
             'obs',
             'advertisements'
         ], function(bg, speedrun, omnibar, layout) {
-            layout.changeTo('interview');
+            layout.changeTo('break');
             window.layout = layout;
             layoutState.value.page = 'open';
 

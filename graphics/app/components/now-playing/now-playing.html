@@ -1,0 +1,68 @@
+<link rel="import" href="../../../components/polymer/polymer.html">
+<link rel="import" href="../../../components/iron-image/iron-image.html">
+
+<dom-module id="now-playing">
+    <style>
+        :host {
+            position: absolute;
+            display: none;
+            left: 0;
+            top: 126px;
+            font-family: 'proxima-nova';
+            font-weight: 800;
+            color: white;
+            text-transform: uppercase;
+            flex-direction: column;
+            visibility: hidden;
+        }
+
+        #songContainer {
+            height: 31px;
+            background-color: #00aeef;
+            will-change: transform;
+        }
+
+        #albumContainer {
+            display: table; /* for some reason this fixes width issues */
+            position: relative;
+            height: 28px;
+            background-color: #0075a1;
+            will-change: transform;
+        }
+
+        #musicNote {
+            position: absolute;
+            top: -4px;
+            left: 0;
+        }
+
+        #song,
+        #album {
+            padding-left: 43px;
+            padding-right: 43px;
+        }
+
+        #song {
+            font-size: 24px;
+            line-height: 33px;
+        }
+
+        #album {
+            font-size: 18px;
+            line-height: 28px;
+        }
+    </style>
+
+    <template>
+        <div id="songContainer">
+            <span id="song">[[song]]</span>
+        </div>
+
+        <div id="albumContainer">
+            <iron-image id="musicNote" src="music_note.png"></iron-image>
+            <span id="album">[[album]]</span>
+        </div>
+    </template>
+</dom-module>
+
+<script src="now-playing.js"></script>
