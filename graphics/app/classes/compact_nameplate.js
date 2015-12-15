@@ -301,7 +301,7 @@ define([
 
         this.twitchTl = new TimelineMax({repeat: -1});
 
-        this.twitchTl.to({}, 3, {});
+        this.twitchTl.to({}, 30, {});
 
         this.twitchTl.to(this.twitchContainer, 1.2, {
             x: 0,
