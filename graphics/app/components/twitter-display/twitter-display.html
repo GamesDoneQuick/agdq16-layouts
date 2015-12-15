@@ -130,7 +130,7 @@
                 this.$.image.style.willChange = 'opacity';
                 this.$.namebar.style.willChange = 'transform';
                 this.$.body.style.willChange = 'opacity, transform';
-                this.style.willChange = 'opacity';
+                this.style.willChange = 'transform';
 
                 tl.to(this.$.background, 1, {
                     onStart: function () {
@@ -196,12 +196,12 @@
                 }, '-=0.25');
 
                 tl.to(this, 1, {
-                    opacity: 0,
-                    ease: Power1.easeInOut
+                    x: '100%',
+                    ease: Power2.easeIn
                 }, '+=' + BODY_DISPLAY_DURATION);
 
                 // Reset
-                tl.set(this, {opacity: 1});
+                tl.set(this, {x: '0%'});
                 tl.set(this.$.background, {opacity: 1, x: '-100%'});
                 tl.set(this.$.namebar, {x: '100%'});
                 tl.set(this.$.body, {opacity: 0, y: '-5%'});
