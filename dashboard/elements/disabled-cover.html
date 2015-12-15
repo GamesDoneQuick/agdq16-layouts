@@ -35,7 +35,15 @@
         },
 
         _reasonChanged: function(newVal) {
-            if (!newVal) {
+            // This needs to be in a debounce, otherwise refreshing a specific panel's iframe can cause
+            // Polymer to throw a cryptic error about Event not having an instanceof function.
+            this.debounce('_handleReasonChanged', this._handleReasonChanged, 50);
+        },
+
+        _handleReasonChanged: function(){
+            var reason = this.reason;
+
+            if (!reason) {
                 this.style.display = 'none';
             }
 
@@ -45,7 +53,7 @@
                     child.style.display = 'none';
                 });
 
-                var reasonToShow = Polymer.dom(this).querySelector('[reason="' + newVal + '"]');
+                var reasonToShow = Polymer.dom(this).querySelector('[reason="' + reason + '"]');
                 if (reasonToShow) {
                     reasonToShow.style.display = 'block';
                     this.style.display = 'flex';

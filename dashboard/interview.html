@@ -6,7 +6,9 @@
     <link rel="import" href="components/paper-button/paper-button.html">
     <link rel="import" href="components/paper-input/paper-input.html">
     <link rel="import" href="elements/label-value.html">
+    <link rel="import" href="elements/disabled-cover.html">
     <link rel="stylesheet" href="shared-panel-styles.css">
+
     <style>
         body {
             margin-bottom: 8px;
@@ -56,65 +58,24 @@
         </div>
     </div>
 
-    <script>
-        var interviewNames = nodecg.Replicant('interviewNames');
-        var take = document.getElementById('take');
-        take.addEventListener('click', function() {
-            interviewNames.value = [
-                document.getElementById('preview1').value,
-                document.getElementById('preview2').value,
-                document.getElementById('preview3').value,
-                document.getElementById('preview4').value
-            ]
-        });
+    <disabled-cover id="cover">
+        <span reason="closed">
+            The layout graphic appears to be closed.
+            <br/>
+            Open the layout graphic to enable these controls.
+        </span>
 
-        interviewNames.on('change', function(oldVal, newVal) {
-            document.getElementById('program1').value = newVal[0];
-            document.getElementById('program2').value = newVal[1];
-            document.getElementById('program3').value = newVal[2];
-            document.getElementById('program4').value = newVal[3];
-        });
+        <span reason="preloading">
+            The layout graphic is preloading.
+            <br/>
+            Please wait...
+        </span>
 
-        /* ------ */
+        <span reason="badLayout">
+            This graphic is only available on the <b>Interview</b> layout.
+        </span>
+    </disabled-cover>
 
-        var show = document.getElementById('show');
-        var hide = document.getElementById('hide');
-        var auto = document.getElementById('auto');
-        var showing = nodecg.Replicant('interviewLowerthirdShowing');
-
-        show.addEventListener('click', function() {
-            showing.value = true;
-        });
-
-        hide.addEventListener('click', function() {
-            showing.value = false;
-        });
-
-        auto.addEventListener('click', function() {
-            nodecg.sendMessage('pulseInterviewLowerthird', 10);
-        });
-
-        showing.on('change', function(oldVal, newVal) {
-            if (newVal) {
-                show.setAttribute('disabled', 'true');
-                hide.removeAttribute('disabled');
-                auto.setAttribute('disabled', 'true')
-            } else {
-                show.removeAttribute('disabled');
-                hide.setAttribute('disabled', 'true');
-                auto.removeAttribute('disabled');
-            }
-        });
-
-        nodecg.Replicant('interviewLowerthirdPulsing').on('change', function(oldVal, newVal) {
-            var shouldDisableHideButton = !showing.value ? true : newVal;
-            if (shouldDisableHideButton) {
-                hide.setAttribute('disabled', 'true');
-            } else {
-                hide.removeAttribute('disabled');
-            }
-        });
-
-    </script>
+    <script src="interview.js"></script>
 </body>
 </html>
