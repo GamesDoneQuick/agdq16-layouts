@@ -155,8 +155,8 @@ define([
             stage.paused = false;
             stage.canvas.style.display = 'block';
 
-            sponsorsAndTwitter.style.top = '479px';
-            sponsorsAndTwitter.style.left = '387px';
+            sponsorsAndTwitter.style.top = '356px';
+            sponsorsAndTwitter.style.left = '764px';
             sponsorsAndTwitter.style.width = '516px';
             sponsorsAndTwitter.style.height = '146px';
 
