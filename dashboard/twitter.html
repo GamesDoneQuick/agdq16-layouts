@@ -5,6 +5,7 @@
     <link rel="import" href="components/iron-flex-layout/iron-flex-layout.html">
     <link rel="import" href="components/nodecg-replicant/nodecg-replicant.html">
     <link rel="import" href="elements/tweet-item.html">
+    <link rel="import" href="elements/disabled-cover.html">
     <link rel="stylesheet" href="/agdq16-layouts/emoji.css">
     <link rel="stylesheet" href="/agdq16-layouts/twitter/shared.css">
     <style is="custom-style">
@@ -44,22 +45,6 @@
             padding: 24px;
             box-sizing: border-box;
         }
-
-        .cover {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
-            @apply(--layout-vertical);
-            @apply(--layout-center-center);
-            display: none;
-        }
-
-        .cover span {
-            text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -96,6 +81,26 @@
         Switch to another layout to enable these controls.
     </span>
 </div>
+
+<disabled-cover id="cover">
+    <span reason="closed">
+        The layout graphic appears to be closed.
+        <br/>
+        Open the layout graphic to enable these controls.
+    </span>
+
+    <span reason="preloading">
+        The layout graphic is preloading.
+        <br/>
+        Please wait...
+    </span>
+
+    <span reason="badLayout">
+        This layout (<b class="layoutName"></b>) does not support Twitter.
+        <br/>
+        Switch to another layout to enable these controls.
+    </span>
+</disabled-cover>
 
 <script src="twitter.js"></script>
 </body>

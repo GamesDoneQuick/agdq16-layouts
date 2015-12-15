@@ -1,0 +1,59 @@
+<link rel="import" href="../components/polymer/polymer.html">
+<link rel="import" href="../components/iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="disabled-cover">
+    <style>
+        :host {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            @apply(--layout-vertical);
+            @apply(--layout-center-center);
+            display: none;
+            text-align: center;
+        }
+    </style>
+
+    <template>
+        <content></content>
+    </template>
+</dom-module>
+
+<script>
+(function() {
+    Polymer({
+        is: 'disabled-cover',
+
+        properties: {
+            reason: {
+                type: String,
+                observer: '_reasonChanged'
+            }
+        },
+
+        _reasonChanged: function(newVal) {
+            if (!newVal) {
+                this.style.display = 'none';
+            }
+
+            else {
+                var allReasons = Polymer.dom(this).querySelectorAll('[reason]');
+                allReasons.forEach(function(child) {
+                    child.style.display = 'none';
+                });
+
+                var reasonToShow = Polymer.dom(this).querySelector('[reason="' + newVal + '"]');
+                if (reasonToShow) {
+                    reasonToShow.style.display = 'block';
+                    this.style.display = 'flex';
+                } else {
+                    this.style.display = 'none';
+                }
+            }
+        }
+    })
+})();
+</script>

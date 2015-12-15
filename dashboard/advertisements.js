@@ -2,42 +2,34 @@
 (function() {
     'use strict';
 
-    var notReadyCover = document.getElementById('notReady');
-    var notReadyCover_closed = document.getElementById('notReady-closed');
-    var notReadyCover_preloading = document.getElementById('notReady-preloading');
+    var disabledCover = document.getElementById('cover');
 
     var layoutState = nodecg.Replicant('layoutState');
     layoutState.on('change', function(oldVal, newVal) {
-        switch (newVal.page) {
-            case 'closed':
-                notReadyCover.style.display = 'flex';
-                notReadyCover_closed.style.display = 'inline';
-                notReadyCover_preloading.style.display = 'none';
+        disabledCover.reason = newVal.page;
 
+        if (newVal.page === 'open') {
+            disabledCover.reason = null;
+
+            /* When the dashboard first loads, the layout might already be open and have all ads preloaded.
+             * Therefore, on first load we have to ask the layout what the status of all the ads is.
+             * This message will trigger the layout to send `adLoadProgress` or `adLoadFinished` events
+             * for all ads. */
+            setTimeout(function() {
+                nodecg.sendMessage('getLoadedAds');
+            }, 100);
+        }
+
+        else {
+            disabledCover.reason = newVal.page;
+
+            if (newVal.page === 'closed') {
                 var adItems = Array.prototype.slice.call(document.querySelectorAll('ad-item'));
                 adItems.forEach(function(adItem) {
                     adItem.percentLoaded = 0;
                     adItem.loaded = false;
                 });
-                break;
-            case 'preloading':
-                notReadyCover.style.display = 'flex';
-                notReadyCover_closed.style.display = 'none';
-                notReadyCover_preloading.style.display = 'inline';
-                break;
-            case 'open':
-                notReadyCover.style.display = 'none';
-
-                /* When the dashboard first loads, the layout might already be open and have all ads preloaded.
-                 * Therefore, on first load we have to ask the layout what the status of all the ads is.
-                 * This message will trigger the layout to send `adLoadProgress` or `adLoadFinished` events
-                 * for all ads. */
-                setTimeout(function() {
-                    nodecg.sendMessage('getLoadedAds');
-                }, 100);
-                break;
-            default:
-                throw new Error('[advertisements] Unexpected layoutState: "' + newVal + '"');
+            }
         }
     });
 

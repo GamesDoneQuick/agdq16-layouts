@@ -6,6 +6,7 @@
     <link rel="import" href="components/iron-icons/iron-icons.html">
     <link rel="import" href="components/paper-button/paper-button.html">
     <link rel="import" href="elements/ad-list.html">
+    <link rel="import" href="elements/disabled-cover.html">
     <link rel="stylesheet" href="shared-panel-styles.css">
 
     <style is="custom-style">
@@ -59,22 +60,6 @@
             @apply(--layout-flex);
         }
 
-        .cover {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
-            @apply(--layout-vertical);
-            @apply(--layout-center-center);
-            display: none;
-        }
-
-        .cover span {
-            text-align: center;
-        }
-
         paper-item {
             --paper-item: {
                 cursor: pointer;
@@ -116,19 +101,19 @@
         <span id="status">Not currently playing an ad.</span>
     </div>
 
-    <div id="notReady" class="cover">
-        <span id="notReady-closed">
+    <disabled-cover id="cover">
+        <span reason="closed">
             The layout graphic appears to be closed.
             <br/>
             Open the layout graphic to enable these controls.
         </span>
 
-        <span id="notReady-preloading">
+        <span reason="preloading">
             The layout graphic is preloading.
             <br/>
             Please wait...
         </span>
-    </div>
+    </disabled-cover>
 
     <script src="advertisements.js"></script>
 </body>
