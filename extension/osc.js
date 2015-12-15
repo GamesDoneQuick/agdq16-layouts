@@ -16,6 +16,16 @@ var clone = require('clone');
 var osc = require('osc');
 
 module.exports = function(nodecg) {
+    var gameAudioChannels = nodecg.Replicant('gameAudioChannels', {
+        defaultValue: [
+            clone(DEFAULT_CHANNEL_OBJ),
+            clone(DEFAULT_CHANNEL_OBJ),
+            clone(DEFAULT_CHANNEL_OBJ),
+            clone(DEFAULT_CHANNEL_OBJ)
+        ],
+        persistent: false
+    });
+
     if (!nodecg.bundleConfig) {
         nodecg.log.error('[osc] cfg/agdq16-layouts.json does not exist. OSC functionality will not work.');
         return;
@@ -33,16 +43,6 @@ module.exports = function(nodecg) {
         nodecg.log.error('[osc] cfg/agdq16-layouts.json must have the property "x32.address" and it must be a string.');
         return;
     }
-
-    var gameAudioChannels = nodecg.Replicant('gameAudioChannels', {
-        defaultValue: [
-            clone(DEFAULT_CHANNEL_OBJ),
-            clone(DEFAULT_CHANNEL_OBJ),
-            clone(DEFAULT_CHANNEL_OBJ),
-            clone(DEFAULT_CHANNEL_OBJ)
-        ],
-        persistent: false
-    });
 
     var channelNumberToReplicantObject = {};
     nodecg.bundleConfig.x32.gameAudioChannels.forEach(function(item, index) {
