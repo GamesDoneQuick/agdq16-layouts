@@ -2,8 +2,6 @@
 (function() {
     'use strict';
 
-    console.log('test');
-
     var notReadyCover = document.getElementById('notReady');
     var notReadyCover_closed = document.getElementById('notReady-closed');
     var notReadyCover_preloading = document.getElementById('notReady-preloading');

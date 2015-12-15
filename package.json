@@ -11,7 +11,7 @@
     "Chris Hanel <chrishanel@gmail.com>"
   ],
   "scripts": {
-    "electron": "electron electron.js"
+    "electron": "electron electron.js --remote-debugging-port=9222"
   },
   "description": "The on-stream graphics used during Awesome Games Done Quick 2016.",
   "license": "Apache-2.0",
@@ -93,6 +93,13 @@
         "width": 3,
         "headerColor": "#55acee",
         "file": "twitter.html"
+      },
+      {
+        "name": "interview",
+        "title": "Interview",
+        "width": 4,
+        "headerColor": "#2d4e8a",
+        "file": "interview.html"
       }
     ],
     "graphics": [
@@ -113,15 +120,16 @@
     "clone": "^1.0.2",
     "debounce": "^1.0.0",
     "deep-equal": "^1.0.1",
+    "electron-prebuilt": "^0.35.0",
     "emoji": "^0.3.2",
     "md5-file": "^2.0.4",
     "numeral": "^1.5.3",
-    "osc": "^2.0.1",
+    "osc": "^2.0.2",
     "request": "^2.67.0",
     "rieussec": "^0.3.0",
     "twitter-stream-api": "^0.4.1"
   },
   "devDependencies": {
-    "electron-prebuilt": "^0.36.0"
+    "electron-prebuilt": "~0.35.0"
   }
 }

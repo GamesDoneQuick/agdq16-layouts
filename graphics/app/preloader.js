@@ -27,6 +27,8 @@ define(function () {
         {id: 'bg-ds', src: 'img/backgrounds/ds.png'},
         {id: 'bg-ds_portrait', src: 'img/backgrounds/ds_portrait.png'},
 
+        {id: 'bg-interview', src: 'img/backgrounds/interview.png'},
+
         // Console icons
         {id: 'console-3ds', src: 'img/consoles/3ds.png'},
         {id: 'console-arcade', src: 'img/consoles/arcade.png'},

@@ -68,6 +68,13 @@ module.exports = function(nodecg) {
     }
 
     try {
+        require('./interview')(nodecg);
+    } catch (e) {
+        nodecg.log.error('Failed to load "interview" lib:', e.stack);
+        process.exit(1);
+    }
+
+    try {
         require('./state')(nodecg);
     } catch (e) {
         nodecg.log.error('Failed to load "state" lib:', e.stack);

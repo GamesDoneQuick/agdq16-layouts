@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="import" href="components/iron-flex-layout/classes/iron-flex-layout.html">
+    <link rel="import" href="components/paper-button/paper-button.html">
+    <link rel="import" href="components/paper-input/paper-input.html">
+    <link rel="import" href="elements/label-value.html">
+    <link rel="stylesheet" href="shared-panel-styles.css">
+    <style>
+        body {
+            margin-bottom: 8px;
+        }
+
+        #preview1 {
+            margin-top: -12px;
+        }
+
+        #show {
+            margin-right: 4px;
+        }
+
+        #hide {
+            margin-left: 4px;
+            margin-right: 4px;
+        }
+
+        #auto {
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout horizontal">
+        <div class="column flex">
+            <h5>Preview</h5>
+            <paper-input id="preview1" label="Name 1" type="text"></paper-input>
+            <paper-input id="preview2" label="Name 2" type="text"></paper-input>
+            <paper-input id="preview3" label="Name 3" type="text"></paper-input>
+            <paper-input id="preview4" label="Name 4" type="text"></paper-input>
+            <paper-button id="take" class="nodecg-info">Take</paper-button>
+        </div>
+
+        <div class="column flex" style="position: relative;">
+            <h5>Program</h5>
+            <label-value id="program1" label="Name 1"></label-value>
+            <label-value id="program2" label="Name 2"></label-value>
+            <label-value id="program3" label="Name 3"></label-value>
+            <label-value id="program4" label="Name 4"></label-value>
+
+            <div class="layout horizontal" style="position: absolute; bottom: 0;">
+                <paper-button id="show" class="nodecg-success">Show</paper-button>
+                <paper-button id="hide" class="nodecg-danger">Hide</paper-button>
+                <paper-button id="auto" class="nodecg-info" raised>Auto</paper-button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var interviewNames = nodecg.Replicant('interviewNames');
+        var take = document.getElementById('take');
+        take.addEventListener('click', function() {
+            interviewNames.value = [
+                document.getElementById('preview1').value,
+                document.getElementById('preview2').value,
+                document.getElementById('preview3').value,
+                document.getElementById('preview4').value
+            ]
+        });
+
+        interviewNames.on('change', function(oldVal, newVal) {
+            document.getElementById('program1').value = newVal[0];
+            document.getElementById('program2').value = newVal[1];
+            document.getElementById('program3').value = newVal[2];
+            document.getElementById('program4').value = newVal[3];
+        });
+
+        /* ------ */
+
+        var show = document.getElementById('show');
+        var hide = document.getElementById('hide');
+        var auto = document.getElementById('auto');
+        var showing = nodecg.Replicant('interviewLowerthirdShowing');
+
+        show.addEventListener('click', function() {
+            showing.value = true;
+        });
+
+        hide.addEventListener('click', function() {
+            showing.value = false;
+        });
+
+        auto.addEventListener('click', function() {
+            nodecg.sendMessage('pulseInterviewLowerthird', 10);
+        });
+
+        showing.on('change', function(oldVal, newVal) {
+            if (newVal) {
+                show.setAttribute('disabled', 'true');
+                hide.removeAttribute('disabled');
+                auto.setAttribute('disabled', 'true')
+            } else {
+                show.removeAttribute('disabled');
+                hide.setAttribute('disabled', 'true');
+                auto.removeAttribute('disabled');
+            }
+        });
+
+        nodecg.Replicant('interviewLowerthirdPulsing').on('change', function(oldVal, newVal) {
+            var shouldDisableHideButton = !showing.value ? true : newVal;
+            if (shouldDisableHideButton) {
+                hide.setAttribute('disabled', 'true');
+            } else {
+                hide.removeAttribute('disabled');
+            }
+        });
+
+    </script>
+</body>
+</html>

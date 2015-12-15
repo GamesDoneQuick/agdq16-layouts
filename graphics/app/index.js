@@ -86,7 +86,7 @@
             'obs',
             'advertisements'
         ], function(bg, speedrun, omnibar, layout) {
-            layout.changeTo('ds_portrait');
+            layout.changeTo('interview');
             window.layout = layout;
             layoutState.value.page = 'open';
 

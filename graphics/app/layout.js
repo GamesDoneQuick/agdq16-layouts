@@ -18,7 +18,9 @@ define([
     'layouts/break',
 
     'layouts/ds',
-    'layouts/ds_portrait'
+    'layouts/ds_portrait',
+
+    'layouts/interview'
 ], function(debug) {
     'use strict';
 
@@ -41,7 +43,9 @@ define([
         'break': arguments[10],
 
         'ds': arguments[11],
-        'ds_portrait': arguments[12]
+        'ds_portrait': arguments[12],
+
+        'interview': arguments[13]
     };
 
     var currentLayoutName, currentLayoutIndex;
