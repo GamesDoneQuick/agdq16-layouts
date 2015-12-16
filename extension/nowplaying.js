@@ -60,7 +60,7 @@ module.exports = function(nodecg) {
         var newNp = {
             artist: track.artist['#text'],
             song: track.name,
-            album: track.album['#text'],
+            album: track.album['#text'] || track.artist['#text'],
             cover: track.image.pop()['#text'],
             artistSong: track.artist['#text'] + ' - ' + track.name
         };
