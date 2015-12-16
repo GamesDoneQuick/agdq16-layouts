@@ -497,7 +497,7 @@ define([
             // Figure out what bids to display in this batch
             var bidsToDisplay = [];
 
-            window.currentBids.forEach(function(bid) {
+            globals.currentBids.forEach(function(bid) {
                 // Don't show closed bids in the automatic rotation.
                 if (bid.state.toLowerCase() === 'closed') return;
 

@@ -1,8 +1,10 @@
 /* jshint -W106 */
 'use strict';
 
-var BIDS_URL = 'https://gamesdonequick.com/tracker/search/?type=allbids&event=17';
-var CURRENT_BIDS_URL = 'https://gamesdonequick.com/tracker/search/?type=allbids&feed=current&event=17';
+//var BIDS_URL = 'https://gamesdonequick.com/tracker/search/?type=allbids&event=17';
+//var CURRENT_BIDS_URL = 'https://gamesdonequick.com/tracker/search/?type=allbids&feed=current&event=17';
+var BIDS_URL = 'https://dl.dropboxusercontent.com/u/6089084/agdq_mock/allBids.json';
+var CURRENT_BIDS_URL = 'https://dl.dropboxusercontent.com/u/6089084/agdq_mock/currentBids.json';
 var POLL_INTERVAL = 60 * 1000;
 
 var format = require('util').format;
@@ -89,14 +91,14 @@ module.exports = function (nodecg) {
                         description: bid.fields.shortdescription || 'No shortdescription for bid #' + bid.pk,
                         total: numeral(bid.fields.total).format('$0,0[.]00'),
                         state: bid.fields.state,
-                        speedrun: bid.fields.public.split(' -- ')[0].substring(6),
+                        speedrun: bid.fields.speedrun__name,
                         type: 'bid'
                     };
 
                     // If this parent bid is not a target, that means it is a donation war that has options.
                     // So, we should add an options property that is an empty array,
                     // which we will fill in the next step.
-                    // Else, add the "target" field to the formattedParentBid.
+                    // Else, add the "goal" field to the formattedParentBid.
                     if (bid.fields.istarget === false) {
                         formattedParentBid.options = [];
                     } else {
@@ -158,7 +160,9 @@ module.exports = function (nodecg) {
                 opts.replicant.value = bidsArray;
                 deferred.resolve(true);
             }
-        } else {
+        }
+
+        else {
             var msg = format('Could not get %s, unknown error', opts.label);
             if (error) msg = format('Could not get %s:', opts.label, error.message);
             else if (response) msg = format('Could not get %s, response code %d', opts.label, response.statusCode);
