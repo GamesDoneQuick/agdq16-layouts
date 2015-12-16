@@ -69,6 +69,14 @@
                 currentRun.value.runners[i].name = editRunnerEl.$.nameInput.value;
                 currentRun.value.runners[i].stream = editRunnerEl.$.streamInput.value
             }
+
+            currentRun.value.concatenatedRunners = currentRun.value.runners.reduce(function(prev, curr) {
+                if (typeof prev === 'object') {
+                    return prev.name + ', ' + curr.name;
+                } else {
+                    return prev + ', ' + curr.name;
+                }
+            })
         });
     </script>
 </body>
