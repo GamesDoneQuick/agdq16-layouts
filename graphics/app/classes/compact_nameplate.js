@@ -166,7 +166,7 @@ define([
 
         this.twitchTl = new TimelineMax({repeat: -1});
 
-        this.twitchTl.to({}, 10, {});
+        this.twitchTl.to({}, 60, {});
 
         this.twitchTl.to(this.twitchContainer, 1.2, {
             x: 0,
