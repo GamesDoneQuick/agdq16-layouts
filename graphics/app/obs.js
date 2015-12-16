@@ -39,8 +39,8 @@ define([
         console.log('[OBS] Authentication failed, %s attempts remaining.', remainingAttempts);
     };
 
-    obs.onSceneSwitched = function(scene) {
-        debug.log('[OBS] Switched to scene "%s".', scene.name);
+    obs.onSceneSwitched = function(sceneName) {
+        debug.log('[OBS] Switched to scene "%s".', sceneName);
         _handleSceneSwitch();
     };
     obs.onSourceChanged = _handleSceneSwitch;

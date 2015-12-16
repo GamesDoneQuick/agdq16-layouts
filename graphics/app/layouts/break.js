@@ -154,6 +154,7 @@ define([
 
             sponsorDisplay.style.display = 'none';
 
+            twitterDisplay.style.zIndex = '-1';
             twitterDisplay.bodyStyle = {
                 fontSize: 21,
                 top: 15,
@@ -171,6 +172,7 @@ define([
             stage.canvas.style.display = 'none';
             nowPlaying.style.display = 'none';
             sponsorDisplay.style.display = 'block';
+            twitterDisplay.style.zIndex = '';
         }
     };
 });

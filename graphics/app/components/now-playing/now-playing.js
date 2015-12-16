@@ -1,12 +1,12 @@
-/* global Polymer, TimelineLite, TweenLite, Power2, debug */
-(function () {
+/* global requirejs, Polymer, TimelineLite, TweenLite, Power2 */
+requirejs(['debug'], function(debug) {
     'use strict';
 
     var SONG_EXTRA_WIDTH = 40;
 
     /* jshint -W064 */
     Polymer({
-    /* jshint +W064 */
+        /* jshint +W064 */
 
         is: 'now-playing',
 
@@ -111,4 +111,4 @@
             }
         }
     });
-})();
+});

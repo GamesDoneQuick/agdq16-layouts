@@ -6,9 +6,6 @@
     <link rel="stylesheet" href="style/fonts.css">
     <script src="components/gsap/src/minified/plugins/RoundPropsPlugin.min.js"></script>
     <script src="components/gsap/src/minified/TweenMax.min.js"></script>
-    <link rel="import" href="app/components/now-playing/now-playing.html">
-    <link rel="import" href="app/components/twitter-display/twitter-display.html">
-    <link rel="import" href="app/components/sponsor-display/sponsor-display.html">
 </head>
 <body>
     <div id="container" style="-webkit-app-region: drag">
@@ -26,6 +23,27 @@
     <script src="lib/preloadjs-NEXT.min.js"></script>
     <script src="lib/obs-remote.js"></script>
     <script src="lib/require.js"></script>
+    <script>
+        requirejs.config({
+            baseUrl: './app',
+            shim: {
+                easel: {
+                    exports: 'createjs'
+                }
+            },
+            paths: {
+                easel: '../components/EaselJS/lib/easeljs-0.8.1.min',
+                classes: './classes',
+                components: './components',
+                layouts: './layouts',
+                debounce: '../components/javascipt-debounce/dist/javascript-debounce.min',
+                numeral: '../components/numeral/min/numeral.min'
+            }
+        });
+    </script>
+    <link rel="import" href="app/components/now-playing/now-playing.html">
+    <link rel="import" href="app/components/twitter-display/twitter-display.html">
+    <link rel="import" href="app/components/sponsor-display/sponsor-display.html">
     <script src="app/index.js"></script>
 </body>
 </html>

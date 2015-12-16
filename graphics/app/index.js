@@ -19,23 +19,6 @@
         }
     });
 
-    requirejs.config({
-        baseUrl: 'app',
-        shim: {
-            easel: {
-                exports: 'createjs'
-            }
-        },
-        paths: {
-            easel: '../components/EaselJS/lib/easeljs-0.8.1.min',
-            classes: './classes',
-            components: './components',
-            layouts: './layouts',
-            debounce: '../components/javascipt-debounce/dist/javascript-debounce.min',
-            numeral: '../components/numeral/min/numeral.min'
-        }
-    });
-
     // Wait until Typekit fonts are loaded before setting up the graphic.
     /*try {
         Typekit.load({active: init});
