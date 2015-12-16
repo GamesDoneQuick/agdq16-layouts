@@ -301,7 +301,7 @@ define([
 
         this.twitchTl = new TimelineMax({repeat: -1});
 
-        this.twitchTl.to({}, 30, {});
+        this.twitchTl.to({}, 60, {});
 
         this.twitchTl.to(this.twitchContainer, 1.2, {
             x: 0,
@@ -311,7 +311,7 @@ define([
         this.twitchTl.to(this.twitchContainer, 0.9, {
             x: twitchHideX,
             ease: Power2.easeIn
-        }, '+=5');
+        }, '+=7');
     };
 
     p.disable = function() {
