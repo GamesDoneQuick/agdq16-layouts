@@ -160,6 +160,24 @@ define([
         }
 
         this.twitchTl = new TimelineMax({repeat: -1});
+        var twitchHideX = this.alignment === 'right' ? 322 : -322;
+        this.twitchContainer.x = twitchHideX;
+        this.twitchContainer.visible = true;
+
+        this.twitchTl = new TimelineMax({repeat: -1});
+
+        this.twitchTl.to({}, 10, {});
+
+        this.twitchTl.to(this.twitchContainer, 1.2, {
+            x: 0,
+            ease: Power2.easeInOut
+        });
+
+        this.twitchTl.to(this.twitchContainer, 0.9, {
+            x: twitchHideX,
+            ease: Power2.easeIn
+        }, '+=7');
+
         if (this.twitchText.text) {
             this.restartTwitchTimeline();
         }
@@ -294,24 +312,6 @@ define([
     p.restartTwitchTimeline = function() {
         this.twitchTl.seek(0);
         this.twitchTl.play();
-
-        var twitchHideX = this.alignment === 'right' ? 322 : -322;
-        this.twitchContainer.x = twitchHideX;
-        this.twitchContainer.visible = true;
-
-        this.twitchTl = new TimelineMax({repeat: -1});
-
-        this.twitchTl.to({}, 60, {});
-
-        this.twitchTl.to(this.twitchContainer, 1.2, {
-            x: 0,
-            ease: Power2.easeInOut
-        });
-
-        this.twitchTl.to(this.twitchContainer, 0.9, {
-            x: twitchHideX,
-            ease: Power2.easeIn
-        }, '+=7');
     };
 
     p.disable = function() {
