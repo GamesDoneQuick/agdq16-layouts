@@ -28,8 +28,8 @@
               }
             }
           },
-          "minItems": "4",
-          "maxItems": "4"
+          "minItems": 4,
+          "maxItems": 4
         }
       },
       "required": ["address", "gameAudioChannels"]
