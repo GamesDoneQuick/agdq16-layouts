@@ -4,31 +4,11 @@ var LastFmNode = require('lastfm').LastFmNode;
 
 module.exports = function(nodecg) {
     if (!nodecg.bundleConfig) {
-        nodecg.log.error('cfg/agdq16-layouts.json was not found. ' +
-            'This file is where the Last.fm API key and secret are set. ' +
-            'Without those, the "now playing" graphic cannot function.');
+        nodecg.log.error('cfg/agdq16-layouts.json was not found. "Now playing" graphic will be disabled.');
         return;
-    }
-    else if (typeof nodecg.bundleConfig.lastfm === 'undefined') {
+    } else if (typeof nodecg.bundleConfig.twitter === 'undefined') {
         nodecg.log.error('"lastfm" is not defined in cfg/agdq16-layouts.json! ' +
-            'This object contains other properties that are required for the "now playing" graphic to function.');
-        return;
-    }
-    else if (typeof nodecg.bundleConfig.lastfm.apiKey === 'undefined') {
-        nodecg.log.error('lastfm.apiKey is not defined in cfg/agdq16-layouts.json! ' +
-            'This key (obtained from your Last.fm developer account) ' +
-            ' is required for the "now playing" graphic to function.');
-        return;
-    }
-    else if (typeof nodecg.bundleConfig.lastfm.secret === 'undefined') {
-        nodecg.log.error('lastfm.secret is not defined in cfg/agdq16-layouts.json! ' +
-            'This secret (obtained from your Last.fm developer account) ' +
-            'is required for the "now playing" graphic to function.');
-        return;
-    }
-    else if (typeof nodecg.bundleConfig.lastfm.targetAccount === 'undefined') {
-        nodecg.log.error('lastfm.targetAccount is not defined in cfg/agdq16-layouts.json! ' +
-            'This is the Last.fm username that you wish to pull "now playing" song data from.');
+            '"Now playing" graphic will be disabled.');
         return;
     }
 

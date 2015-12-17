@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+
+  "properties": {
+    "enableRestApi": {
+      "type": "boolean",
+      "description": "Whether or not to enable the Stopwatch REST API.",
+      "default": false
+    },
+    "x32": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "description": "The IP address or hostname of a Behringer X32 digital mixer."
+        },
+        "gameAudioChannels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sd": {
+                "type": ["integer", "null"]
+              },
+              "hd": {
+                "type": ["integer", "null"]
+              }
+            }
+          },
+          "minItems": "4",
+          "maxItems": "4"
+        }
+      },
+      "required": ["address", "gameAudioChannels"]
+    },
+    "twitter": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The numeric userid of the Twitter account that owns these API keys. http://mytwitterid.com/"
+        },
+        "consumerKey": {
+          "type": "string"
+        },
+        "consumerSecret": {
+          "type": "string"
+        },
+        "accessTokenKey": {
+          "type": "string"
+        },
+        "accessTokenSecret": {
+          "type": "string"
+        }
+      },
+      "required": ["userId", "consumerKey", "consumerSecret", "accessTokenKey", "accessTokenSecret"]
+    },
+    "lastfm": {
+      "type": "object",
+      "properties": {
+        "apiKey": {
+          "type": "string"
+        },
+        "secret": {
+          "type": "string"
+        },
+        "targetAccount": {
+          "type": "string"
+        }
+      },
+      "description": "Configuration object for Last.fm API, used by nowplaying graphic.",
+      "required": ["apiKey", "secret", "targetAccount"]
+    },
+    "debug": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether or not to enable the client-side debug logging."
+    }
+  }
+}

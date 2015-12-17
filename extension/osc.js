@@ -27,20 +27,11 @@ module.exports = function(nodecg) {
     });
 
     if (!nodecg.bundleConfig) {
-        nodecg.log.error('[osc] cfg/agdq16-layouts.json does not exist. OSC functionality will not work.');
+        nodecg.log.error('cfg/agdq16-layouts.json was not found. Behringer X32 OSC integration will be disabled.');
         return;
-    }
-    else if (typeof nodecg.bundleConfig.x32 !== 'object') {
-        nodecg.log.error('[osc] cfg/agdq16-layouts.json must have the property "x32" and it must be an object.');
-        return;
-    }
-    else if (!Array.isArray(nodecg.bundleConfig.x32.gameAudioChannels)) {
-        nodecg.log.error('[osc] cfg/agdq16-layouts.json must have the property "x32.gameAudioChannels" ' +
-            'and it must be an array.');
-        return;
-    }
-    else if (typeof nodecg.bundleConfig.x32.address !== 'string') {
-        nodecg.log.error('[osc] cfg/agdq16-layouts.json must have the property "x32.address" and it must be a string.');
+    } else if (typeof nodecg.bundleConfig.twitter === 'undefined') {
+        nodecg.log.error('"x32" is not defined in cfg/agdq16-layouts.json! ' +
+            'Behringer X32 OSC integration will be disabled.');
         return;
     }
 

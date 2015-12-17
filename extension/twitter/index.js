@@ -8,44 +8,11 @@ var TwitterStream = require('twitter-stream-api');
 
 module.exports = function(nodecg) {
     if (!nodecg.bundleConfig) {
-        nodecg.log.error('cfg/agdq16-layouts.json was not found. ' +
-            'This file is where the Twitter API keys are set. ' +
-            'Without those, the Twitter graphic cannot function.');
+        nodecg.log.error('cfg/agdq16-layouts.json was not found. Twitter integration will be disabled.');
         return;
-    }
-    else if (typeof nodecg.bundleConfig.twitter === 'undefined') {
+    } else if (typeof nodecg.bundleConfig.twitter === 'undefined') {
         nodecg.log.error('"twitter" is not defined in cfg/agdq16-layouts.json! ' +
-            'This object contains other properties that are required for the Twitter graphic to function.');
-        return;
-    }
-    else if (typeof nodecg.bundleConfig.twitter.userId === 'undefined') {
-        nodecg.log.error('twitter.userId is not defined in cfg/agdq16-layouts.json! ' +
-            'This ID (obtained from http://mytwitterid.com/ or similar) ' +
-            ' is required for the Twitter graphic to function.');
-        return;
-    }
-    else if (typeof nodecg.bundleConfig.twitter.consumerKey === 'undefined') {
-        nodecg.log.error('twitter.consumerKey is not defined in cfg/agdq16-layouts.json! ' +
-            'This key (obtained from your Twitter developer account) ' +
-            ' is required for the Twitter graphic to function.');
-        return;
-    }
-    else if (typeof nodecg.bundleConfig.twitter.consumerSecret === 'undefined') {
-        nodecg.log.error('twitter.consumerSecret is not defined in cfg/agdq16-layouts.json! ' +
-            'This secret (obtained from your Twitter developer account) ' +
-            ' is required for the Twitter graphic to function.');
-        return;
-    }
-    else if (typeof nodecg.bundleConfig.twitter.accessTokenKey === 'undefined') {
-        nodecg.log.error('twitter.accessTokenKey is not defined in cfg/agdq16-layouts.json! ' +
-            'This key (obtained from your Twitter developer account) ' +
-            ' is required for the Twitter graphic to function.');
-        return;
-    }
-    else if (typeof nodecg.bundleConfig.twitter.accessTokenSecret === 'undefined') {
-        nodecg.log.error('twitter.accessTokenSecret is not defined in cfg/agdq16-layouts.json! ' +
-            'This secret (obtained from your Twitter developer account) ' +
-            ' is required for the Twitter graphic to function.');
+            'Twitter integration will be disabled.');
         return;
     }
 
