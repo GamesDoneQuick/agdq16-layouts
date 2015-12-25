@@ -258,6 +258,10 @@ define([
 
         name.text = newVal.name.toUpperCase();
 
+        if (newVal.releaseYear) {
+            name.text += ' (' + newVal.releaseYear + ')';
+        }
+
         category.text = newVal.category;
         categoryRect.w = category.x + category.getBounds().width + 43;
 

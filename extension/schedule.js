@@ -93,6 +93,7 @@ module.exports = function (nodecg) {
                         startTime: Date.parse(run.fields.starttime) || null,
                         order: run.fields.order,
                         estimate: run.fields.run_time || 'Unknown',
+                        releaseYear: run.fields.release_year,
                         runners: run.fields.runners || [],
                         concatenatedRunners: run.fields.runners.reduce(function(prev, curr) {
                             if (typeof prev === 'object') {

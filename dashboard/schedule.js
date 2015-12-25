@@ -94,7 +94,7 @@
         var runInfoName = document.querySelector('label-value[label="Name"]');
         var runInfoConsole = document.querySelector('label-value[label="Console"]');
         var runInfoRunners = document.querySelector('label-value[label="Runners"]');
-        var runInfoCommentators = document.querySelector('label-value[label="Commentators"]');
+        var runInfoReleaseYear = document.querySelector('label-value[label="Release Year"]');
         var runInfoEstimate = document.querySelector('label-value[label="Estimate"]');
         var runInfoCategory = document.querySelector('label-value[label="Category"]');
         var runInfoOrder = document.querySelector('label-value[label="Order"]');
@@ -104,7 +104,7 @@
             runInfoName.value = newVal.name;
             runInfoConsole.value = newVal.console;
             runInfoRunners.value = newVal.concatenatedRunners;
-            runInfoCommentators.value = newVal.commentators;
+            runInfoReleaseYear.value = newVal.releaseYear;
             runInfoEstimate.value = newVal.estimate;
             runInfoCategory.value = newVal.category;
             runInfoOrder.value = newVal.order;
