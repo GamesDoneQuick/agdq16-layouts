@@ -6,6 +6,7 @@ define([
 ],function(debug, preloader, Stage) {
     'use strict';
 
+    var SLIDE_DURATION = 1.5;
     var FADE_DURATION = 0.5;
     var FADE_EASE = Power1.easeInOut;
     var IMAGE_AD_DURATION = 30;
@@ -166,25 +167,27 @@ define([
             }, 'start');
         }
 
-        // Else, just fade the new image up.
+        // Else, just slide the imageContainer in.
         else {
             currentImage = img;
             imageContainer.appendChild(currentImage);
 
-            tl.to(imageContainer, FADE_DURATION, {
+            tl.to(imageContainer, SLIDE_DURATION, {
                 onStart: function() {
                     currentImage.style.opacity = 1;
                     adState.value = 'playing';
                 },
-                opacity: 1,
-                ease: FADE_EASE
+                x: 0,
+                roundProps: 'x',
+                ease: Power2.easeOut
             }, 'start');
         }
 
-        // Fade out after FADE_DURATION seconds.
-        tl.to(imageContainer, FADE_DURATION, {
-            opacity: 0,
-            ease: FADE_EASE,
+        // Slide out after FADE_DURATION seconds.
+        tl.to(imageContainer, SLIDE_DURATION, {
+            x: -1280,
+            roundProps: 'x',
+            ease: Power2.easeIn,
             onComplete: function() {
                 adState.value = 'stopped';
                 removeAdImages();

@@ -24,7 +24,7 @@ body {
 #imageAdContainer {
     z-index: 11;
     background-color: black;
-    opacity: 0;
+    transform: translateX(-1280px);
 }
 
 #imageAdContainer img {
