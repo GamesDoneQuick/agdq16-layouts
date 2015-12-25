@@ -51,6 +51,7 @@ define(function () {
         {id: 'console-xbox', src: 'img/consoles/xbox.png'},
         {id: 'console-xbox360', src: 'img/consoles/xbox360.png'},
         {id: 'console-xboxone', src: 'img/consoles/xboxone.png'},
+        {id: 'console-unknown', src: 'img/consoles/unknown.png'},
 
         // Omnibar
         {id: 'omnibar-logo-gdq', src: 'img/omnibar/logo-gdq.png'},
