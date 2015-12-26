@@ -9,9 +9,8 @@ define([
 
     var BOXART_WIDTH = 469;
     var BOXART_ASPECT_RATIO = 1.397;
-    var BOXART_SCROLL_TIME = 30;
+    var BOXART_SCROLL_TIME = 10;
     var BOXART_FADE_TIME = 2;
-    var BOXART_DEFAULT_URL = '/graphics/agdq16-layouts/img/placeholder/boxart.png';
 
     // We'll be changing these every time we switch to a new layout.
     // The "g" here means "Global". IDK, just some way of signifying these vars are permanent.
@@ -153,6 +152,7 @@ define([
     /**
      *  Waits for the boxart image to be fully loaded, then redraws both boxart elements.
      */
+    // TODO: Figure out if the "after image load" part is still necessary now that I'm using base64 images.
     function recacheBoxartAfterImageLoad(boxartContainer) {
         var bitmap = boxartContainer.children[1];
         if (!bitmap.image) return;
@@ -242,10 +242,7 @@ define([
     // This needs to be near the bottom of this file.
     globals.currentRunRep.on('change', function(oldVal, newVal) {
         var img = document.createElement('img');
-        img.addEventListener('error', function() {
-            img.src = BOXART_DEFAULT_URL;
-        });
-        img.src = newVal.boxart.url;
+        img.src = 'data:image/jpeg;base64,' + newVal.boxart.base64;
         gBoxartImage = img;
 
         // If we have at least BOXART_FADE_TIME before the next fade begins,

@@ -1,18 +1,22 @@
 'use strict';
 
+var fs = require('fs');
+var rp = require('request-promise');
+var clone = require('clone');
+var Q = require('q');
+var equals = require('deep-equal');
+var base64 = require('node-base64-image');
+
 var POLL_INTERVAL = 60 * 1000;
 var BOXART_ASPECT_RATIO = 1.397;
 var BOXART_WIDTH = 469;
 var BOXART_HEIGHT = Math.round(BOXART_WIDTH * BOXART_ASPECT_RATIO);
 var BOXART_TEMPLATE = 'http://static-cdn.jtvnw.net/ttv-boxart/{name}-{width}x{height}.jpg';
-
-var rp = require('request-promise');
-var clone = require('clone');
-var Q = require('q');
-var equals = require('deep-equal');
+var TWITCH_DEFAULT_BOXART_BASE64 = fs.readFileSync(__dirname + '/twitch_default_boxart.jpg', 'base64');
+var GDQ_DEFAULT_BOXART_BASE64 = fs.readFileSync(__dirname + '/gdq_default_boxart.png', 'base64');
 
 module.exports = function (nodecg) {
-    var checklist = require('./checklist')(nodecg);
+    var checklist = require('../checklist')(nodecg);
     var scheduleRep = nodecg.Replicant('schedule', {defaultValue: [], persistent: false});
     var currentRun = nodecg.Replicant('currentRun', {defaultValue: {}});
 
@@ -44,22 +48,26 @@ module.exports = function (nodecg) {
 
     nodecg.listenFor('nextRun', function(cb) {
         var nextIndex = currentRun.value.nextRun.order - 1;
-        _setCurrentRun(scheduleRep.value[nextIndex]);
-        checklist.reset();
+        _setCurrentRun(scheduleRep.value[nextIndex])
+            .then(function() {
+                checklist.reset();
 
-        if (typeof cb === 'function') {
-            cb();
-        }
+                if (typeof cb === 'function') {
+                    cb();
+                }
+            });
     });
 
     nodecg.listenFor('previousRun', function(cb) {
         var prevIndex = currentRun.value.order - 2;
-        _setCurrentRun(scheduleRep.value[prevIndex]);
-        checklist.reset();
+        _setCurrentRun(scheduleRep.value[prevIndex])
+            .then(function() {
+                checklist.reset();
 
-        if (typeof cb === 'function') {
-            cb();
-        }
+                if (typeof cb === 'function') {
+                    cb();
+                }
+            });
     });
 
     nodecg.listenFor('setCurrentRunByOrder', function(order, cb) {
@@ -183,11 +191,34 @@ module.exports = function (nodecg) {
     }
 
     function _setCurrentRun(run) {
+        var deferred = Q.defer();
         var cr = clone(run);
-        if (scheduleRep.value[cr.order]) cr.nextRun = scheduleRep.value[cr.order];
 
-        if (!equals(cr, currentRun.value)) {
-            currentRun.value = cr;
+        // `order` is always `index+1`. So, if there is another run in the schedule after this one, add it as `nextRun`.
+        if (scheduleRep.value[cr.order]) {
+            cr.nextRun = scheduleRep.value[cr.order];
         }
+
+        base64.base64encoder(cr.boxart.url, {string: true}, function (err, image) {
+            if (err) {
+                nodecg.log.error('[schedule] Could not download boxart:', err.stack);
+                return;
+            }
+
+            if (image === TWITCH_DEFAULT_BOXART_BASE64) {
+                cr.boxart.base64 = GDQ_DEFAULT_BOXART_BASE64;
+            } else {
+                cr.boxart.base64 = image;
+            }
+
+            if (!equals(cr, currentRun.value)) {
+                currentRun.value = cr;
+                deferred.resolve(true);
+            } else {
+                deferred.resolve(false);
+            }
+        });
+
+        return deferred.promise;
     }
 };
