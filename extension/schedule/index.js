@@ -109,7 +109,7 @@ module.exports = function (nodecg) {
             /* jshint -W106 */
             var formattedSchedule = scheduleJSON.map(function(run) {
                 var boxartUrl = BOXART_TEMPLATE
-                    .replace('{name}', run.fields.name)
+                    .replace('{name}', encodeURIComponent(run.fields.name))
                     .replace('{width}', BOXART_WIDTH)
                     .replace('{height}', BOXART_HEIGHT);
 
