@@ -134,7 +134,7 @@ module.exports = function (nodecg) {
                     name: run.fields.name || 'Unknown',
                     console: run.fields.console || 'Unknown',
                     commentators: run.fields.commentators || 'Unknown',
-                    category: run.fields.description || 'Any%',
+                    category: run.fields.category || 'Any%',
                     startTime: Date.parse(run.fields.starttime) || null,
                     order: run.fields.order,
                     estimate: run.fields.run_time || 'Unknown',
