@@ -11,6 +11,7 @@ define([
     var BOXART_ASPECT_RATIO = 1.397;
     var BOXART_SCROLL_TIME = 30;
     var BOXART_FADE_TIME = 2;
+    var BOXART_DEFAULT_URL = '/graphics/agdq16-layouts/img/placeholder/boxart.png';
 
     // We'll be changing these every time we switch to a new layout.
     // The "g" here means "Global". IDK, just some way of signifying these vars are permanent.
@@ -241,6 +242,9 @@ define([
     // This needs to be near the bottom of this file.
     globals.currentRunRep.on('change', function(oldVal, newVal) {
         var img = document.createElement('img');
+        img.addEventListener('error', function() {
+            img.src = BOXART_DEFAULT_URL;
+        });
         img.src = newVal.boxart.url;
         gBoxartImage = img;
 

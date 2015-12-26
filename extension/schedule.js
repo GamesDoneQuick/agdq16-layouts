@@ -1,16 +1,14 @@
 'use strict';
 
-var SCHEDULE_URL = 'https://gamesdonequick.com/tracker/search/?type=run&event=17';
 var POLL_INTERVAL = 60 * 1000;
 var BOXART_ASPECT_RATIO = 1.397;
 var BOXART_WIDTH = 469;
 var BOXART_HEIGHT = Math.round(BOXART_WIDTH * BOXART_ASPECT_RATIO);
-var BOXART_DEFAULT_URL = '/graphics/agdq16-layouts/img/placeholder/boxart.png';
+var BOXART_TEMPLATE = 'http://static-cdn.jtvnw.net/ttv-boxart/{name}-{width}x{height}.jpg';
 
-var request = require('request');
+var rp = require('request-promise');
 var clone = require('clone');
 var Q = require('q');
-var format = require('util').format;
 var equals = require('deep-equal');
 
 module.exports = function (nodecg) {
@@ -75,89 +73,113 @@ module.exports = function (nodecg) {
     function update() {
         var deferred = Q.defer();
 
-        request(SCHEDULE_URL, function(err, res, body) {
-            if (!err && res.statusCode === 200) {
-                var json = JSON.parse(body);
+        var runnersPromise = rp({
+            uri: 'https://gamesdonequick.com/tracker/search',
+            qs: {
+                type: 'runner',
+                event: 17
+            },
+            json: true
+        });
 
-                /* jshint -W106 */
-                var formattedSchedule = json.map(function(run) {
-                    var boxartUrl = typeof run.fields.boxart_template === 'string'
-                        ? run.fields.boxart_template.replace('{width}', BOXART_WIDTH).replace('{height}', BOXART_HEIGHT)
-                        : BOXART_DEFAULT_URL;
+        var schedulePromise = rp({
+            uri: 'https://gamesdonequick.com/tracker/search',
+            qs: {
+                type: 'run',
+                event: 17
+            },
+            json: true
+        });
 
-                    return {
-                        name: run.fields.name || 'Unknown',
-                        console: run.fields.console || 'Unknown',
-                        commentators: run.fields.commentators || 'Unknown',
-                        category: run.fields.description || 'Any%',
-                        startTime: Date.parse(run.fields.starttime) || null,
-                        order: run.fields.order,
-                        estimate: run.fields.run_time || 'Unknown',
-                        releaseYear: run.fields.release_year,
-                        runners: run.fields.runners || [],
-                        concatenatedRunners: run.fields.runners.reduce(function(prev, curr) {
-                            if (typeof prev === 'object') {
-                                return prev.name + ', ' + curr.name;
-                            } else {
-                                return prev + ', ' + curr.name;
-                            }
-                        }),
-                        boxart: {
-                            url: boxartUrl
-                        },
-                        type: 'run'
-                    };
+        return Q.spread([runnersPromise, schedulePromise], function(runnersJSON, scheduleJSON) {
+            var allRunners = [];
+            runnersJSON.forEach(function(obj) {
+                obj.fields.stream = obj.fields.stream.split('/').pop();
+                allRunners[obj.pk] = obj.fields;
+            });
+
+            /* jshint -W106 */
+            var formattedSchedule = scheduleJSON.map(function(run) {
+                var boxartUrl = BOXART_TEMPLATE
+                    .replace('{name}', run.fields.name)
+                    .replace('{width}', BOXART_WIDTH)
+                    .replace('{height}', BOXART_HEIGHT);
+
+                var runners = run.fields.runners.map(function(runnerId) {
+                    return allRunners[runnerId];
                 });
-                /* jshint +W106 */
 
-                // If nothing has changed, return.
-                if (equals(formattedSchedule, scheduleRep.value)) {
-                    deferred.resolve(false);
-                    return;
+                var concatenatedRunners;
+                if (runners.length === 1) {
+                    concatenatedRunners = runners[0].name;
+                } else {
+                    concatenatedRunners = runners.reduce(function(prev, curr) {
+                        if (typeof prev === 'object') {
+                            return prev.name + ', ' + curr.name;
+                        } else {
+                            return prev + ', ' + curr.name;
+                        }
+                    });
                 }
 
-                scheduleRep.value = formattedSchedule;
+                return {
+                    name: run.fields.name || 'Unknown',
+                    console: run.fields.console || 'Unknown',
+                    commentators: run.fields.commentators || 'Unknown',
+                    category: run.fields.description || 'Any%',
+                    startTime: Date.parse(run.fields.starttime) || null,
+                    order: run.fields.order,
+                    estimate: run.fields.run_time || 'Unknown',
+                    releaseYear: run.fields.release_year,
+                    runners: runners,
+                    concatenatedRunners: concatenatedRunners,
+                    boxart: {
+                        url: boxartUrl
+                    },
+                    type: 'run'
+                };
+            });
+            /* jshint +W106 */
 
-                // If no currentRun is set or if the order of the current run is greater than
-                // the length of the schedule, set current run to the first run.
-                if (typeof(currentRun.value.order) === 'undefined'
-                    || currentRun.value.order > scheduleRep.value.length) {
+            // If nothing has changed, return.
+            if (equals(formattedSchedule, scheduleRep.value)) {
+                deferred.resolve(false);
+                return;
+            }
 
-                    _setCurrentRun(scheduleRep.value[0]);
-                }
+            scheduleRep.value = formattedSchedule;
 
-                // Else, update the currentRun
-                else {
-                    // First, try to find the current run by name.
-                    var updatedCurrentRun = formattedSchedule.some(function(run) {
-                        if (run.name === currentRun.value.name) {
+            // If no currentRun is set or if the order of the current run is greater than
+            // the length of the schedule, set current run to the first run.
+            if (typeof(currentRun.value.order) === 'undefined'
+                || currentRun.value.order > scheduleRep.value.length) {
+
+                _setCurrentRun(scheduleRep.value[0]);
+            }
+
+            // Else, update the currentRun
+            else {
+                // First, try to find the current run by name.
+                var updatedCurrentRun = formattedSchedule.some(function(run) {
+                    if (run.name === currentRun.value.name) {
+                        _setCurrentRun(run);
+                        return true;
+                    }
+                });
+
+                // If that fails, try to update it by order.
+                if (!updatedCurrentRun) {
+                    formattedSchedule.some(function(run) {
+                        if (run.order === currentRun.value.order) {
                             _setCurrentRun(run);
                             return true;
                         }
                     });
-
-                    // If that fails, try to update it by order.
-                    if (!updatedCurrentRun) {
-                        formattedSchedule.some(function(run) {
-                            if (run.order === currentRun.value.order) {
-                                _setCurrentRun(run);
-                                return true;
-                            }
-                        });
-                    }
                 }
-
-                deferred.resolve(true);
-            } else {
-                var msg = format('Could not get schedule, unknown error');
-                if (err) msg = format('Could not get schedule:', err.message);
-                else if (res) msg = format('Could not get schedule, response code %d', res.statusCode);
-                nodecg.log.error(msg);
-                deferred.reject(msg);
             }
+        }).catch(function(err) {
+            nodecg.log.error('[schedule] Failed to update:', err.stack);
         });
-
-        return deferred.promise;
     }
 
     function _setCurrentRun(run) {
