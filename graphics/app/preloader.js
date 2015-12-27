@@ -32,6 +32,7 @@ define(function () {
         // Console icons
         {id: 'console-3ds', src: 'img/consoles/3ds.png'},
         {id: 'console-arc', src: 'img/consoles/arc.png'},
+        {id: 'console-dc', src: 'img/consoles/dc.png'},
         {id: 'console-ds', src: 'img/consoles/ds.png'},
         {id: 'console-gb', src: 'img/consoles/gb.png'},
         {id: 'console-gba', src: 'img/consoles/gba.png'},
@@ -45,6 +46,7 @@ define(function () {
         {id: 'console-ps2', src: 'img/consoles/ps2.png'},
         {id: 'console-ps3', src: 'img/consoles/ps3.png'},
         {id: 'console-ps4', src: 'img/consoles/ps4.png'},
+        {id: 'console-sat', src: 'img/consoles/sat.png'},
         {id: 'console-snes', src: 'img/consoles/snes.png'},
         {id: 'console-wii', src: 'img/consoles/wii.png'},
         {id: 'console-wiiu', src: 'img/consoles/wiiu.png'},
