@@ -46,6 +46,7 @@ define(function () {
         {id: 'console-ps2', src: 'img/consoles/ps2.png'},
         {id: 'console-ps3', src: 'img/consoles/ps3.png'},
         {id: 'console-ps4', src: 'img/consoles/ps4.png'},
+        {id: 'console-psp', src: 'img/consoles/psp.png'},
         {id: 'console-sat', src: 'img/consoles/sat.png'},
         {id: 'console-snes', src: 'img/consoles/snes.png'},
         {id: 'console-wii', src: 'img/consoles/wii.png'},
