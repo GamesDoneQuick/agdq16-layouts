@@ -245,12 +245,12 @@ define([
         img.src = 'data:image/jpeg;base64,' + newVal.boxart.base64;
         gBoxartImage = img;
 
-        // If we have at least BOXART_FADE_TIME before the next fade begins,
+        // If we're not currenly in the midst of a fade,
         // immediately load the new boxart into hiddenBoxart so its shows ASAP.
         if(currentBoxartScrollTl) {
             var currentTime = currentBoxartScrollTl.time();
             if (currentTime > BOXART_FADE_TIME
-                    && currentTime < currentBoxartScrollTl.duration() - BOXART_FADE_TIME * 2) {
+                    && currentTime < currentBoxartScrollTl.duration() - BOXART_FADE_TIME) {
                 // This is confusing. You'd think it'd be hiddenBoxart that we change, but no.
                 // This is becuase they're flipped immediately every time showBoxart() is called.
                 recacheBoxartAfterImageLoad(showingBoxart);
