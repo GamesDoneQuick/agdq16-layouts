@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="import" href="components/paper-button/paper-button.html">
-    <link rel="import" href="components/paper-input/paper-input.html">
     <link rel="import" href="components/iron-flex-layout/classes/iron-flex-layout.html">
+    <link rel="import" href="components/paper-button/paper-button.html">
+    <link rel="import" href="components/paper-dropdown-menu/paper-dropdown-menu.html">
+    <link rel="import" href="components/paper-input/paper-input.html">
+    <link rel="import" href="components/paper-item/paper-item.html">
+    <link rel="import" href="components/paper-listbox/paper-listbox.html">
     <link rel="import" href="elements/edit-runner.html">
     <style>
         h5 {margin-bottom: -16px;}
@@ -17,7 +20,32 @@
             <h5>General Run Info</h5>
             <paper-input type="text" label="Name"></paper-input>
             <paper-input type="text" label="Release Year"></paper-input>
-            <paper-input type="text" label="Console"></paper-input>
+            <paper-dropdown-menu label="Console">
+                <paper-listbox id="consoleListbox" class="dropdown-content" attr-for-selected="value">
+                    <paper-item value="Unknown">Unknown/None</paper-item>
+                    <paper-item value="3DS">3DS</paper-item>
+                    <paper-item value="ARC">Arcade</paper-item>
+                    <paper-item value="DC">Dreamcast</paper-item>
+                    <paper-item value="DS">DS</paper-item>
+                    <paper-item value="GB">Game Boy</paper-item>
+                    <paper-item value="GBA">Game Boy Advance</paper-item>
+                    <paper-item value="GBC">Game Boy Color</paper-item>
+                    <paper-item value="GCN">GameCube</paper-item>
+                    <paper-item value="GEN">Genesis</paper-item>
+                    <paper-item value="N64">Nintendo 64</paper-item>
+                    <paper-item value="NES">NES</paper-item>
+                    <paper-item value="PC">PC</paper-item>
+                    <paper-item value="PS1">PlayStation 1</paper-item>
+                    <paper-item value="PS2">PlayStation 2</paper-item>
+                    <paper-item value="PS3">PlayStation 3</paper-item>
+                    <paper-item value="PS4">PlayStation 4</paper-item>
+                    <paper-item value="SAT">Saturn</paper-item>
+                    <paper-item value="SNES">SNES</paper-item>
+                    <paper-item value="WII">Wii</paper-item>
+                    <paper-item value="WIIU">WiiU</paper-item>
+                    <paper-item value="WSHP">Wii Virtal Console</paper-item>
+                </paper-listbox>
+            </paper-dropdown-menu>
             <paper-input type="text" label="Estimate"></paper-input>
             <paper-input type="text" label="Category"></paper-input>
         </div>
@@ -29,7 +57,7 @@
     <script>
         var nameEl = document.querySelector('paper-input[label="Name"]');
         var releaseYearEl = document.querySelector('paper-input[label="Release Year"]');
-        var consoleEl = document.querySelector('paper-input[label="Console"]');
+        var consoleEl = document.getElementById('consoleListbox');
         var estimateEl = document.querySelector('paper-input[label="Estimate"]');
         var categoryEl = document.querySelector('paper-input[label="Category"]');
         var runners = document.getElementById('runners');
@@ -38,7 +66,7 @@
         currentRun.on('change', function(oldVal, newVal) {
             nameEl.value = newVal.name;
             releaseYearEl.value = newVal.releaseYear;
-            consoleEl.value = newVal.console;
+            consoleEl.select(newVal.console.toUpperCase());
             estimateEl.value = newVal.estimate;
             categoryEl.value = newVal.category;
 
@@ -59,7 +87,7 @@
         document.addEventListener('dialog-confirmed', function() {
             currentRun.value.name = nameEl.value;
             currentRun.value.releaseYear = releaseYearEl.value;
-            currentRun.value.console = consoleEl.value;
+            currentRun.value.console = consoleEl.selected;
             currentRun.value.estimate = estimateEl.value;
             currentRun.value.category = categoryEl.value;
 
@@ -70,13 +98,21 @@
                 currentRun.value.runners[i].stream = editRunnerEl.$.streamInput.value
             }
 
-            currentRun.value.concatenatedRunners = currentRun.value.runners.reduce(function(prev, curr) {
-                if (typeof prev === 'object') {
-                    return prev.name + ', ' + curr.name;
-                } else {
-                    return prev + ', ' + curr.name;
-                }
-            })
+            var runners = currentRun.value.runners;
+            var concatenatedRunners;
+            if (runners.length === 1) {
+                concatenatedRunners = runners[0].name;
+            } else {
+                concatenatedRunners = runners.reduce(function(prev, curr) {
+                    if (typeof prev === 'object') {
+                        return prev.name + ', ' + curr.name;
+                    } else {
+                        return prev + ', ' + curr.name;
+                    }
+                });
+            }
+
+            currentRun.value.concatenatedRunners = concatenatedRunners;
         });
     </script>
 </body>

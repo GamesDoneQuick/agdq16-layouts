@@ -20,6 +20,8 @@
     "numeral": "~1.5.3",
     "nodecg-replicant": "NodeCGElements/nodecg-replicant#~0.5.3",
     "iron-image": "PolymerElements/iron-image#~1.0.4",
-    "moment": "~2.10.6"
+    "moment": "~2.10.6",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#~1.1.1",
+    "paper-listbox": "PolymerElements/paper-listbox#~1.1.0"
   }
 }
