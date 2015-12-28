@@ -9,7 +9,7 @@ define([
 
     var BOXART_WIDTH = 469;
     var BOXART_ASPECT_RATIO = 1.397;
-    var BOXART_SCROLL_TIME = 30;
+    var BOXART_SCROLL_TIME = 8;
     var BOXART_FADE_TIME = 2;
 
     // We'll be changing these every time we switch to a new layout.
@@ -250,7 +250,7 @@ define([
         if(currentBoxartScrollTl) {
             var currentTime = currentBoxartScrollTl.time();
             if (currentTime > BOXART_FADE_TIME
-                    && currentTime < currentBoxartScrollTl.duration() - BOXART_FADE_TIME) {
+                    && currentTime < currentBoxartScrollTl.duration() - BOXART_FADE_TIME + 0.1) {
                 // This is confusing. You'd think it'd be hiddenBoxart that we change, but no.
                 // This is becuase they're flipped immediately every time showBoxart() is called.
                 recacheBoxartAfterImageLoad(showingBoxart);
