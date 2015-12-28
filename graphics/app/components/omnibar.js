@@ -460,7 +460,7 @@ define([
                     var upNextRun = layout.currentLayoutName === 'break' ? globals.currentRun : globals.nextRun;
                     if (upNextRun) {
                         showMainLine1(upNextRun.concatenatedRunners);
-                        showMainLine2(upNextRun.name + ' - ' + upNextRun.category);
+                        showMainLine2(upNextRun.name.replace('\n', ' ').trim() + ' - ' + upNextRun.category);
                     } else {
                         tl.clear();
 
