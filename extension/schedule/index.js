@@ -131,7 +131,7 @@ module.exports = function (nodecg) {
                 }
 
                 return {
-                    name: run.fields.name || 'Unknown',
+                    name: run.fields.display_name || 'Unknown',
                     console: run.fields.console || 'Unknown',
                     commentators: run.fields.commentators || 'Unknown',
                     category: run.fields.category || 'Any%',

@@ -263,6 +263,8 @@ define([
             name.text += ' (' + newVal.releaseYear + ')';
         }
 
+        name.text = name.text.replace('\\N', '\n');
+
         category.text = newVal.category;
         categoryRect.w = category.x + category.getBounds().width + 43;
 
