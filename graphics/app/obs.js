@@ -7,14 +7,20 @@ define([
     'use strict';
 
     var obs = new OBSRemote();
-
     var retryConnection = debounce(connect, 5000);
-
+    var _lastLayoutName;
     var _handleSceneSwitch = debounce(function () {
         obs.getCurrentScene(function (scene) {
             scene.sources.some(function(source) {
                 if (source.name.indexOf('Layout ') === 0) {
-                    layout.changeTo(source.name.split(' ')[1]);
+                    var layoutName = source.name.split(' ')[1];
+
+                    // Only execute a layout change if this new layout is different from the previous one.
+                    // This prevents the boxart from needlessly resetting when checking/unchecking sources in OBS.
+                    if (layoutName !== _lastLayoutName) {
+                        layout.changeTo(layoutName);
+                        _lastLayoutName = layoutName;
+                    }
                 }
             });
         });
