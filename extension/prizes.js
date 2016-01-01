@@ -92,7 +92,7 @@ module.exports = function (nodecg) {
     function formatPrize(prize) {
         return {
             name: prize.fields.name,
-            provided: prize.fields.provided,
+            provided: prize.fields.provider,
             description: prize.fields.shortdescription,
             image: prize.fields.altimage,
             minimumbid: numeral(prize.fields.minimumbid).format('$0,0[.]00'),
