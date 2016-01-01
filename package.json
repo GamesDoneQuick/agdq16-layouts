@@ -127,7 +127,6 @@
     "clone": "^1.0.2",
     "debounce": "^1.0.0",
     "deep-equal": "^1.0.1",
-    "electron-prebuilt": "^0.35.0",
     "emoji": "^0.3.2",
     "lastfm": "^0.9.2",
     "md5-file": "^2.0.4",
