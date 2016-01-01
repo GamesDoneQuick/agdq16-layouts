@@ -9,7 +9,7 @@ define([
 
     var BOXART_WIDTH = 469;
     var BOXART_ASPECT_RATIO = 1.397;
-    var BOXART_SCROLL_TIME = 8;
+    var BOXART_SCROLL_TIME = 30;
     var BOXART_FADE_TIME = 2;
 
     // We'll be changing these every time we switch to a new layout.
