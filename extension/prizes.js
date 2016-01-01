@@ -1,11 +1,10 @@
 /* jshint -W106 */
 'use strict';
 
-// TODO: Change these back to the real URLs ASAP
-//var PRIZES_URL = 'https://gamesdonequick.com/tracker/search/?type=prize&event=17';
-//var CURRENT_PRIZES_URL = 'https://gamesdonequick.com/tracker/search/?type=prize&feed=current&event=17';
-var PRIZES_URL = 'https://dl.dropboxusercontent.com/u/6089084/agdq_mock/allPrizes.json';
-var CURRENT_PRIZES_URL = 'https://dl.dropboxusercontent.com/u/6089084/agdq_mock/currentPrizes.json';
+var PRIZES_URL = 'https://gamesdonequick.com/tracker/search/?type=prize&event=17';
+var CURRENT_PRIZES_URL = 'https://gamesdonequick.com/tracker/search/?type=prize&feed=current&event=17';
+//var PRIZES_URL = 'https://dl.dropboxusercontent.com/u/6089084/agdq_mock/allPrizes.json';
+//var CURRENT_PRIZES_URL = 'https://dl.dropboxusercontent.com/u/6089084/agdq_mock/currentPrizes.json';
 
 var POLL_INTERVAL = 60 * 1000;
 

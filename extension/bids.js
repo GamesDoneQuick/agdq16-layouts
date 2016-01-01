@@ -1,10 +1,10 @@
 /* jshint -W106 */
 'use strict';
 
-//var BIDS_URL = 'https://gamesdonequick.com/tracker/search/?type=allbids&event=17';
-//var CURRENT_BIDS_URL = 'https://gamesdonequick.com/tracker/search/?type=allbids&feed=current&event=17';
-var BIDS_URL = 'https://dl.dropboxusercontent.com/u/6089084/agdq_mock/allBids.json';
-var CURRENT_BIDS_URL = 'https://dl.dropboxusercontent.com/u/6089084/agdq_mock/currentBids.json';
+var BIDS_URL = 'https://gamesdonequick.com/tracker/search/?type=allbids&event=17';
+var CURRENT_BIDS_URL = 'https://gamesdonequick.com/tracker/search/?type=allbids&feed=current&event=17';
+//var BIDS_URL = 'https://dl.dropboxusercontent.com/u/6089084/agdq_mock/allBids.json';
+//var CURRENT_BIDS_URL = 'https://dl.dropboxusercontent.com/u/6089084/agdq_mock/currentBids.json';
 var POLL_INTERVAL = 60 * 1000;
 
 var format = require('util').format;
