@@ -74,7 +74,7 @@ define([
 
         /* ----- */
 
-        this.audioIcon = new createjs.Bitmap(preloader.getResult('nameplate-audio-off'));
+        this.audioIcon = new createjs.Bitmap(preloader.getResult('nameplate-audio-on'));
         this.audioIcon.regX = AUDIO_ICON_WIDTH / 2;
         this.audioIconColorFilter = new createjs.ColorFilter(0,0,0);
         this.audioIcon.visible = false;
