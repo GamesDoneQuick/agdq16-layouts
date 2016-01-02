@@ -123,7 +123,7 @@ define([
             y: STAGE_HEIGHT,
             ease: Power2.easeIn,
             onComplete: function() {
-                descriptionText.text = prize.description || prize.name;
+                descriptionText.text = prize.description;
                 descriptionContainer.cache(0, 0, STAGE_WIDTH, DESCRIPTION_HEIGHT);
             }
         }, 'prizeEnter');
