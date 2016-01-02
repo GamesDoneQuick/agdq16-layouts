@@ -103,9 +103,10 @@ define([
     nodecg.listenFor('stopAd', function() {
         adState.value = 'stopped';
         tl.clear();
-        tl.to(imageContainer, FADE_DURATION, {
-            opacity: 0,
-            ease: FADE_EASE,
+        tl.to(imageContainer, SLIDE_DURATION, {
+            x: -1280,
+            roundProps: 'x',
+            ease: Power2.easeIn,
             onComplete: removeAdImages
         });
         removeAdVideo();
