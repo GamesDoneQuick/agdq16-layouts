@@ -88,6 +88,13 @@ requirejs(['debug'], function(debug) {
                 this.$.body.style.willChange = 'opacity, transform';
                 this.style.willChange = 'transform';
 
+                // Reset
+                tl.set(this, {visibility: 'visible'});
+                tl.set(selfProxy, {x: '0%'});
+                tl.set(backgroundProxy, {x: '-100%'});
+                tl.set(self.$.namebar, {x: '100%'});
+                tl.set(self.$.body, {opacity: 0, y: '-5%'});
+
                 tl.to(backgroundProxy, 1, {
                     onStart: function () {
                         this.$.body.fontSize = this.bodyStyle.fontSize + 'px';
@@ -156,13 +163,7 @@ requirejs(['debug'], function(debug) {
                     ease: Power2.easeIn
                 }, '+=' + BODY_DISPLAY_DURATION);
 
-                // Reset
-                tl.call(function() {
-                    TweenLite.set(selfProxy, {x: '0%'});
-                    TweenLite.set(backgroundProxy, {x: '-100%'});
-                    TweenLite.set(self.$.namebar, {x: '100%'});
-                    TweenLite.set(self.$.body, {opacity: 0, y: '-5%'});
-                }, null, null, '+=0.1');
+                tl.set(this, {visibility: 'hidden'});
 
                 // Padding
                 tl.to({}, 0.1, {});
