@@ -666,9 +666,9 @@ define([
                 showMainLine1('Provided by ' + prize.provided);
 
                 if (prize.grand) {
-                    showMainLine2('Grand Prize: ' + prize.description + ' (Minimum Bid: ' + prize.minimumbid + ')');
+                    showMainLine2('Grand Prize: ' + prize.description);
                 } else {
-                    showMainLine2(prize.description + ' (Minimum Bid: ' + prize.minimumbid + ')');
+                    showMainLine2(prize.description);
                 }
             }
         });
