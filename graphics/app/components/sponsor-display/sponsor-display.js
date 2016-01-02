@@ -4,7 +4,7 @@ requirejs(['debug'], function(debug) {
 
     var FADE_DURATION = 1;
     var FADE_EASE = Power1.easeInOut;
-    var HOLD_DURATION = 6;
+    var HOLD_DURATION = 20;
 
     function oneTime(target, type, callback) {
         if (target.loaded) {
