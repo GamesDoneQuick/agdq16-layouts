@@ -157,10 +157,15 @@ requirejs(['debug'], function(debug) {
                 }, '+=' + BODY_DISPLAY_DURATION);
 
                 // Reset
-                tl.set(selfProxy, {x: '0%'});
-                tl.set(backgroundProxy, {x: '-100%'});
-                tl.set(this.$.namebar, {x: '100%'});
-                tl.set(this.$.body, {opacity: 0, y: '-5%'});
+                tl.call(function() {
+                    TweenLite.set(selfProxy, {x: '0%'});
+                    TweenLite.set(backgroundProxy, {x: '-100%'});
+                    TweenLite.set(self.$.namebar, {x: '100%'});
+                    TweenLite.set(self.$.body, {opacity: 0, y: '-5%'});
+                }, null, null, '+=0.1');
+
+                // Padding
+                tl.to({}, 0.1, {});
             }.bind(this));
         },
 
