@@ -7,11 +7,15 @@ requirejs(['debug'], function(debug) {
     var HOLD_DURATION = 6;
 
     function oneTime(target, type, callback) {
-        var listener = function(e) {
-            callback(e);
-            e.target.removeEventListener(type, listener);
-        };
-        target.addEventListener(type, listener);
+        if (target.loaded) {
+            callback();
+        } else {
+            var listener = function(e) {
+                callback(e);
+                e.target.removeEventListener(type, listener);
+            };
+            target.addEventListener(type, listener);
+        }
     }
 
     /* jshint -W064 */
