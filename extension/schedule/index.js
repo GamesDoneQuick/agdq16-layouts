@@ -1,19 +1,13 @@
 'use strict';
 
 var fs = require('fs');
+var path = require('path');
 var rp = require('request-promise');
 var clone = require('clone');
 var Q = require('q');
 var equals = require('deep-equal');
-var base64 = require('node-base64-image');
 
 var POLL_INTERVAL = 60 * 1000;
-var BOXART_ASPECT_RATIO = 1.397;
-var BOXART_WIDTH = 469;
-var BOXART_HEIGHT = Math.round(BOXART_WIDTH * BOXART_ASPECT_RATIO);
-var BOXART_TEMPLATE = 'http://static-cdn.jtvnw.net/ttv-boxart/{name}-{width}x{height}.jpg';
-var TWITCH_DEFAULT_BOXART_BASE64 = fs.readFileSync(__dirname + '/twitch_default_boxart.jpg', 'base64');
-var GDQ_DEFAULT_BOXART_BASE64 = fs.readFileSync(__dirname + '/gdq_default_boxart.png', 'base64');
 
 module.exports = function (nodecg) {
     var checklist = require('../checklist')(nodecg);
@@ -48,26 +42,22 @@ module.exports = function (nodecg) {
 
     nodecg.listenFor('nextRun', function(cb) {
         var nextIndex = currentRun.value.nextRun.order - 1;
-        _setCurrentRun(scheduleRep.value[nextIndex])
-            .then(function() {
-                checklist.reset();
+        _setCurrentRun(scheduleRep.value[nextIndex]);
+        checklist.reset();
 
-                if (typeof cb === 'function') {
-                    cb();
-                }
-            });
+        if (typeof cb === 'function') {
+            cb();
+        }
     });
 
     nodecg.listenFor('previousRun', function(cb) {
         var prevIndex = currentRun.value.order - 2;
-        _setCurrentRun(scheduleRep.value[prevIndex])
-            .then(function() {
-                checklist.reset();
+        _setCurrentRun(scheduleRep.value[prevIndex]);
+        checklist.reset();
 
-                if (typeof cb === 'function') {
-                    cb();
-                }
-            });
+        if (typeof cb === 'function') {
+            cb();
+        }
     });
 
     nodecg.listenFor('setCurrentRunByOrder', function(order, cb) {
@@ -108,10 +98,14 @@ module.exports = function (nodecg) {
 
             /* jshint -W106 */
             var formattedSchedule = scheduleJSON.map(function(run) {
-                var boxartUrl = BOXART_TEMPLATE
-                    .replace('{name}', encodeURIComponent(run.fields.name))
-                    .replace('{width}', BOXART_WIDTH)
-                    .replace('{height}', BOXART_HEIGHT);
+                var name = run.fields.display_name;
+                var boxartUrl = '/graphics/agdq16-layouts/img/boxart/default.png';
+                var boxartName = new Buffer(name).toString('base64');
+                var boxartPath = path.resolve(__dirname, '../../graphics/img/boxart/', boxartName +'.jpg');
+
+                if (fs.existsSync(boxartPath)) {
+                    boxartUrl = '/graphics/agdq16-layouts/img/boxart/' + boxartName + '.jpg';
+                }
 
                 var runners = run.fields.runners.map(function(runnerId) {
                     return allRunners[runnerId];
@@ -191,7 +185,6 @@ module.exports = function (nodecg) {
     }
 
     function _setCurrentRun(run) {
-        var deferred = Q.defer();
         var cr = clone(run);
 
         // `order` is always `index+1`. So, if there is another run in the schedule after this one, add it as `nextRun`.
@@ -199,26 +192,7 @@ module.exports = function (nodecg) {
             cr.nextRun = scheduleRep.value[cr.order];
         }
 
-        base64.base64encoder(cr.boxart.url, {string: true}, function (err, image) {
-            if (err) {
-                nodecg.log.error('[schedule] Could not download boxart:', err.stack);
-                return;
-            }
-
-            if (image === TWITCH_DEFAULT_BOXART_BASE64) {
-                cr.boxart.base64 = GDQ_DEFAULT_BOXART_BASE64;
-            } else {
-                cr.boxart.base64 = image;
-            }
-
-            if (!equals(cr, currentRun.value)) {
-                currentRun.value = cr;
-                deferred.resolve(true);
-            } else {
-                deferred.resolve(false);
-            }
-        });
-
-        return deferred.promise;
+        console.log('changing from %s to %s', currentRun.value.name, cr.name);
+        currentRun.value = cr;
     }
 };

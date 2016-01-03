@@ -242,7 +242,8 @@ define([
     // This needs to be near the bottom of this file.
     globals.currentRunRep.on('change', function(oldVal, newVal) {
         var img = document.createElement('img');
-        img.src = 'data:image/jpeg;base64,' + newVal.boxart.base64;
+        img.src = newVal.boxart.url;
+        console.log('boxart img src:', img.src);
         gBoxartImage = img;
 
         // If we're not currenly in the midst of a fade,
