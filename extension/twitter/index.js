@@ -158,7 +158,9 @@ module.exports = function(nodecg) {
 
         // Highlight the #AGDQ2016 hashtag
         var HASHTAG = '#AGDQ2016';
+        var hashtag = '#agdq2016';
         tweet.text = tweet.text.split(HASHTAG).join('<span class="agdqHashtag">' + HASHTAG + '</span>');
+        tweet.text = tweet.text.split(hashtag).join('<span class="agdqHashtag">' + hashtag + '</span>');
 
         // Parse emoji in tweet body
         tweet.text = jEmoji.unifiedToHTML(tweet.text);
