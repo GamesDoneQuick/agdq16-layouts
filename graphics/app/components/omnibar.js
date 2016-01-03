@@ -439,7 +439,11 @@ define([
     }
 
     function showUpNext(immediate) {
-        var upNextRun = layout.currentLayoutName === 'break' ? globals.currentRun : globals.nextRun;
+        var upNextRun = globals.nextRun;
+
+        if (layout.currentLayoutName === 'break' || layout.currentLayoutName === 'interview') {
+            upNextRun = globals.currentRun;
+        }
 
         if (upNextRun) {
             if (immediate) tl.clear();
