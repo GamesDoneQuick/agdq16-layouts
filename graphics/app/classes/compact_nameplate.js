@@ -166,7 +166,7 @@ define([
 
         this.twitchTl = new TimelineMax({repeat: -1});
 
-        this.twitchTl.to({}, 60, {});
+        this.twitchTl.to({}, 8, {});
 
         this.twitchTl.to(this.twitchContainer, 1.2, {
             x: 0,
@@ -186,6 +186,10 @@ define([
 
         var handleRunnerChange = debounce(function(name, stream) {
             var tl = new TimelineLite();
+
+            if (name === 'Yagamoth') {
+                window.c1 = this;
+            }
 
             tl.add('enter');
 
