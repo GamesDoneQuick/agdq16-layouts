@@ -192,7 +192,6 @@ module.exports = function (nodecg) {
             cr.nextRun = scheduleRep.value[cr.order];
         }
 
-        console.log('changing from %s to %s', currentRun.value.name, cr.name);
         currentRun.value = cr;
     }
 };
