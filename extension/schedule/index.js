@@ -159,7 +159,9 @@ module.exports = function (nodecg) {
                 _setCurrentRun(scheduleRep.value[0]);
             }
 
-            // Else, update the currentRun
+            // TODO: This is commented out because it blows away any manual edits made to currentRun.
+            // TODO: Need to figure out a merge system that preserves manual edits when they don't conflict.
+            /*// Else, update the currentRun
             else {
                 // First, try to find the current run by name.
                 var updatedCurrentRun = formattedSchedule.some(function(run) {
@@ -178,7 +180,7 @@ module.exports = function (nodecg) {
                         }
                     });
                 }
-            }
+            }*/
         }).catch(function(err) {
             nodecg.log.error('[schedule] Failed to update:', err.stack);
         });
