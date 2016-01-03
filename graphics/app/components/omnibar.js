@@ -506,7 +506,7 @@ define([
                     showedLabel = true;
                     tl.to({}, 0.3, {
                         onStart: function() {
-                            showLabel('BID WAR', 33);
+                            showLabel('DONATION\nINCENTIVES', 24);
                         }
                     });
                 }
