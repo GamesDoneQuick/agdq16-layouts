@@ -50,17 +50,8 @@
 </head>
 <body>
 <div id="scrollWrapper">
-    <template is="dom-bind">
-        <nodecg-replicant replicant-name="tweets" value="{{value}}"></nodecg-replicant>
-
-        <template is="dom-if" if="[[!value.length]]">
-            <div id="empty">There are no tweets in the queue.</div>
-        </template>
-
-        <template is="dom-repeat" items="[[value]]" as="tweet">
-            <tweet-item value="[[tweet]]"></tweet-item>
-        </template>
-    </template>
+    <div id="tweets"></div>
+    <div id="empty">There are no tweets in the queue.</div>
 </div>
 
 <disabled-cover id="cover">
