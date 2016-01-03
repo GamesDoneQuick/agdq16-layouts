@@ -50,6 +50,7 @@ body {
 
 #sponsorsAndTwitter {
     position: absolute;
+    overflow: hidden;
 }
 
 .fullscreen {
