@@ -295,7 +295,7 @@ define([
 
                 totalContainer.x = state.totalShowing ? totalContainer.showingX : totalContainer.hiddenX;
 
-                mainLine1.maxWidth = totalContainer.showingX - mainLine1.x - 12;
+                mainLine1.maxWidth = totalContainer.showingX - mainLine1.restingX - 12;
                 mainLine2.maxWidth = mainLine1.maxWidth - 4;
             }
         });
