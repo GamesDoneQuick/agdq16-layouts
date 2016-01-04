@@ -11,7 +11,7 @@ module.exports = function(nodecg) {
         {name: 'TVs have Video', complete: false},
         {name: 'Restart Recording', complete: false},
         {name: 'Stream Audio', complete: false},
-        {name: 'Stream Video', complete: false},
+        {name: 'Stream Video & Deinterlacing', complete: false},
         {name: 'Stream Layout', complete: false},
         {name: 'Camera', complete: false},
         {name: 'Reset Timer', complete: false},
