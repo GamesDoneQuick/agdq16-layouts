@@ -3,8 +3,8 @@
 requirejs(['debug'], function(debug) {
     'use strict';
 
-    var BODY_DISPLAY_DURATION = 7;
-    var BASE_IMAGE_DURATION = 5;
+    var BODY_DISPLAY_DURATION = 9;
+    var BASE_IMAGE_DURATION = 5.5;
     var MIN_BOTTOM_BODY_MARGIN = 28;
     var imgPreloaderEl = document.createElement('img');
 
