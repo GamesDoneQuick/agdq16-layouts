@@ -8,6 +8,8 @@ var Q = require('q');
 var request = require('request');
 var numeral = require('numeral');
 
+var updateInterval;
+
 module.exports = function (nodecg) {
     var total = nodecg.Replicant('total', {
         defaultValue: {
@@ -40,7 +42,8 @@ module.exports = function (nodecg) {
     if (autoUpdateTotal.value) {
         // Get latest prize data every POLL_INTERVAL milliseconds
         nodecg.log.info('Polling donation total every %d seconds...', POLL_INTERVAL / 1000);
-        var updateInterval = setInterval(update, POLL_INTERVAL);
+        clearInterval(updateInterval);
+        updateInterval = setInterval(update, POLL_INTERVAL);
     } else {
         nodecg.log.info('Automatic update of total is disabled, will not poll until enabled');
     }
