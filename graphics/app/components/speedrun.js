@@ -269,7 +269,7 @@ define([
         category.text = newVal.category;
         categoryRect.w = category.x + category.getBounds().width + 43;
 
-        estimate.text = newVal.estimate;
+        estimate.text = 'EST: ' + newVal.estimate;
         estimateRect.w = category.x + estimate.getBounds().width + 43;
         estimate.x = estimateRect.w - 34;
         estimateContainer.regX = estimateRect.w - 2;
