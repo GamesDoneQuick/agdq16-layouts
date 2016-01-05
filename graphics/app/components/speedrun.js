@@ -274,7 +274,9 @@ define([
         estimate.x = estimateRect.w - 34;
         estimateContainer.regX = estimateRect.w - 2;
 
-        consoleBitmap.image = preloader.getResult('console-' + newVal.console.toLowerCase());
+        var imgEl = preloader.getResult('console-' + newVal.console.toLowerCase());
+        imgEl = imgEl || preloader.getResult('console-unknown');
+        consoleBitmap.image = imgEl;
 
         // EaselJS has problems applying shadows to stroked graphics.
         // To work around this, we remove the shadow, cache the graphic, then apply the shadow to the cache.
