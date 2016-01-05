@@ -14,6 +14,7 @@ module.exports = function(nodecg) {
         {name: 'Stream Video & Deinterlacing', complete: false},
         {name: 'Stream Layout', complete: false},
         {name: 'RACE ONLY: Confirm Runner Names Match Game Positions', complete: false},
+        {name: 'STEAM ONLY: Turn off Steam notifications', complete: false},
         {name: 'Camera', complete: false},
         {name: 'Reset Timer', complete: false},
         {name: 'Check Notes', complete: false}
