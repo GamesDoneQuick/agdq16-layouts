@@ -35,40 +35,86 @@ module.exports = function(nodecg) {
 
     var tweets = nodecg.Replicant('tweets', {defaultValue: []});
 
-    var userStream = new TwitterStream({
-        consumer_key: nodecg.bundleConfig.twitter.consumerKey,
-        consumer_secret: nodecg.bundleConfig.twitter.consumerSecret,
-        token: nodecg.bundleConfig.twitter.accessTokenKey,
-        token_secret: nodecg.bundleConfig.twitter.accessTokenSecret
-    });
+    var userStream;
 
-    userStream.on('data', function (data) {
-        // We discard quoted statuses because we can't show them.
-        if (data.quoted_status) return;
+    function buildUserStream() {
+        userStream = new TwitterStream({
+            consumer_key: nodecg.bundleConfig.twitter.consumerKey,
+            consumer_secret: nodecg.bundleConfig.twitter.consumerSecret,
+            token: nodecg.bundleConfig.twitter.accessTokenKey,
+            token_secret: nodecg.bundleConfig.twitter.accessTokenSecret
+        });
 
-        if (data.event) {
-            switch (data.event) {
-                case 'favorite':
-                    handleFavorite(data);
-                    break;
-                case 'unfavorite':
-                    handleUnfavorite(data);
-                    break;
+        userStream.on('data', function (data) {
+            // We discard quoted statuses because we can't show them.
+            if (data.quoted_status) return;
+
+            if (data.event) {
+                switch (data.event) {
+                    case 'favorite':
+                        handleFavorite(data);
+                        break;
+                    case 'unfavorite':
+                        handleUnfavorite(data);
+                        break;
+                }
             }
-        }
 
-        else if (data.delete) {
-            handleDelete(data);
-        }
+            else if (data.delete) {
+                handleDelete(data);
+            }
 
-        else if (data.retweeted_status) {
-            handleRetweet(data);
-        }
+            else if (data.retweeted_status) {
+                handleRetweet(data);
+            }
 
-        else if (data.text) {
-            handleStatus(data);
-        }
-    });
+            else if (data.text) {
+                handleStatus(data);
+            }
+        });
+
+        userStream.on('error', function (error) {
+            nodecg.log.error('[twitter]', error.stack);
+        });
+
+        userStream.on('connection success', function () {
+            nodecg.log.info('[twitter] Connection success.');
+        });
+
+        userStream.on('connection aborted', function () {
+            nodecg.log.error('[twitter] Connection aborted!');
+        });
+
+        userStream.on('connection error network', function (error) {
+            nodecg.log.error('[twitter] Connection error network:', error.stack);
+        });
+
+        userStream.on('connection error stall', function () {
+            nodecg.log.error('[twitter] Connection error stall!');
+        });
+
+        userStream.on('connection error http', function (httpStatusCode) {
+            nodecg.log.error('[twitter] Connection error HTTP:', httpStatusCode);
+        });
+
+        userStream.on('connection rate limit', function (httpStatusCode) {
+            nodecg.log.error('[twitter] Connection rate limit:', httpStatusCode);
+        });
+
+        userStream.on('connection error unknown', function (error) {
+            nodecg.log.error('[twitter] Connection error unknown:', error.stack);
+            userStream.close();
+            userStream = new TwitterStream({
+                consumer_key: nodecg.bundleConfig.twitter.consumerKey,
+                consumer_secret: nodecg.bundleConfig.twitter.consumerSecret,
+                token: nodecg.bundleConfig.twitter.accessTokenKey,
+                token_secret: nodecg.bundleConfig.twitter.accessTokenSecret
+            });
+            userStream.stream('user', {thisCantBeNull: true});
+        });
+
+        userStream.stream('user', {thisCantBeNull: true});
+    }
 
     function handleStatus(status) {
         if (status.user.id_str !== TARGET_USER_ID) return;
@@ -77,6 +123,8 @@ module.exports = function(nodecg) {
         if (status.text.charAt(0) === '@') return;
         addTweet(status);
     }
+
+    buildUserStream();
 
     function handleRetweet(retweet) {
         if (retweet.user.id_str !== TARGET_USER_ID) return;
@@ -99,46 +147,12 @@ module.exports = function(nodecg) {
         removeTweetById(unfavorite.target_object.id_str);
     }
 
-    userStream.on('error', function (error) {
-        nodecg.log.error('[twitter]', error.stack);
-    });
-
-    userStream.on('connection success', function () {
-        nodecg.log.info('[twitter] Connection success.');
-    });
-
-    userStream.on('connection aborted', function () {
-        nodecg.log.error('[twitter] Connection aborted!');
-    });
-
-    userStream.on('connection error network', function (error) {
-        nodecg.log.error('[twitter] Connection error network:', error.stack);
-    });
-
-    userStream.on('connection error stall', function () {
-        nodecg.log.error('[twitter] Connection error stall!');
-    });
-
-    userStream.on('connection error http', function (httpStatusCode) {
-        nodecg.log.error('[twitter] Connection error HTTP:', httpStatusCode);
-    });
-
-    userStream.on('connection rate limit', function (httpStatusCode) {
-        nodecg.log.error('[twitter] Connection rate limit:', httpStatusCode);
-    });
-
-    userStream.on('connection error unknown', function (error) {
-        nodecg.log.error('[twitter] Connection error unknown:', error.stack);
-        userStream.close();
-    });
-
-    userStream.stream('user', {});
-
     // Close and re-open the twitter connection every 90 minutes
     setInterval(function() {
+        nodecg.log.info('[twitter] Restarting Twitter connection (done every 90 minutes).');
         userStream.close();
-        userStream.stream('user', {});
-    });
+        buildUserStream();
+    }, 90 * 60 * 1000);
 
     nodecg.listenFor('acceptTweet', function(tweet) {
         removeTweetById(tweet.id_str);
