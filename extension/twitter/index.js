@@ -132,7 +132,13 @@ module.exports = function(nodecg) {
         userStream.close();
     });
 
-    userStream.stream('user', {thisObjectCantBeNull: true});
+    userStream.stream('user', {});
+
+    // Close and re-open the twitter connection every 90 minutes
+    setInterval(function() {
+        userStream.close();
+        userStream.stream('user', {});
+    });
 
     nodecg.listenFor('acceptTweet', function(tweet) {
         removeTweetById(tweet.id_str);
