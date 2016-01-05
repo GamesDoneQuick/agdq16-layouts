@@ -3,9 +3,9 @@
 module.exports = function(nodecg) {
     // Create defaults array
     var checklistDefault = [
-        {name: 'Check for Interview/Video to play', complete: false},
+        {name: 'Check for Interview', complete: false},
         {name: 'Cue game music', complete: false},
-        {name: 'Run Ad*', complete: false},
+        {name: 'Check for Advertisement', complete: false},
         {name: 'Commentator Mics', complete: false},
         {name: 'Runner Game Audio', complete: false},
         {name: 'TVs have Video', complete: false},
