@@ -331,7 +331,7 @@ define([
         this.twitchContainer.visible = true;
         this.twitchContainer.x = twitchHideX;
 
-        this.twitchTl.to({}, 60, {});
+        this.twitchTl.to({}, 90, {});
 
         this.twitchTl.to(this.twitchContainer, 1.2, {
             x: 0,
@@ -341,7 +341,7 @@ define([
         this.twitchTl.to(this.twitchContainer, 0.9, {
             x: twitchHideX,
             ease: Power2.easeIn
-        }, '+=7');
+        }, '+=8.5');
     };
 
     p.disable = function() {
