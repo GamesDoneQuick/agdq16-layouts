@@ -35,6 +35,11 @@ module.exports = function(nodecg) {
 
     var tweets = nodecg.Replicant('tweets', {defaultValue: []});
 
+    // Clear queue of tweets when currentRun changes
+    nodecg.Replicant('currentRun').on('change', function(oldVal, newVal) {
+        tweets.value = [];
+    });
+
     var userStream;
 
     function buildUserStream() {
