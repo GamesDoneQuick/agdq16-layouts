@@ -187,10 +187,6 @@ define([
         var handleRunnerChange = debounce(function(name, stream) {
             var tl = new TimelineLite();
 
-            if (name === 'Yagamoth') {
-                window.c1 = this;
-            }
-
             tl.add('enter');
 
             tl.to(this.cover1Rect, 0.33, {
