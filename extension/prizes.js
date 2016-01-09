@@ -70,8 +70,16 @@ module.exports = function (nodecg) {
 
     function handleResponse(error, response, body, deferred, opts) {
         if (!error && response.statusCode === 200) {
+            var prizes;
+
+            try {
+                prizes = JSON.parse(body);
+            } catch(e) {
+                nodecg.log.error('Could not parse %s, response not valid JSON:\n\t', opts.label, body);
+                return;
+            }
+
             // The response we get has a tremendous amount of cruft that we just don't need. We filter that out.
-            var prizes = JSON.parse(body);
             var relevantData = prizes.map(formatPrize);
 
             if (equal(relevantData, opts.replicant.value)) {

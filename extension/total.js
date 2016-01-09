@@ -73,7 +73,15 @@ module.exports = function (nodecg) {
         var deferred = Q.defer();
         request(DONATION_STATS_URL, function (error, response, body) {
             if (!error && response.statusCode === 200) {
-                var stats = JSON.parse(body);
+                var stats;
+
+                try {
+                    stats = JSON.parse(body);
+                } catch(e) {
+                    nodecg.log.error('Could not parse total, response not valid JSON:\n\t', body);
+                    return;
+                }
+
                 var freshTotal = parseFloat(stats.agg.amount || 0);
 
                 if (freshTotal !== total.value.raw) {
