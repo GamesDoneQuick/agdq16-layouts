@@ -9,7 +9,7 @@ define([
     var lastBg;
 
     return function(bgName) {
-        debug.log('[backgound] setBackground(%s)', bgName);
+        debug.log('[background] setBackground(%s)', bgName);
 
         // Remove the last background, if any.
         if (lastBg) {
