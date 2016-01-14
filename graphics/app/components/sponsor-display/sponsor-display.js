@@ -10,11 +10,20 @@ requirejs(['debug'], function(debug) {
         if (target.loaded) {
             callback();
         } else {
-            var listener = function(e) {
+            var loadedListener = function(e) {
+                e.target.removeEventListener(type, errorListener);
+                e.target.removeEventListener(type, loadedListener);
                 callback(e);
-                e.target.removeEventListener(type, listener);
             };
-            target.addEventListener(type, listener);
+
+            var errorListener = function(e) {
+                if (e.detail.value) {
+                    e.target.removeEventListener(type, errorListener);
+                    e.target.removeEventListener(type, loadedListener);
+                }
+            };
+
+            target.addEventListener(type, loadedListener);
         }
     }
 
@@ -68,7 +77,20 @@ requirejs(['debug'], function(debug) {
                 }
             }.bind(this));
 
-            // Cycle through sponsor logos every this.duration seconds
+            var handleErrorChanged = function(e) {
+                if (e.detail.value && !this._retryPending) {
+                    this._retryPending = true;
+                    this.$.nextVertical.src = '';
+                    this.$.nextHorizontal.src = '';
+                    setTimeout(this.prepareSponsorChange.bind(this), HOLD_DURATION * 1000);
+                }
+            }.bind(this);
+
+            // If an image can't be loaded, automatically try again in HOLD_DURATION seconds
+            this.$.nextVertical.addEventListener('error-changed', handleErrorChanged);
+            this.$.nextHorizontal.addEventListener('error-changed', handleErrorChanged);
+
+            // Cycle through sponsor logos every this.duration se`ds
             setTimeout(this.prepareSponsorChange.bind(this), HOLD_DURATION * 1000);
         },
 
@@ -103,6 +125,8 @@ requirejs(['debug'], function(debug) {
         },
 
         prepareSponsorChange: function() {
+            this._retryPending = false;
+
             // If there's no images, do nothing
             if (!this.sponsors|| this.sponsors.length <= 0) {
                 debug.log('[sponsors] prepareSponsorChange | No sponsors, returning early.' +
