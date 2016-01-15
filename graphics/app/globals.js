@@ -12,7 +12,7 @@ define(function() {
 
     /* ----- */
 
-    var currentPrizesRep =  nodecg.Replicant('currentPrizes');
+    var currentPrizesRep = nodecg.Replicant('currentPrizes');
     var currentGrandPrizes = [];
     var currentNormalPrizes = [];
     currentPrizesRep.on('change', function (oldVal, newVal) {

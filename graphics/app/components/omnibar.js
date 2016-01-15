@@ -287,7 +287,7 @@ define([
             ease: Power2.easeOut,
             onUpdate: function() {
                 var formattedTotal = numeral(totalText.rawValue).format('$0,0');
-                totalText.text =  tabulate(formattedTotal);
+                totalText.text = tabulate(formattedTotal);
 
                 var totalContainerWidth = totalContainer.getBounds().width;
                 totalContainer.showingX = OMNIBAR_WIDTH_MINUS_LOGO - totalContainerWidth - PCF_LOGO_WIDTH - 36;
