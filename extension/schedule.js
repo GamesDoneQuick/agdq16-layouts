@@ -10,7 +10,7 @@ var equals = require('deep-equal');
 var POLL_INTERVAL = 60 * 1000;
 
 module.exports = function (nodecg) {
-    var checklist = require('../checklist')(nodecg);
+    var checklist = require('./checklist')(nodecg);
     var scheduleRep = nodecg.Replicant('schedule', {defaultValue: [], persistent: false});
     var currentRun = nodecg.Replicant('currentRun', {defaultValue: {}});
 
@@ -98,10 +98,9 @@ module.exports = function (nodecg) {
 
             /* jshint -W106 */
             var formattedSchedule = scheduleJSON.map(function(run) {
-                var name = run.fields.display_name;
                 var boxartUrl = '/graphics/agdq16-layouts/img/boxart/default.png';
-                var boxartName = new Buffer(name).toString('base64');
-                var boxartPath = path.resolve(__dirname, '../../graphics/img/boxart/', boxartName +'.jpg');
+                var boxartName = new Buffer(run.fields.display_name).toString('base64');
+                var boxartPath = path.resolve(__dirname, '../graphics/img/boxart/', boxartName +'.jpg');
 
                 if (fs.existsSync(boxartPath)) {
                     boxartUrl = '/graphics/agdq16-layouts/img/boxart/' + boxartName + '.jpg';
