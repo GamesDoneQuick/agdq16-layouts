@@ -1,6 +1,7 @@
 /* jshint -W106 */
 'use strict';
 
+var path = require('path');
 var fs = require('fs');
 var rp = require('request-promise');
 var request = require('request');
@@ -24,7 +25,7 @@ function fetchBoxart(run) {
     console.log('Fetching %s...', boxartUrl);
 
     var filename = new Buffer(run.fields.display_name).toString('base64');
-    var filepath = 'graphics/img/boxart/' + filename + '.jpg';
+    var filepath = path.join(__dirname, '/graphics/img/boxart/' + filename + '.jpg');
 
     var stream = request(boxartUrl);
     stream.pipe(fs.createWriteStream(filepath));
