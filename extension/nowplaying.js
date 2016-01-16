@@ -30,7 +30,7 @@ module.exports = function(nodecg) {
         if (pulsing.value) return;
         pulsing.value = true;
 
-        // Hard-coded 15 second duration
+        // Hard-coded 12 second duration
         pulseTimeout = setTimeout(function() {
             pulsing.value = false;
         }, 12 * 1000);
