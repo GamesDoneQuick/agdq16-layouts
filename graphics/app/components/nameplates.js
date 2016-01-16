@@ -1,4 +1,4 @@
-/* global definer */
+/* global define */
 define([
     'globals',
     'classes/nameplate'
