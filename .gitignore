@@ -4,5 +4,7 @@ node_modules
 bower_components
 
 /graphics/advertisements/*
+/graphics/img/boxart/*
+!/graphics/img/boxart/default.png
 !.empty_directory
 
