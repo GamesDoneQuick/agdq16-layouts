@@ -721,8 +721,6 @@ define([
         showCTA(true);
     });
 
-    //nodecg.listenFor('barGDQMonitor', showGDQMonitor);
-
     // CTA is the first thing we show, so we use this to start our loop
     showCTA();
 });
