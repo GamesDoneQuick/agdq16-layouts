@@ -10,6 +10,8 @@ define(function() {
      * @returns {String}
      */
     return function(str) {
+        // Disabled for now
+        return str;
         return str.split('').map(function(char) {
             switch (char) {
                 case '0':
