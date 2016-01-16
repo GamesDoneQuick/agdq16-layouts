@@ -1,4 +1,4 @@
-/* global requirejs, TweenLite, Power1 */
+/* global requirejs, TweenLite, Power1, Typekit */
 (function() {
     'use strict';
 
@@ -20,15 +20,14 @@
     });
 
     // Wait until Typekit fonts are loaded before setting up the graphic.
-    /*try {
+    try {
         Typekit.load({active: init});
     } catch (e) {
         console.error(e);
-    }*/
+    }
 
     var preloaderDone = false;
     var replicantsDone = false;
-    init();
 
     function init() {
         requirejs(['debug', 'preloader', 'globals', 'easel'], function (debug, preloader, globals, createjs) {
