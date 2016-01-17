@@ -5,9 +5,14 @@ This is a [NodeCG](http://github.com/nodecg/nodecg) 0.7 bundle. You will need to
 
 ## Installation
 - Install to `nodecg/bundles/agdq16-layouts`.
-- Start NodeCG once and let it fully boot. This will install `agdq16-layout`'s dependencies.
- - Alternatively, run `npm install` and `bower install` from `nodecg/bundles/agdq16-layouts` yourself.
-- Run `node nodecg/bundles/agdq16-layouts/download_boxart.js` to populate the boxart.
+- Install `bower` if you have not already (`npm install -g bower`)
+- **WINDOWS**: Follow [these instructions](https://github.com/nodejs/node-gyp/issues/629#issuecomment-153196245) to set up a build chain to compile `agdq16-layouts`' dependencies.
+- **LINUX**: Install `build-essential` and Python 2.7, which are needed to compile `agdq16-layouts`' dependencies.
+- `cd nodecg/bundles/agdq16-layouts` and run `npm install`, then `bower install`
+- Run `node ./download_boxart.js` to populate the boxart.
+
+Please note that you **must manually run `npm install` for this bundle**. NodeCG currently cannot reliably 
+compile this bundle's npm dependencies. This is an issue we hope to address in the future.
 
 ## Usage
 This bundle is not intended to be used verbatim. Many of the assets have been replaced with placeholders, and
