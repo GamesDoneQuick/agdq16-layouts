@@ -3,6 +3,9 @@ The on-stream graphics used during Awesome Games Done Quick 2016.
 
 This is a [NodeCG](http://github.com/nodecg/nodecg) 0.7 bundle. You will need to have NodeCG 0.7 installed to run it.
 
+## Video Walkthrough
+[A ten-part video series explaining the structure and function of this NodeCG bundle.](https://www.youtube.com/playlist?list=PL1EO2PfU4nFnB4c40SzUpulvYvVmPxeTx)
+
 ## Installation
 - Install to `nodecg/bundles/agdq16-layouts`.
 - Install `bower` if you have not already (`npm install -g bower`)
