@@ -13,6 +13,16 @@ This is a [NodeCG](http://github.com/nodecg/nodecg) 0.7 bundle. You will need to
 - **LINUX**: Install `build-essential` and Python 2.7, which are needed to compile `agdq16-layouts`' dependencies.
 - `cd nodecg/bundles/agdq16-layouts` and run `npm install`, then `bower install`
 - Run `node ./download_boxart.js` to populate the boxart.
+- Create the configuration file (see the [configuration][id] section below for more details)
+- Run the nodecg server: `nodecg start` (or `node index.js` if you don't have nodecg-cli) from the `nodecg` root directory.
+- Run the electron window:
+  - For Windows:
+    - Create a shortcut in the `bundles/agdq16-layouts` folder with the location set to
+      `C:\path\to\nodecg\bundles\agdq16-layouts\node_modules\electron-prebuilt\dist\electron.exe` called Electron.
+    - Next, edit the properties of the link you created, add ` electron.js --remote-debugging-port=9222` to the end of
+      the `Target` value, and change the `Start in` folder to be `C:\path\to\nodecg\bundles\agdq16-layouts\`.
+  - For Linux/Mac:
+    - `cd` to the `bundles/agdq16-bundles` directory, then run `./node_modules/electron-prebuild/dist/electron electron.js --remote-debugging-port=9222`
 
 Please note that you **must manually run `npm install` for this bundle**. NodeCG currently cannot reliably 
 compile this bundle's npm dependencies. This is an issue we hope to address in the future.
@@ -24,6 +34,7 @@ learning tool and base to build from, rather than just taking and using it whole
 
 To reiterate, please don't just download and use this bundle as-is. Build something new from it.
 
+[id]: configuration
 ## Configuration
 To configure this bundle, create and edit `nodecg/cfg/agdq16-layouts.json`.  
 Refer to [configschema.json][] for the structure of this file.
