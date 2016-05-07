@@ -6,7 +6,7 @@ module.exports = function(nodecg) {
     if (!nodecg.bundleConfig) {
         nodecg.log.error('cfg/agdq16-layouts.json was not found. "Now playing" graphic will be disabled.');
         return;
-    } else if (typeof nodecg.bundleConfig.twitter === 'undefined') {
+    } else if (typeof nodecg.bundleConfig.lastfm === 'undefined') {
         nodecg.log.error('"lastfm" is not defined in cfg/agdq16-layouts.json! ' +
             '"Now playing" graphic will be disabled.');
         return;
